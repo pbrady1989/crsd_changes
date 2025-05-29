@@ -237,7 +237,7 @@ SIX_Enum_BEGIN_DEFINE(PixelType)
         RE32F_IM32F = 1,
 
         // Each pixel is stored as a pair of numbers that represent the real and imaginary 
-        // components. Each component is stored in a 16-bit signed integer in 2’s 
+        // components. Each component is stored in a 16-bit signed integer in 2ï¿½s 
         // complement format (2 bytes per component, 4 bytes per pixel). 
         RE16I_IM16I = 2,
 
@@ -652,6 +652,40 @@ SIX_Enum_ENUM_3(XYZEnum,
     X, 0,
     Y, 1,
     Z, 2
+);
+
+/*!
+ *  \struct PolarizationType
+ *
+ *  Enumeration used to represent PolarizationTypes
+ */
+// SIX_Enum_BEGIN_DEFINE(TxWFType)
+//     //! The enumerations allowed
+//     SIX_Enum_BEGIN_enum
+//         LFM= 1,
+//         XM = 2,
+//         LFMwXM = 3,
+//         UNSPECIFIED = 4,
+//     SIX_Enum_END_enum
+
+//     SIX_Enum_BEGIN_string_to_value
+//         SIX_Enum_map_entry_(LFM),
+//         SIX_Enum_map_entry_(XM),
+//         SIX_Enum_map_entry_(LFMwXM),
+//         SIX_Enum_map_entry_(UNSPECIFIED),
+//     SIX_Enum_END_string_to_value
+// SIX_Enum_END_DEFINE(TxWFType);
+
+/*!
+ *  \struct RadarModeType
+ *
+ *  Enumeration used to represent RadarModeTypes
+ */
+SIX_Enum_ENUM_4(TxWFType,
+        LFM, 1,
+        XM, 2,
+        LFMwXM, 3,
+        UNSPECIFIED, 4
 );
 
 }

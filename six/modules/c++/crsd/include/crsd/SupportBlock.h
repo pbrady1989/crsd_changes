@@ -1,0 +1,192 @@
+/* =========================================================================
+ * This file is part of crsd-c++
+ * =========================================================================
+ *
+ * (C) Copyright 2004 - 2019, MDA Information Systems LLC
+ *
+ * crsd-c++ is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this program; If not,
+ * see <http://www.gnu.org/licenses/>.
+ *
+ */
+#ifndef __CRSD_SUPPORT_BLOCK_H__
+#define __CRSD_SUPPORT_BLOCK_H__
+#pragma once
+
+#include <iostream>
+#include <string>
+#include <complex>
+#include <unordered_map>
+
+#include <std/cstddef>
+
+#include <scene/sys_Conf.h>
+#include <io/SeekableStreams.h>
+#include <types/RowCol.h>
+#include <mem/ScopedArray.h>
+#include <mem/BufferView.h>
+
+#include <crsd/Data.h>
+#include <crsd/Utilities.h>
+
+namespace crsd
+{
+    class FileHeader;
+
+
+/*
+ *  \struct SupportBlock
+ *
+ *  \brief This class contains information about the SupportBlock CRSD data.
+ */
+//  Provides methods to read support block data from CRSD file/stream
+struct SupportBlock final
+{
+    /*
+     *  \func SupportBlock
+     *
+     *  \brief Constructor initializes book keeping information
+     *
+     *  \param pathname Input CRSD pathname to initialize a file input stream
+     *  \param data Data section from CRSD
+     *  \param startSupport CRSD header keyword "SUPPORT_BLOCK_BYTE_OFFSET"
+     *  \param sizeSupport CRSD header keyword "SUPPORT_BLOCK_SIZE"
+     */
+    SupportBlock(const std::string& pathname,
+                 const crsd::Data& data,
+                 int64_t startSupport,
+                 int64_t sizeSupport);
+
+    /*
+     *  \func SupportBlock
+     *
+     *  \brief Constructor initializes book keeping information
+     *
+     *  \param inStream Input stream to an already opened CRSD file
+     *  \param data Data section from CRSD
+     *  \param startSupport CRSD header keyword "SUPPORT_BLOCK_BYTE_OFFSET"
+     *  \param sizeSupport CRSD header keyword "SUPPORT_BLOCK_SIZE"
+     */
+    SupportBlock(std::shared_ptr<io::SeekableInputStream> inStream,
+                 const crsd::Data& data,
+                 int64_t startSupport,
+                 int64_t sizeSupport);
+    SupportBlock(std::shared_ptr<io::SeekableInputStream> inStream,
+        const crsd::Data& data, const FileHeader&);
+
+    // Noncopyable
+    SupportBlock(const SupportBlock&) = delete;
+    const SupportBlock& operator=(const SupportBlock&) = delete;
+
+    /*
+     *  \func getFileOffset
+     *
+     *  \brief Get the byte offset of a specific support array in the CRSD file
+     *
+     *  \param id Unique id of support array
+     *
+     *  \return Returns offset from start of CRSD file
+     */
+    int64_t getFileOffset(const std::string& id) const;
+
+    /*
+     *  \func read
+     *
+     *  \brief Read the specified support array.
+     *
+     *   Performs endian swapping if necessary
+     *
+     *  \param id unique identifier of support array
+     *  \param numThreads Number of threads to use for endian swapping if
+     *   necessary
+     *  \param[in,out] data A pre allocated std::span that will hold the data
+     *   read from the file.
+     *
+     *  \throws except::Exception Throws if buffer has not been allocated to a sufficient size
+     *   (numRows *  numCols *  bytesPerElement)
+     */
+    void read(const std::string& id,
+              size_t numThreads,
+              const mem::BufferView<sys::ubyte>& data) const;
+    void read(const std::string& id,
+              size_t numThreads,
+              std::span<std::byte> data) const
+    {
+        mem::BufferView<sys::ubyte> data_(reinterpret_cast<sys::ubyte*>(data.data()), data.size());
+        read(id, numThreads, data_);
+    }
+
+    /*
+     *  \func read
+     *
+     *  \brief Read the specified support array
+     *
+     *   Performs endian swapping if necessary
+     *
+     *  \param id unique identifier of support array
+     *  \param numThreads Number of threads to use for endian swapping if
+     *   necessary
+     *  \param[out] data std::unique_ptr<[]> that will hold the data read from the file.
+     */
+    // Same as above but allocates the memory
+    void read(const std::string& id,
+              size_t numThreads,
+              std::unique_ptr<sys::ubyte[]>& data) const;
+    void read(const std::string& id,
+              size_t numThreads,
+              std::unique_ptr<std::byte[]>& data) const
+    {
+        std::unique_ptr<sys::ubyte[]> data_;
+        read(id, numThreads, data_);
+        data.reset(reinterpret_cast<std::byte*>(data_.release()));
+    }
+
+    /*
+     *  \func readAll
+     *
+     *  \brief Read all the support arrays
+     *
+     *   Performs endian swapping if necessary
+     *
+     *  \param numThreads Number of threads to use for endian swapping if
+     *   necessary
+     *  \param[out] data std::unique_ptr<[]> that will hold the data read from the file.
+     *
+     */
+    void readAll(size_t numThreads,
+                std::unique_ptr<sys::ubyte[]>& data) const;
+    void readAll(size_t numThreads,
+                 std::unique_ptr<std::byte[]>& data) const
+    {
+        std::unique_ptr<sys::ubyte[]> data_;
+        readAll(numThreads, data_);
+        data.reset(reinterpret_cast<std::byte*>(data_.release()));
+    }
+
+
+private:
+    //! Initialize mOffsets for each array
+    // both for uncompressed and compressed data
+    void initialize();
+
+    const std::shared_ptr<io::SeekableInputStream> mInStream;
+    crsd::Data mData;
+    const int64_t mSupportOffset;       // offset in bytes to start of SupportBlock
+    const size_t mSupportSize;             // total size in bytes of SupportBlock
+    std::unordered_map<std::string,int64_t> mOffsets; // Offset to start of each support array
+
+    friend std::ostream& operator<< (std::ostream& os, const SupportBlock& d);
+};
+}
+
+#endif

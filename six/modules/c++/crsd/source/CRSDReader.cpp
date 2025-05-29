@@ -1,10 +1,10 @@
 /* =========================================================================
- * This file is part of cphd-c++
+ * This file is part of crsd-c++
  * =========================================================================
  *
  * (C) Copyright 2004 - 2019, MDA Information Systems LLC
  *
- * cphd-c++ is free software; you can redistribute it and/or modify
+ * crsd-c++ is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
@@ -19,7 +19,7 @@
  * see <http://www.gnu.org/licenses/>.
  *
  */
-#include <cphd/CPHDReader.h>
+#include <crsd/CRSDReader.h>
 
 #include <std/memory>
 #include <algorithm>
@@ -33,11 +33,11 @@
 #include <gsl/gsl.h>
 
 #include <six/XmlLite.h>
-#include <cphd/CPHDXMLControl.h>
+#include <crsd/CRSDXMLControl.h>
 
-namespace cphd
+namespace crsd
 {
-CPHDReader::CPHDReader(std::shared_ptr<io::SeekableInputStream> inStream,
+CRSDReader::CRSDReader(std::shared_ptr<io::SeekableInputStream> inStream,
                        size_t numThreads,
                        const std::vector<std::string>& schemaPaths,
                        std::shared_ptr<logging::Logger> logger)
@@ -45,7 +45,7 @@ CPHDReader::CPHDReader(std::shared_ptr<io::SeekableInputStream> inStream,
     initialize(inStream, numThreads, logger, schemaPaths);
 }
 
-CPHDReader::CPHDReader(const std::string& fromFile,
+CRSDReader::CRSDReader(const std::string& fromFile,
                        size_t numThreads,
                        const std::vector<std::string>& schemaPaths,
                        std::shared_ptr<logging::Logger> logger)
@@ -54,7 +54,7 @@ CPHDReader::CPHDReader(const std::string& fromFile,
         numThreads, logger, schemaPaths);
 }
 
-void CPHDReader::initialize(std::shared_ptr<io::SeekableInputStream> inStream,
+void CRSDReader::initialize(std::shared_ptr<io::SeekableInputStream> inStream,
                             size_t numThreads,
                             std::shared_ptr<logging::Logger> logger,
                             const std::vector<std::string>& schemaPaths_)
@@ -76,7 +76,7 @@ void CPHDReader::initialize(std::shared_ptr<io::SeekableInputStream> inStream,
     std::vector<std::filesystem::path> schemaPaths;
     std::transform(schemaPaths_.begin(), schemaPaths_.end(), std::back_inserter(schemaPaths),
         [](const std::string& s) { return s; });
-    mMetadata = CPHDXMLControl(logger.get()).fromXML(xmlParser.getDocument(), schemaPaths);
+    mMetadata = CRSDXMLControl(logger.get()).fromXML(xmlParser.getDocument(), schemaPaths);
 
     mSupportBlock = std::make_unique<SupportBlock>(inStream, mMetadata.data, mFileHeader);
 

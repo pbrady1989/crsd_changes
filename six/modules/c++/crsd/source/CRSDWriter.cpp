@@ -1,10 +1,10 @@
 /* =========================================================================
- * This file is part of cphd-c++
+ * This file is part of crsd-c++
  * =========================================================================
  *
  * (C) Copyright 2004 - 2019, MDA Information Systems LLC
  *
- * cphd-c++ is free software; you can redistribute it and/or modify
+ * crsd-c++ is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
@@ -19,7 +19,7 @@
  * see <http://www.gnu.org/licenses/>.
  *
  */
-#include <cphd/CPHDWriter.h>
+#include <crsd/CRSDWriter.h>
 
 #include <thread>
 #include <std/bit>
@@ -27,17 +27,17 @@
 
 #include <except/Exception.h>
 
-#include <cphd/ByteSwap.h>
-#include <cphd/CPHDXMLControl.h>
-#include <cphd/FileHeader.h>
-#include <cphd/Utilities.h>
-#include <cphd/Wideband.h>
+#include <crsd/ByteSwap.h>
+#include <crsd/CRSDXMLControl.h>
+#include <crsd/FileHeader.h>
+#include <crsd/Utilities.h>
+#include <crsd/Wideband.h>
 
 #undef min
 #undef max
 
 
-namespace cphd
+namespace crsd
 {
 DataWriter::DataWriter(std::shared_ptr<io::SeekableOutputStream> stream,
                        size_t numThreads) :
@@ -72,7 +72,7 @@ void DataWriterLittleEndian::operator()(const sys::ubyte* data,
 
         memcpy(mScratch.data(), data + dataProcessed, dataToProcess);
 
-        cphd::byteSwap(mScratch.data(),
+        crsd::byteSwap(mScratch.data(),
                        elementSize,
                        dataToProcess / elementSize,
                        mNumThreads);
@@ -97,10 +97,10 @@ void DataWriterBigEndian::operator()(const sys::ubyte* data,
                    numElements * elementSize);
 }
 
-void CPHDWriter::initializeDataWriter()
+void CRSDWriter::initializeDataWriter()
 {
     // Get the correct dataWriter.
-    // The CPHD file needs to be big endian.
+    // The CRSD file needs to be big endian.
     auto endianness = std::endian::native; // "conditional expression is constant"
     if (endianness == std::endian::big)
     {
@@ -115,7 +115,7 @@ void CPHDWriter::initializeDataWriter()
 }
 
 
-CPHDWriter::CPHDWriter(const Metadata& metadata,
+CRSDWriter::CRSDWriter(const Metadata& metadata,
                        std::shared_ptr<io::SeekableOutputStream> outStream,
                        const std::vector<std::string>& schemaPaths,
                        size_t numThreads,
@@ -130,7 +130,7 @@ CPHDWriter::CPHDWriter(const Metadata& metadata,
     initializeDataWriter();
 }
 
-CPHDWriter::CPHDWriter(const Metadata& metadata,
+CRSDWriter::CRSDWriter(const Metadata& metadata,
                        const std::string& pathname,
                        const std::vector<std::string>& schemaPaths,
                        size_t numThreads,
@@ -147,11 +147,11 @@ CPHDWriter::CPHDWriter(const Metadata& metadata,
     initializeDataWriter();
 }
 
-void CPHDWriter::writeMetadata(size_t supportSize,
+void CRSDWriter::writeMetadata(size_t supportSize,
                                size_t pvpSize,
-                               size_t cphdSize)
+                               size_t crsdSize)
 {
-    const auto xmlMetadata(CPHDXMLControl().toXMLString(mMetadata, mSchemaPaths));
+    const auto xmlMetadata(CRSDXMLControl().toXMLString(mMetadata, mSchemaPaths));
 
     // update header version, or remains default if unset
     mHeader.setVersion(mMetadata.getVersion());
@@ -171,14 +171,14 @@ void CPHDWriter::writeMetadata(size_t supportSize,
                                      "informaion must be specified"));
     }
     // set header size, final step before write
-    mHeader.set(xmlMetadata.size(), supportSize, pvpSize, cphdSize);
+    mHeader.set(xmlMetadata.size(), supportSize, pvpSize, crsdSize);
     mStream->write(mHeader.toString());
     mStream->write("\f\n");
     mStream->write(xmlMetadata);
     mStream->write("\f\n");
 }
 
-void CPHDWriter::writePVPData(const std::byte* pvpBlock, size_t channel)
+void CRSDWriter::writePVPData(const std::byte* pvpBlock, size_t channel)
 {
     const size_t size = (mMetadata.data.getNumVectors(channel) *
                          mMetadata.data.getNumBytesPVPSet()) /
@@ -188,14 +188,14 @@ void CPHDWriter::writePVPData(const std::byte* pvpBlock, size_t channel)
     (*mDataWriter)(pvpBlock, size, 8);
 }
 
-void CPHDWriter::writeCPHDDataImpl(const std::byte* data, size_t size)
+void CRSDWriter::writeCRSDDataImpl(const std::byte* data, size_t size)
 {
     //! We have to pass in the data as though it was not complex
     //  thus we pass in twice the number of elements at half the size.
     (*mDataWriter)(data, size * 2, mElementSize / 2);
 }
 
-void CPHDWriter::writeCompressedCPHDDataImpl(const std::byte* data,
+void CRSDWriter::writeCompressedCRSDDataImpl(const std::byte* data,
                                              size_t channel)
 {
     //! We have to pass in the data as though it was 1 signal array sized
@@ -203,7 +203,7 @@ void CPHDWriter::writeCompressedCPHDDataImpl(const std::byte* data,
     (*mDataWriter)(data, mMetadata.data.getCompressedSignalSize(channel), 1);
 }
 
-void CPHDWriter::writeSupportDataImpl(const std::byte* data,
+void CRSDWriter::writeSupportDataImpl(const std::byte* data,
                                       size_t numElements,
                                       size_t elementSize)
 {
@@ -211,7 +211,7 @@ void CPHDWriter::writeSupportDataImpl(const std::byte* data,
 }
 
 template <typename T>
-void CPHDWriter::write(const PVPBlock& pvpBlock,
+void CRSDWriter::write(const PVPBlock& pvpBlock,
                        const T* widebandData,
                        const sys::ubyte* supportData)
 {
@@ -241,51 +241,51 @@ void CPHDWriter::write(const PVPBlock& pvpBlock,
     {
         size_t numElements = mMetadata.data.getNumVectors(ii) *
                 mMetadata.data.getNumSamples(ii);
-        // writeCPHDData handles compressed data as well
-        writeCPHDData<T>(widebandData + elementsWritten, numElements, ii);
+        // writeCRSDData handles compressed data as well
+        writeCRSDData<T>(widebandData + elementsWritten, numElements, ii);
         elementsWritten += numElements;
     }
 }
 
 // For compressed data
-template void CPHDWriter::write<sys::ubyte>(const PVPBlock& pvpBlock,
+template void CRSDWriter::write<sys::ubyte>(const PVPBlock& pvpBlock,
                                             const sys::ubyte* widebandData,
                                             const sys::ubyte* supportData);
-template void CPHDWriter::write<std::byte>(const PVPBlock& pvpBlock,
+template void CRSDWriter::write<std::byte>(const PVPBlock& pvpBlock,
                                             const std::byte* widebandData,
                                             const std::byte* supportData);
 
-template void CPHDWriter::write<std::complex<int8_t>>(
+template void CRSDWriter::write<std::complex<int8_t>>(
     const PVPBlock& pvpBlock,
     const std::complex<int8_t>* widebandData,
     const sys::ubyte* supportData);
 
-template void CPHDWriter::write<std::complex<int16_t>>(
+template void CRSDWriter::write<std::complex<int16_t>>(
     const PVPBlock& pvpBlock,
     const std::complex<int16_t>* widebandData,
     const sys::ubyte* supportData);
 
-template void CPHDWriter::write<std::complex<float>>(
+template void CRSDWriter::write<std::complex<float>>(
     const PVPBlock& pvpBlock,
     const std::complex<float>* widebandData,
     const sys::ubyte* supportData);
 
-template void CPHDWriter::write<std::complex<int8_t>>(
+template void CRSDWriter::write<std::complex<int8_t>>(
         const PVPBlock& pvpBlock,
         const std::complex<int8_t>* widebandData,
         const std::byte* supportData);
 
-template void CPHDWriter::write<std::complex<int16_t>>(
+template void CRSDWriter::write<std::complex<int16_t>>(
         const PVPBlock& pvpBlock,
         const std::complex<int16_t>* widebandData,
         const std::byte* supportData);
 
-template void CPHDWriter::write<std::complex<float>>(
+template void CRSDWriter::write<std::complex<float>>(
         const PVPBlock& pvpBlock,
         const std::complex<float>* widebandData,
         const std::byte* supportData);
 
-void CPHDWriter::writeMetadata(const PVPBlock& pvpBlock)
+void CRSDWriter::writeMetadata(const PVPBlock& pvpBlock)
 {
     // Update the number of bytes per PVP
     if (mMetadata.data.numBytesPVP != pvpBlock.getNumBytesPVPSet())
@@ -301,7 +301,7 @@ void CPHDWriter::writeMetadata(const PVPBlock& pvpBlock)
     const size_t numChannels = mMetadata.data.getNumChannels();
     size_t totalSupportSize = 0;
     size_t totalPVPSize = 0;
-    size_t totalCPHDSize = 0;
+    size_t totalCRSDSize = 0;
 
     for (auto it = mMetadata.data.supportArrayMap.begin();
          it != mMetadata.data.supportArrayMap.end();
@@ -313,14 +313,14 @@ void CPHDWriter::writeMetadata(const PVPBlock& pvpBlock)
     for (size_t ii = 0; ii < numChannels; ++ii)
     {
         totalPVPSize += pvpBlock.getPVPsize(ii);
-        totalCPHDSize += mMetadata.data.getNumVectors(ii) *
+        totalCRSDSize += mMetadata.data.getNumVectors(ii) *
                 mMetadata.data.getNumSamples(ii) * mElementSize;
     }
 
-    writeMetadata(totalSupportSize, totalPVPSize, totalCPHDSize);
+    writeMetadata(totalSupportSize, totalPVPSize, totalCRSDSize);
 }
 
-void CPHDWriter::writePVPData(const PVPBlock& pvpBlock)
+void CRSDWriter::writePVPData(const PVPBlock& pvpBlock)
 {
     // Add padding
     char zero = 0;
@@ -346,13 +346,13 @@ void CPHDWriter::writePVPData(const PVPBlock& pvpBlock)
 }
 
 template <typename T>
-void CPHDWriter::writeCPHDData(const T* data,
+void CRSDWriter::writeCRSDData(const T* data,
                                size_t numElements,
                                size_t channel)
 {
     if (mMetadata.data.isCompressed())
     {
-        writeCompressedCPHDDataImpl(reinterpret_cast<const std::byte*>(data),
+        writeCompressedCRSDDataImpl(reinterpret_cast<const std::byte*>(data),
                                     channel);
     }
     else
@@ -362,29 +362,29 @@ void CPHDWriter::writeCPHDData(const T* data,
             throw except::Exception(
                     Ctxt("Incorrect buffer data type used for metadata!"));
         }
-        writeCPHDDataImpl(reinterpret_cast<const std::byte*>(data),
+        writeCRSDDataImpl(reinterpret_cast<const std::byte*>(data),
                           numElements);
     }
 }
 
 // For compressed data
-template void CPHDWriter::writeCPHDData(const sys::ubyte* data,
+template void CRSDWriter::writeCRSDData(const sys::ubyte* data,
                                         size_t numElements,
                                         size_t channel);
-template void CPHDWriter::writeCPHDData(const std::byte* data,
+template void CRSDWriter::writeCRSDData(const std::byte* data,
                                         size_t numElements,
                                         size_t channel);
 
-template void CPHDWriter::writeCPHDData<std::complex<int8_t>>(
+template void CRSDWriter::writeCRSDData<std::complex<int8_t>>(
         const std::complex<int8_t>* data,
         size_t numElements,
         size_t channel);
 
-template void CPHDWriter::writeCPHDData<std::complex<int16_t>>(
+template void CRSDWriter::writeCRSDData<std::complex<int16_t>>(
         const std::complex<int16_t>* data,
         size_t numElements,
         size_t channel);
 
-template void CPHDWriter::writeCPHDData<std::complex<float>>(
+template void CRSDWriter::writeCRSDData<std::complex<float>>(
         const std::complex<float>* data, size_t numElements, size_t channel);
 }

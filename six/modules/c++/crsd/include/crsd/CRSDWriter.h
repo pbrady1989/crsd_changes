@@ -35,6 +35,8 @@
 #include <crsd/Metadata.h>
 #include <crsd/PVP.h>
 #include <crsd/PVPBlock.h>
+#include <crsd/PPP.h>
+#include <crsd/PPPBlock.h>
 
 namespace crsd
 {

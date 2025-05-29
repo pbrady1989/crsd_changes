@@ -548,6 +548,7 @@ struct Data
 
     //! Getter functions
     virtual size_t getNumVectors(size_t channel) const;
+    virtual size_t getNumPulses(size_t index) const;
     virtual size_t getNumSamples(size_t channel) const;
     size_t getCompressedSignalSize(size_t channel) const;
     size_t getSignalSize(size_t channel) const;
@@ -561,6 +562,14 @@ struct Data
     {
         if (receiveParameters.get())
             return receiveParameters->channels.size();
+        else
+            return 0;
+    }
+
+    size_t getNumTxSequences() const
+    {
+        if (transmitParameters.get())
+            return transmitParameters->getNumTxSequences();
         else
             return 0;
     }
@@ -641,6 +650,11 @@ private:
      * Check if channel is in range
      */
     void verifyChannelInRange(size_t channel) const;
+
+    /*
+     * Check if tx sequence is in range
+     */
+    void verifyTxSequenceInRange(size_t index) const;
 
     // Book keeping map for efficient validation
     // Support Array Map with:

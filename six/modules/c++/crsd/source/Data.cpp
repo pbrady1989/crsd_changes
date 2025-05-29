@@ -205,6 +205,12 @@ size_t Data::getNumVectors(size_t channel) const
     verifyChannelInRange(channel);
     return receiveParameters->channels[channel].getNumVectors();
 }
+//! Getter functions
+size_t Data::getNumPulses(size_t index) const
+{
+    verifyTxSequenceInRange(index);
+    return transmitParameters->txSequence[index].getNumPulses();
+}
 size_t Data::getNumSamples(size_t channel) const
 {
     verifyChannelInRange(channel);
@@ -253,6 +259,32 @@ void Data::verifyChannelInRange(size_t channel) const
     {
         std::ostringstream ostr;
         ostr << "No receive parameters exist for this CRSD!! \n";
+        throw except::Exception(ostr.str());
+    }
+}
+
+
+/*
+ * Check if channel is in range
+ */
+void Data::verifyTxSequenceInRange(size_t index) const
+{
+
+    if (transmitParameters.get())
+    {
+        if (index >= transmitParameters->txSequence.size())
+        {
+        std::ostringstream ostr;
+        ostr << "TxSequence provided is " << index << "\n"
+                << "while only " << transmitParameters->txSequence.size()
+                << " tx sequences exist \n";
+        throw except::Exception(ostr.str());
+        }
+    }
+    else
+    {
+        std::ostringstream ostr;
+        ostr << "No transmit parameters exist for this CRSD!! \n";
         throw except::Exception(ostr.str());
     }
 }

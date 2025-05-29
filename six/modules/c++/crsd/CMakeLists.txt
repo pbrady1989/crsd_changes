@@ -24,7 +24,8 @@ coda_add_module(
         source/Antenna.cpp
         source/TxSequence.cpp
         source/CRSDXMLParser.cpp
-        source/CRSDWriter.cpp)
+        source/CRSDWriter.cpp
+        source/CRSDReader.cpp)
 
 # coda_add_tests(
 #     MODULE_NAME ${MODULE_NAME}

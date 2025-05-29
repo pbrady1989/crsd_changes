@@ -255,6 +255,11 @@ private:
     // Required key-value pairs
     int64_t mXmlBlockSize;
     int64_t mXmlBlockByteOffset;
+    int64_t mSupportBlockSize;
+    int64_t mSupportBlockByteOffset;
+
+
+    // Optional key-value pairs
     int64_t mPvpBlockSize;
     int64_t mPvpBlockByteOffset;
     int64_t mPppBlockSize;
@@ -264,9 +269,6 @@ private:
     std::string mClassification;
     std::string mReleaseInfo;
 
-    // Optional key-value pairs
-    int64_t mSupportBlockSize;
-    int64_t mSupportBlockByteOffset;
 };
 }
 

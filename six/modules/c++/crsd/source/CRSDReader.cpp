@@ -84,6 +84,10 @@ void CRSDReader::initialize(std::shared_ptr<io::SeekableInputStream> inStream,
     mPVPBlock = PVPBlock(mMetadata);
     mPVPBlock.load(*inStream, mFileHeader, numThreads);
 
+    // Load the PVPBlock into memory
+    mPPPBlock = PPPBlock(mMetadata);
+    mPPPBlock.load(*inStream, mFileHeader, numThreads);
+
     // Setup for wideband reading
     mWideband = std::make_unique<Wideband>(inStream, mMetadata,
         mFileHeader.getSignalBlockByteOffset(), mFileHeader.getSignalBlockSize());

@@ -29,6 +29,7 @@
 #include <crsd/Metadata.h>
 #include <crsd/FileHeader.h>
 #include <crsd/PVPBlock.h>
+#include <crsd/PPPBlock.h>
 #include <crsd/Wideband.h>
 #include <crsd/SupportBlock.h>
 
@@ -82,10 +83,20 @@ struct CRSDReader final
     {
         return mMetadata.data.getNumChannels();
     }
+    //! Get parameter functions
+    size_t getNumTxSequences() const
+    {
+        return mMetadata.data.getNumTxSequences();
+    }
     //! 0-based channel number
     size_t getNumVectors(size_t channel) const
     {
         return mMetadata.data.getNumVectors(channel);
+    }
+    //! 0-based tx sequence number
+    size_t getNumPulses(size_t index) const
+    {
+        return mMetadata.data.getNumPulses(index);
     }
     //! 0-based channel number
     size_t getNumSamples(size_t channel) const
@@ -128,6 +139,11 @@ struct CRSDReader final
     {
         return mPVPBlock;
     }
+    //! Get per vector parameters
+    const PPPBlock& getPPPBlock() const
+    {
+        return mPPPBlock;
+    }
     //! Get signal data
     const Wideband& getWideband() const
     {
@@ -149,6 +165,8 @@ private:
     std::unique_ptr<SupportBlock> mSupportBlock;
     //! Per Vector Parameter info read in from CRSD file
     PVPBlock mPVPBlock;
+    //! Per Pulse Parameter info read in from CRSD file
+    PPPBlock mPPPBlock;
     //! Signal block book-keeping info read in from CRSD file
     std::unique_ptr<Wideband> mWideband;
 

@@ -289,7 +289,6 @@ void Data::verifyTxSequenceInRange(size_t index) const
     }
 }
 
-
 std::ostream& operator<< (std::ostream& os, const Data::SupportArray& s)
 {
     os << "    Identifier        : " << s.identifier << "\n"

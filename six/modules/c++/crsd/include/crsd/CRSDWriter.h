@@ -252,15 +252,17 @@ struct CRSDWriter
     template<typename T>
     void write(
             const PVPBlock& pvpBlock,
+            const PPPBlock& pppBlock,
             const T* widebandData,
             const sys::ubyte* supportData = nullptr);
     template<typename T>
     void write(
             const PVPBlock& pvpBlock,
+            const PPPBlock& pppBlock,
             const T* widebandData,
             const std::byte* supportData = nullptr)
     {
-        write(pvpBlock, widebandData, reinterpret_cast<const sys::ubyte*>(supportData));
+        write(pvpBlock, pppBlock, widebandData, reinterpret_cast<const sys::ubyte*>(supportData));
     }
 
     /*
@@ -272,7 +274,7 @@ struct CRSDWriter
      *
      *  \param pvpBlock The vector based metadata to write.
      */
-    void writeMetadata(const PVPBlock& pvpBlock);
+    void writeMetadata(const PVPBlock& pvpBlock, const PPPBlock& pppBlock);
 
     /*
      *  \func writeSupportData
@@ -328,6 +330,15 @@ struct CRSDWriter
     void writePVPData(const PVPBlock& PVPBlock);
 
     /*
+     *  \func writePPPData
+     *  \brief Writes the PPP to the file
+     *
+     *  \param PPPBlock A populated PPPBlock object that will be written
+     *  to the file as a block of data
+     */
+    void writePPPData(const PPPBlock& PPPBlock);
+
+    /*
      *  \func writeCRSDData
      *  \brief Writes a chunk of CRSD data to disk. To create a proper
      *  CRSD file you must call writeMetadata and writePVPData before
@@ -361,12 +372,19 @@ private:
     void writeMetadata(
         size_t supportSize, // Optional
         size_t pvpSize,
+        size_t pppSize,
         size_t crsdSize);
 
     /*
      *  Write pvp helper
      */
     void writePVPData(const std::byte* pvpBlock,
+                      size_t index);
+
+    /*
+     *  Write ppp helper
+     */                  
+    void writePPPData(const std::byte* pppBlock,
                       size_t index);
 
     /*

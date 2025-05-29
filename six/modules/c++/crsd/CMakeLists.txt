@@ -56,5 +56,5 @@ coda_add_module(
 #        test_support_block_round.cpp)
 
 # Install the schemas
-file(GLOB cphd_schemas "${CMAKE_CURRENT_SOURCE_DIR}/conf/schema/*")
+file(GLOB crsd_schemas "${CMAKE_CURRENT_SOURCE_DIR}/conf/schema/*")
 install(FILES ${cphd_schemas} DESTINATION "conf/schema/six")

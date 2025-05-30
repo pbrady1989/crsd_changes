@@ -702,253 +702,147 @@ void runTest(const std::string& testName, const std::string& version)
     TEST_ASSERT_EQ(metadata->productInfo.creationInfo[0].dateTime.getYear(), 2024);
     TEST_ASSERT_EQ(metadata->productInfo.creationInfo[0].site, "ExampleSite");
     
+    //SARInfo
+    TEST_ASSERT_EQ(metadata->sarInfo->collectType,crsd::CollectType::MONOSTATIC);
+    TEST_ASSERT_EQ(metadata->sarInfo->radarMode.toString(), "SPOTLIGHT");
+    TEST_ASSERT_EQ(metadata->sarInfo->radarModeID, "MODE1");
 
-    // // CollectionID
-    // TEST_ASSERT_EQ(metadata->collectionID.collectorName, "Collector");
-    // TEST_ASSERT_EQ(metadata->collectionID.coreName, "Core");
-    // TEST_ASSERT_EQ(metadata->collectionID.collectType,
-    //                six::CollectType::MONOSTATIC);
-    // TEST_ASSERT_EQ(metadata->collectionID.radarMode,
-    //                six::RadarModeType::STRIPMAP);
-    // TEST_ASSERT_EQ(metadata->collectionID.radarModeID, "Mode");
-    // TEST_ASSERT_EQ(metadata->collectionID.getClassificationLevel(), "U");
-    // TEST_ASSERT_EQ(metadata->collectionID.releaseInfo, "Release");
-    // TEST_ASSERT_EQ(metadata->collectionID.countryCodes[0], "US");
-    // TEST_ASSERT_EQ(metadata->collectionID.countryCodes[1], "GB");
-    // TEST_ASSERT_EQ(metadata->collectionID.countryCodes[2], "AZ");
+    // TransmitInfo
+    TEST_ASSERT_EQ(metadata->transmitInfo->sensorName, "TX_SENSOR");
+    TEST_ASSERT_EQ(metadata->transmitInfo->eventName, "TX_EVENT");
 
-    // TEST_ASSERT_EQ(metadata->collectionID.parameters[0].getName(), "param1");
-    // TEST_ASSERT_EQ(metadata->collectionID.parameters[0].str(), "val");
+    // ReceiveInfo
+    TEST_ASSERT_EQ(metadata->receiveInfo->sensorName, "RX_SENSOR");
+    TEST_ASSERT_EQ(metadata->receiveInfo->eventName, "RX_EVENT");
 
-    // // Global
-    // const crsd::Global& global = metadata->global;
-    // TEST_ASSERT_EQ(global.domainType, crsd::DomainType::FX);
-    // TEST_ASSERT_EQ(global.sgn, crsd::PhaseSGN::PLUS_1);
-    // const crsd::Timeline& timeline = global.timeline;
-    // TEST_ASSERT_EQ(timeline.collectionStart.getYear(), 2013);
-    // TEST_ASSERT_EQ(timeline.rcvCollectionStart.getYear(), 2014);
-    // TEST_ASSERT_EQ(timeline.txTime1, 1.3);
-    // TEST_ASSERT_EQ(timeline.txTime2, 1.5);
-    // TEST_ASSERT_EQ(global.fxBand.fxMin, 0.9);
-    // TEST_ASSERT_EQ(global.fxBand.fxMax, 1.7);
-    // TEST_ASSERT_EQ(global.toaSwath.toaMin, 3.4);
-    // TEST_ASSERT_EQ(global.toaSwath.toaMax, 6.1);
-    // TEST_ASSERT_TRUE(global.tropoParameters.get() != nullptr);
-    // TEST_ASSERT_EQ(global.tropoParameters->n0, 65.2);
-    // TEST_ASSERT_EQ(global.tropoParameters->refHeight, crsd::RefHeight::IARP);
-    // TEST_ASSERT_TRUE(global.ionoParameters.get() != nullptr);
-    // TEST_ASSERT_EQ(global.ionoParameters->tecv, 5.8);
-    // TEST_ASSERT_EQ(global.ionoParameters->f2Height, 3);
+    // Global
+    TEST_ASSERT_EQ(metadata->global.collectionRefTime.getYear(), 2024);
+    TEST_ASSERT_EQ(metadata->global.transmitParameters->txTime1, 0.0);
+    TEST_ASSERT_EQ(metadata->global.transmitParameters->txTime2, 1.0);
+    TEST_ASSERT_EQ(metadata->global.transmitParameters->fxMin, 950000000.0);
+    TEST_ASSERT_EQ(metadata->global.transmitParameters->fxMax, 1050000000.0);
+    TEST_ASSERT_EQ(metadata->global.receiveParameters->rcvStartTime1, 0.0);
+    TEST_ASSERT_EQ(metadata->global.receiveParameters->rcvStartTime2, 1.0);
+    TEST_ASSERT_EQ(metadata->global.receiveParameters->fRcvMin, 950000000.0);
+    TEST_ASSERT_EQ(metadata->global.receiveParameters->fRcvMax, 1050000000.0);
 
-    // // Scene Coordinates
-    // const crsd::SceneCoordinates& scene = metadata->sceneCoordinates;
-    // TEST_ASSERT_EQ(scene.earthModel, crsd::EarthModelType::WGS_84);
-    // TEST_ASSERT_EQ(scene.iarp.ecf[0], 1.2);
-    // TEST_ASSERT_EQ(scene.iarp.ecf[1], 2.3);
-    // TEST_ASSERT_EQ(scene.iarp.ecf[2], 3.4);
+    // SceneCoordinates
+    TEST_ASSERT_EQ(metadata->sceneCoordinates.earthModel, crsd::EarthModelType::WGS_84);
+    TEST_ASSERT_EQ(metadata->sceneCoordinates.iarp.ecf[0], 1234567.0);
+    TEST_ASSERT_EQ(metadata->sceneCoordinates.iarp.ecf[1], 2345678.0);
+    TEST_ASSERT_EQ(metadata->sceneCoordinates.iarp.ecf[2], 3456789.0);
+    TEST_ASSERT_EQ(metadata->sceneCoordinates.iarp.llh.getLat(), 38.0);
+    TEST_ASSERT_EQ(metadata->sceneCoordinates.iarp.llh.getLon(), -77.0);
+    TEST_ASSERT_EQ(metadata->sceneCoordinates.iarp.llh.getAlt(), 100.0);
+    TEST_ASSERT_EQ(metadata->sceneCoordinates.referenceSurface.planar->uIax[0], 1.0);
+    TEST_ASSERT_EQ(metadata->sceneCoordinates.referenceSurface.planar->uIax[1], 0.0);
+    TEST_ASSERT_EQ(metadata->sceneCoordinates.referenceSurface.planar->uIay[0], 0.0);
+    TEST_ASSERT_EQ(metadata->sceneCoordinates.referenceSurface.planar->uIay[1], 1.0);
+    TEST_ASSERT_EQ(metadata->sceneCoordinates.imageArea.x1y1[0], 0.0);
+    TEST_ASSERT_EQ(metadata->sceneCoordinates.imageArea.x1y1[1], 0.0);
+    TEST_ASSERT_EQ(metadata->sceneCoordinates.imageArea.x2y2[0], 1000.0);
+    TEST_ASSERT_EQ(metadata->sceneCoordinates.imageArea.x2y2[1], 1000.0);
+    TEST_ASSERT_EQ(metadata->sceneCoordinates.imageArea.polygon.size(), 4);
+    TEST_ASSERT_EQ(metadata->sceneCoordinates.imageArea.polygon[0][0], 0.0);
+    TEST_ASSERT_EQ(metadata->sceneCoordinates.imageArea.polygon[0][1], 0.0);
+    TEST_ASSERT_EQ(metadata->sceneCoordinates.imageArea.polygon[1][0], 1000.0);
+    TEST_ASSERT_EQ(metadata->sceneCoordinates.imageArea.polygon[1][1], 0.0);
+    TEST_ASSERT_EQ(metadata->sceneCoordinates.imageArea.polygon[2][0], 1000.0);
+    TEST_ASSERT_EQ(metadata->sceneCoordinates.imageArea.polygon[2][1], 1000.0);
+    TEST_ASSERT_EQ(metadata->sceneCoordinates.imageArea.polygon[3][0], 0.0);
+    TEST_ASSERT_EQ(metadata->sceneCoordinates.imageArea.polygon[3][1], 1000.0);
+    TEST_ASSERT_EQ(metadata->sceneCoordinates.imageAreaCorners.upperLeft.getLat(), 38.0);
+    TEST_ASSERT_EQ(metadata->sceneCoordinates.imageAreaCorners.upperLeft.getLon(), -77.0);
+    TEST_ASSERT_EQ(metadata->sceneCoordinates.imageAreaCorners.upperRight.getLat(), 38.0);
+    TEST_ASSERT_EQ(metadata->sceneCoordinates.imageAreaCorners.upperRight.getLon(), -76.9);
+    TEST_ASSERT_EQ(metadata->sceneCoordinates.imageAreaCorners.lowerRight.getLat(), 38.1);
+    TEST_ASSERT_EQ(metadata->sceneCoordinates.imageAreaCorners.lowerRight.getLon(), -76.9);
+    TEST_ASSERT_EQ(metadata->sceneCoordinates.imageAreaCorners.lowerLeft.getLat(), 38.1);
+    TEST_ASSERT_EQ(metadata->sceneCoordinates.imageAreaCorners.lowerLeft.getLon(), -77.0);
+    TEST_ASSERT_TRUE(metadata->sceneCoordinates.imageGrid.get() == nullptr);
+ 
+    // Data
+    TEST_ASSERT_EQ(metadata->data.supportArrayMap.size(), 1);
+    TEST_ASSERT_TRUE(metadata->data.supportArrayMap.find("SUPPORT1") !=
+                   metadata->data.supportArrayMap.end());
+    TEST_ASSERT_EQ(metadata->data.supportArrayMap.at("SUPPORT1").numRows, 10);
+    TEST_ASSERT_EQ(metadata->data.supportArrayMap.at("SUPPORT1").numCols, 10);
+    TEST_ASSERT_EQ(metadata->data.supportArrayMap.at("SUPPORT1").bytesPerElement, 4);
+    TEST_ASSERT_EQ(metadata->data.supportArrayMap.at("SUPPORT1").arrayByteOffset, 0);
+    TEST_ASSERT_EQ(metadata->data.transmitParameters->numBytesPPP, 128);
+    TEST_ASSERT_EQ(metadata->data.transmitParameters->txSequence.size(), 1);
+    TEST_ASSERT_TRUE(metadata->data.transmitParameters->txSequence[0].identifier == "TXSEQ1");
+    TEST_ASSERT_EQ(metadata->data.transmitParameters->txSequence[0].numPulses, 64);
+    TEST_ASSERT_EQ(metadata->data.transmitParameters->txSequence[0].pppArrayByteOffset, 0);
+    TEST_ASSERT_EQ(metadata->data.receiveParameters->signalArrayFormat, crsd::SignalArrayFormat::CI2);
+    TEST_ASSERT_EQ(metadata->data.receiveParameters->numBytesPVP, 256);
+    TEST_ASSERT_EQ(metadata->data.receiveParameters->getNumCRSDChannels(), 1);
+    TEST_ASSERT_TRUE(metadata->data.receiveParameters->channels[0].identifier  == "CHAN1");
+    TEST_ASSERT_EQ(metadata->data.receiveParameters->channels[0].numVectors, 128);
+    TEST_ASSERT_EQ(metadata->data.receiveParameters->channels[0].numSamples, 1024);
+    TEST_ASSERT_EQ(metadata->data.receiveParameters->channels[0].signalArrayByteOffset, 0);
+    TEST_ASSERT_EQ(metadata->data.receiveParameters->channels[0].pvpArrayByteOffset, 0);
 
-    // TEST_ASSERT_EQ(scene.iarp.llh.getLat(), 45);
-    // TEST_ASSERT_EQ(scene.iarp.llh.getLon(), -102);
-    // TEST_ASSERT_EQ(scene.iarp.llh.getAlt(), 3.4);
+    // TxSequence
+    TEST_ASSERT_TRUE(metadata->txSequence->refTxId == "TXSEQ1");
+    TEST_ASSERT_TRUE(metadata->txSequence->txWFType.toString() == "LFM");
+    TEST_ASSERT_EQ(metadata->txSequence->parameters[0].identifier, "TXSEQ1_PARAM");
+    TEST_ASSERT_EQ(metadata->txSequence->parameters[0].refPulseIndex, 0);
+    TEST_ASSERT_EQ(metadata->txSequence->parameters[0].fxResponseId, "FXRESP1");
+    TEST_ASSERT_TRUE(metadata->txSequence->parameters[0].fxBWFixed);
+    TEST_ASSERT_EQ(metadata->txSequence->parameters[0].fxC, 1000000000.0);  
+    TEST_ASSERT_EQ(metadata->txSequence->parameters[0].fxBW, 10000000.0);
+    TEST_ASSERT_EQ(metadata->txSequence->parameters[0].txmtMin, 0.0001);
+    TEST_ASSERT_EQ(metadata->txSequence->parameters[0].txmtMax, 0.001);
+    TEST_ASSERT_EQ(metadata->txSequence->parameters[0].txTime1, 0.0);
+    TEST_ASSERT_EQ(metadata->txSequence->parameters[0].txTime2, 1.0);
+    TEST_ASSERT_EQ(metadata->txSequence->parameters[0].txAPCId, "APC1");
+    TEST_ASSERT_EQ(metadata->txSequence->parameters[0].txAPATId, "APAT1");
+    TEST_ASSERT_EQ(metadata->txSequence->parameters[0].txRefPoint.ecf[0], 1234567.0);
+    TEST_ASSERT_EQ(metadata->txSequence->parameters[0].txRefPoint.ecf[1], 2345678.0);
+    TEST_ASSERT_EQ(metadata->txSequence->parameters[0].txRefPoint.ecf[2], 3456789.0);
+    TEST_ASSERT_EQ(metadata->txSequence->parameters[0].txRefPoint.iac[0], 0.0);
+    TEST_ASSERT_EQ(metadata->txSequence->parameters[0].txRefPoint.iac[1], 0.0);
+    TEST_ASSERT_EQ(metadata->txSequence->parameters[0].txPolarization.polarizationID.toString(), "H");
+    TEST_ASSERT_EQ(metadata->txSequence->parameters[0].txPolarization.ampH, 1.0);
+    TEST_ASSERT_EQ(metadata->txSequence->parameters[0].txPolarization.ampV, 0.0);
+    TEST_ASSERT_EQ(metadata->txSequence->parameters[0].txPolarization.phaseH, 0.0);
+    TEST_ASSERT_EQ(metadata->txSequence->parameters[0].txPolarization.phaseV, 0.0);
+    TEST_ASSERT_EQ(metadata->txSequence->parameters[0].txRefRadIntensity, 1.0);
+    TEST_ASSERT_EQ(metadata->txSequence->parameters[0].txRefRadIntensityStdDev, 0.01);
+    TEST_ASSERT_EQ(metadata->txSequence->parameters[0].txRefLAtm, 0.0);
 
-    // TEST_ASSERT_TRUE(scene.referenceSurface.hae.get() != nullptr);
-    // TEST_ASSERT_EQ(scene.referenceSurface.hae->uIax.getLat(), 12);
-    // TEST_ASSERT_EQ(scene.referenceSurface.hae->uIax.getLon(), 24);
-    // TEST_ASSERT_EQ(scene.referenceSurface.hae->uIay.getLat(), 36);
-    // TEST_ASSERT_EQ(scene.referenceSurface.hae->uIay.getLon(), 48);
-
-    // TEST_ASSERT_EQ(scene.imageArea.x1y1[0], 3.5);
-    // TEST_ASSERT_EQ(scene.imageArea.x1y1[1], 5.3);
-    // TEST_ASSERT_EQ(scene.imageArea.x2y2[0], 5.3);
-    // TEST_ASSERT_EQ(scene.imageArea.x2y2[1], 3.5);
-    // TEST_ASSERT_EQ(scene.imageArea.polygon.size(), static_cast<size_t>(3));
-    // TEST_ASSERT_EQ(scene.imageArea.polygon[0][0], .1);
-    // TEST_ASSERT_EQ(scene.imageArea.polygon[0][1], .3);
-    // TEST_ASSERT_EQ(scene.imageArea.polygon[1][0], .4);
-    // TEST_ASSERT_EQ(scene.imageArea.polygon[1][1], .2);
-    // TEST_ASSERT_EQ(scene.imageArea.polygon[2][0], .5);
-    // TEST_ASSERT_EQ(scene.imageArea.polygon[2][1], .9);
-
-    // TEST_ASSERT_EQ(scene.imageAreaCorners.upperLeft.getLat(), 10);
-    // TEST_ASSERT_EQ(scene.imageAreaCorners.upperLeft.getLon(), 11);
-
-    // TEST_ASSERT_EQ(scene.imageAreaCorners.upperRight.getLat(), 20);
-    // TEST_ASSERT_EQ(scene.imageAreaCorners.upperRight.getLon(), 21);
-
-    // TEST_ASSERT_EQ(scene.imageAreaCorners.lowerRight.getLat(), 30);
-    // TEST_ASSERT_EQ(scene.imageAreaCorners.lowerRight.getLon(), 31);
-
-    // TEST_ASSERT_EQ(scene.imageAreaCorners.lowerLeft.getLat(), 40);
-    // TEST_ASSERT_EQ(scene.imageAreaCorners.lowerLeft.getLon(), 41);
-
-    // TEST_ASSERT_TRUE(scene.imageGrid.get() != nullptr);
-    // TEST_ASSERT_EQ(scene.imageGrid->identifier, "Grid");
-    // TEST_ASSERT_EQ(scene.imageGrid->iarpLocation.line, 1.23);
-    // TEST_ASSERT_EQ(scene.imageGrid->iarpLocation.sample, 3.21);
-    // TEST_ASSERT_EQ(scene.imageGrid->xExtent.lineSpacing, 3.14);
-    // TEST_ASSERT_EQ(scene.imageGrid->xExtent.firstLine, 4);
-    // TEST_ASSERT_EQ(scene.imageGrid->xExtent.numLines, static_cast<size_t>(50));
-    // TEST_ASSERT_EQ(scene.imageGrid->yExtent.sampleSpacing, 6.28);
-    // TEST_ASSERT_EQ(scene.imageGrid->yExtent.firstSample, 8);
-    // TEST_ASSERT_EQ(scene.imageGrid->yExtent.numSamples, static_cast<size_t>(100));
-    // TEST_ASSERT_EQ(scene.imageGrid->segments.size(), static_cast<size_t>(2));
-    // TEST_ASSERT_EQ(scene.imageGrid->segments[0].startLine, 0);
-    // TEST_ASSERT_EQ(scene.imageGrid->segments[0].startSample, 1);
-    // TEST_ASSERT_EQ(scene.imageGrid->segments[0].endLine, 2);
-    // TEST_ASSERT_EQ(scene.imageGrid->segments[0].endSample, 3);
-    // TEST_ASSERT_EQ(scene.imageGrid->segments[0].polygon.size(), static_cast<size_t>(3));
-    // TEST_ASSERT_EQ(scene.imageGrid->segments[0].polygon[0].line, 0.4);
-    // TEST_ASSERT_EQ(scene.imageGrid->segments[0].polygon[0].sample, 0.6);
-    // TEST_ASSERT_EQ(scene.imageGrid->segments[0].polygon[1].line, 0.8);
-    // TEST_ASSERT_EQ(scene.imageGrid->segments[0].polygon[1].sample, 1.2);
-    // TEST_ASSERT_EQ(scene.imageGrid->segments[0].polygon[2].line, 1.2);
-    // TEST_ASSERT_EQ(scene.imageGrid->segments[0].polygon[2].sample, 1.8);
-
-    // // Data
-    // const crsd::Data& data = metadata->data;
-    // TEST_ASSERT_EQ(data.signalArrayFormat, crsd::SignalArrayFormat::CI4);
-    // TEST_ASSERT_EQ(data.numBytesPVP, static_cast<size_t>(24));
-    // TEST_ASSERT_EQ(data.channels.size(), static_cast<size_t>(2));
-    // TEST_ASSERT_EQ(data.channels[0].identifier, "Channel");
-    // TEST_ASSERT_EQ(data.channels[0].numVectors, static_cast<size_t>(2));
-    // TEST_ASSERT_EQ(data.channels[0].numSamples, static_cast<size_t>(3));
-    // TEST_ASSERT_EQ(data.channels[0].signalArrayByteOffset, static_cast<size_t>(0));
-    // TEST_ASSERT_EQ(data.channels[0].pvpArrayByteOffset, static_cast<size_t>(1));
-    // TEST_ASSERT_EQ(data.channels[0].compressedSignalSize, static_cast<size_t>(3));
-    // TEST_ASSERT_EQ(data.signalCompressionID, "Compress");
-    // TEST_ASSERT_EQ(data.supportArrayMap.size(), static_cast<size_t>(3));
-    // const std::string identifier = "1.0";
-    // TEST_ASSERT_EQ(data.supportArrayMap.count(identifier), static_cast<size_t>(1));
-    // TEST_ASSERT_EQ(data.supportArrayMap.find(identifier)->second.numRows, static_cast<size_t>(3));
-    // TEST_ASSERT_EQ(data.supportArrayMap.find(identifier)->second.numCols, static_cast<size_t>(4));
-    // TEST_ASSERT_EQ(data.supportArrayMap.find(identifier)->second.bytesPerElement, static_cast<size_t>(8));
-    // TEST_ASSERT_EQ(data.supportArrayMap.find(identifier)->second.arrayByteOffset, static_cast<size_t>(0));
-
-    // // Channel
-    // const crsd::Channel& channel = metadata->channel;
-    // TEST_ASSERT_EQ(channel.refChId, "ChId");
-    // TEST_ASSERT_EQ(channel.fxFixedCrsd, six::BooleanType::IS_TRUE);
-    // TEST_ASSERT_EQ(channel.toaFixedCrsd, six::BooleanType::IS_FALSE);
-    // TEST_ASSERT_EQ(channel.srpFixedCrsd, six::BooleanType::IS_TRUE);
-    // TEST_ASSERT_EQ(channel.parameters.size(), static_cast<size_t>(1));
-    // TEST_ASSERT_EQ(channel.parameters[0].identifier, "CPI");
-    // TEST_ASSERT_EQ(channel.parameters[0].refVectorIndex, static_cast<size_t>(1));
-    // TEST_ASSERT_EQ(channel.parameters[0].fxFixed,
-    //                six::BooleanType::IS_FALSE);
-    // TEST_ASSERT_EQ(channel.parameters[0].toaFixed,
-    //                six::BooleanType::IS_TRUE);
-    // TEST_ASSERT_EQ(channel.parameters[0].srpFixed,
-    //                six::BooleanType::IS_TRUE);
-    // TEST_ASSERT_EQ(channel.parameters[0].signalNormal,
-    //                six::BooleanType::IS_FALSE);
-
-    // TEST_ASSERT_EQ(channel.parameters[0].polarization.txPol,
-    //                crsd::PolarizationType::X);
-    // TEST_ASSERT_EQ(channel.parameters[0].polarization.rcvPol,
-    //                crsd::PolarizationType::RHC);
-
-    // TEST_ASSERT_EQ(channel.parameters[0].fxC, 1.3);
-    // TEST_ASSERT_EQ(channel.parameters[0].fxBW, 0.8);
-    // TEST_ASSERT_EQ(channel.parameters[0].toaSaved, 2.7);
-    // TEST_ASSERT_EQ(channel.parameters[0].toaExtended->toaExtSaved, 1.0);
-    // TEST_ASSERT_EQ(channel.parameters[0].toaExtended->lfmEclipse->fxEarlyLow, 1.0);
-    // TEST_ASSERT_EQ(channel.parameters[0].toaExtended->lfmEclipse->fxEarlyHigh, 2.0);
-    // TEST_ASSERT_EQ(channel.parameters[0].toaExtended->lfmEclipse->fxLateLow, 1.0);
-    // TEST_ASSERT_EQ(channel.parameters[0].toaExtended->lfmEclipse->fxLateHigh, 2.0);
-
-    // TEST_ASSERT_EQ(channel.parameters[0].dwellTimes.codId, "CODPolynomial");
-    // TEST_ASSERT_EQ(channel.parameters[0].dwellTimes.dwellId, "DwellPolynomial");
-
-    // TEST_ASSERT_EQ(channel.parameters[0].imageArea.x1y1[0], 3.5);
-    // TEST_ASSERT_EQ(channel.parameters[0].imageArea.x1y1[1], 5.3);
-    // TEST_ASSERT_EQ(channel.parameters[0].imageArea.x2y2[0], 5.3);
-    // TEST_ASSERT_EQ(channel.parameters[0].imageArea.x2y2[1], 3.5);
-
-    // TEST_ASSERT_EQ(channel.parameters[0].imageArea.polygon[0][0], 0.1);
-    // TEST_ASSERT_EQ(channel.parameters[0].imageArea.polygon[0][1], 0.3);
-    // TEST_ASSERT_EQ(channel.parameters[0].imageArea.polygon[1][0], 0.4);
-    // TEST_ASSERT_EQ(channel.parameters[0].imageArea.polygon[1][1], 0.2);
-    // TEST_ASSERT_EQ(channel.parameters[0].imageArea.polygon[2][0], 0.5);
-    // TEST_ASSERT_EQ(channel.parameters[0].imageArea.polygon[2][1], 0.9);
-
-    // TEST_ASSERT_EQ(channel.parameters[0].antenna->txAPCId, "TxAPCId");
-    // TEST_ASSERT_EQ(channel.parameters[0].antenna->txAPATId, "TxAPATId");
-    // TEST_ASSERT_EQ(channel.parameters[0].antenna->rcvAPCId, "RcvAPCId");
-    // TEST_ASSERT_EQ(channel.parameters[0].antenna->rcvAPATId, "RcvAPATId");
-
-    // TEST_ASSERT_EQ(channel.parameters[0].txRcv->txWFId[0], "TxWFId");
-    // TEST_ASSERT_EQ(channel.parameters[0].txRcv->rcvId[0], "RcvId");
-
-    // TEST_ASSERT_EQ(channel.parameters[0].tgtRefLevel->ptRef, 12.0);
-
-    // TEST_ASSERT_EQ(channel.parameters[0].noiseLevel->pnRef, 0.5);
-    // TEST_ASSERT_EQ(channel.parameters[0].noiseLevel->bnRef, 0.8);
-
-    // TEST_ASSERT_EQ(channel.parameters[0].noiseLevel->fxNoiseProfile->point.size(), static_cast<size_t>(2));
-    // TEST_ASSERT_EQ(channel.parameters[0].noiseLevel->fxNoiseProfile->point[0].fx, 0.3);
-    // TEST_ASSERT_EQ(channel.parameters[0].noiseLevel->fxNoiseProfile->point[0].pn, 2.7);
-    // TEST_ASSERT_EQ(channel.parameters[0].noiseLevel->fxNoiseProfile->point[1].fx, 0.5);
-    // TEST_ASSERT_EQ(channel.parameters[0].noiseLevel->fxNoiseProfile->point[1].pn, 2.7);
-
-    // TEST_ASSERT_EQ(channel.addedParameters[0].getName(), "AddedParameter1");
-    // TEST_ASSERT_EQ(channel.addedParameters[0].str(), "Param");
-    // TEST_ASSERT_EQ(channel.addedParameters[1].getName(), "AddedParameter2");
-    // TEST_ASSERT_EQ(channel.addedParameters[0].str(), "Param");
-
-
-    // //PVP
-    // const crsd::Pvp& pvp = metadata->pvp;
-    // TEST_ASSERT_EQ(pvp.txTime.getOffset(), static_cast<size_t>(0));
-    // TEST_ASSERT_EQ(pvp.txTime.getSize(), static_cast<size_t>(1));
-    // TEST_ASSERT_EQ(pvp.txTime.getFormat(), "F8");
-    // TEST_ASSERT_EQ(pvp.txPos.getOffset(), static_cast<size_t>(1));
-    // TEST_ASSERT_EQ(pvp.txPos.getSize(), static_cast<size_t>(3));
-    // TEST_ASSERT_EQ(pvp.txPos.getFormat(), "X=F8;Y=F8;Z=F8;");
-    // TEST_ASSERT_EQ(pvp.rcvVel.getOffset(), static_cast<size_t>(11));
-    // TEST_ASSERT_EQ(pvp.rcvVel.getSize(), static_cast<size_t>(3));
-    // TEST_ASSERT_EQ(pvp.rcvVel.getFormat(), "X=F8;Y=F8;Z=F8;");
-    // TEST_ASSERT_EQ(pvp.addedPVP.size(), static_cast<size_t>(2));
-    // TEST_ASSERT_EQ(pvp.addedPVP.find("newParam1")->second.getName(), "newParam1");
-    // TEST_ASSERT_EQ(pvp.addedPVP.find("newParam1")->second.getOffset(), static_cast<size_t>(27));
-    // TEST_ASSERT_EQ(pvp.addedPVP.find("newParam2")->second.getName(), "newParam2");
-    // TEST_ASSERT_EQ(pvp.addedPVP.find("newParam2")->second.getOffset(), static_cast<size_t>(28));
-
-    // //Dwell
-    // const crsd::Dwell& dwell = metadata->dwell;
-    // TEST_ASSERT_EQ(dwell.cod.size(), static_cast<size_t>(1));
-    // TEST_ASSERT_EQ(dwell.dtime.size(), static_cast<size_t>(1));
-    // TEST_ASSERT_EQ(dwell.cod[0].identifier, "codPolynomial1");
-    // TEST_ASSERT_EQ(dwell.dtime[0].identifier, "dwellPolynomial1");
-    // TEST_ASSERT_EQ(dwell.cod[0].codTimePoly.orderX(), static_cast<size_t>(1));
-    // TEST_ASSERT_EQ(dwell.cod[0].codTimePoly.orderY(), static_cast<size_t>(1));
-    // TEST_ASSERT_EQ(dwell.dtime[0].dwellTimePoly.orderX(), static_cast<size_t>(1));
-    // TEST_ASSERT_EQ(dwell.dtime[0].dwellTimePoly.orderY(), static_cast<size_t>(1));
-
-    // // ReferenceGeometry
-    // const crsd::ReferenceGeometry& ref = metadata->referenceGeometry;
-    // TEST_ASSERT_EQ(ref.srp.ecf[0], 1.0);
-    // TEST_ASSERT_EQ(ref.srp.ecf[1], 2.0);
-    // TEST_ASSERT_EQ(ref.srp.ecf[2], 3.5);
-    // TEST_ASSERT_EQ(ref.srp.iac[0], 1.5);
-    // TEST_ASSERT_EQ(ref.srp.iac[1], 2.5);
-    // TEST_ASSERT_EQ(ref.srp.iac[2], 4.0);
-    // TEST_ASSERT_EQ(ref.referenceTime, 0.0);
-    // TEST_ASSERT_EQ(ref.srpCODTime, 23.0);
-    // TEST_ASSERT_EQ(ref.srpDwellTime, 25.0);
-    // TEST_ASSERT_EQ(ref.monostatic->arpPos[0], 10);
-    // TEST_ASSERT_EQ(ref.monostatic->arpPos[1], 10);
-    // TEST_ASSERT_EQ(ref.monostatic->arpPos[2], 10);
-    // TEST_ASSERT_EQ(ref.monostatic->arpVel[0], 10);
-    // TEST_ASSERT_EQ(ref.monostatic->arpVel[1], 10);
-    // TEST_ASSERT_EQ(ref.monostatic->arpVel[2], 10);
-    // TEST_ASSERT(ref.monostatic->sideOfTrack.toString() == "LEFT");
-    // TEST_ASSERT_EQ(ref.monostatic->sideOfTrack, six::SideOfTrackType::LEFT);
-    // TEST_ASSERT_EQ(ref.monostatic->azimuthAngle, 30.0);
-    // TEST_ASSERT_EQ(ref.monostatic->grazeAngle, 30.0);
-    // TEST_ASSERT_EQ(ref.monostatic->twistAngle, 30.0);
-    // TEST_ASSERT_EQ(ref.monostatic->slopeAngle, 30.0);
-    // TEST_ASSERT_EQ(ref.monostatic->layoverAngle, 30.0);
-    // TEST_ASSERT_EQ(ref.monostatic->dopplerConeAngle, 30.0);
+    // Channel
+    TEST_ASSERT_TRUE(metadata->channel->refChId == "CHAN1");
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].identifier, "CHAN1");
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].refVectorIndex, 0);
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].refFreqFixed, true);
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].fRcvFixed, true);
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].signalNormal, true);
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].f0Ref, 1000000000.0);
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].fs, 20000000.0);
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].bwInst, 10000000.0);
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].rcvStartTime1, 0.0);
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].rcvStartTime2, 1.0);
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].fRcvMin, 950000000.0);
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].fRcvMax, 1050000000.0);
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].rcvAPCId, "APC2");
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].rcvAPATId, "APAT2");
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].rcvRefPoint.ecf[0], 1234567.0);
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].rcvRefPoint.ecf[1], 2345678.0);
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].rcvRefPoint.ecf[2], 3456789.0);
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].rcvRefPoint.iac[0], 0.0);
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].rcvRefPoint.iac[1], 0.0);
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].rcvPolarization.polarizationID.toString(), "V");
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].rcvPolarization.ampH, 0.0);
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].rcvPolarization.ampV, 1.0);
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].rcvPolarization.phaseH, 0.0);
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].rcvPolarization.phaseV, 0.0);
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].rcvRefIrradiance, 1.0);
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].rcvRefIrradianceErrorStdDev, 0.01);
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].rcvRefLAtm, 0.0);
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].pncrsd, 0.0);
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].bncrsd, 1.0);
 }
 }
 

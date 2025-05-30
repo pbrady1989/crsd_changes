@@ -48,854 +48,624 @@ namespace
 {
 std::string testCRSDXMLBody()
 {
-    const char* xmlBody =
-"    <CollectionID>\n"
-"        <CollectorName>Collector</CollectorName>\n"
-"        <CoreName>Core</CoreName>\n"
-"        <CollectType>MONOSTATIC</CollectType>\n"
-"        <RadarMode>\n"
-"            <ModeType>STRIPMAP</ModeType>\n"
-"            <ModeID>Mode</ModeID>\n"
-"        </RadarMode>\n"
-"        <Classification>U</Classification>\n"
-"        <ReleaseInfo>Release</ReleaseInfo>\n"
-"        <CountryCode>US,GB,AZ</CountryCode>\n"
-"        <Parameter name=\"param1\">val</Parameter>\n"
-"    </CollectionID>\n"
-"    <Global>\n"
-"        <DomainType>FX</DomainType>\n"
-"        <SGN>1</SGN>\n"
-"        <Timeline>\n"
-"            <CollectionStart>2013-04-10T08:52:09.000000Z</CollectionStart>\n"
-"            <RcvCollectionStart>2014-04-10T08:52:09.000000Z</RcvCollectionStart>\n"
-"            <TxTime1>1.300000000000000E00</TxTime1>\n"
-"            <TxTime2>1.500000000000000E00</TxTime2>\n"
-"        </Timeline>\n"
-"        <FxBand>\n"
-"            <FxMin>9.000000000000000E-01</FxMin>\n"
-"            <FxMax>1.700000000000000E00</FxMax>\n"
-"        </FxBand>\n"
-"        <TOASwath>\n"
-"            <TOAMin>3.400000000000000E00</TOAMin>\n"
-"            <TOAMax>6.100000000000000E00</TOAMax>\n"
-"        </TOASwath>\n"
-"        <TropoParameters>\n"
-"            <N0>6.520000000000000E01</N0>\n"
-"            <RefHeight>IARP</RefHeight>\n"
-"        </TropoParameters>\n"
-"        <IonoParameters>\n"
-"            <TECV>5.800000000000000E00</TECV>\n"
-"            <F2Height>3.000000000000000E00</F2Height>\n"
-"        </IonoParameters>\n"
-"    </Global>\n"
-"    <SceneCoordinates>\n"
-"        <EarthModel>WGS_84</EarthModel>\n"
-"        <IARP>\n"
-"            <ECF>\n"
-"                <X>1.200000000000000E00</X>\n"
-"                <Y>2.300000000000000E00</Y>\n"
-"                <Z>3.400000000000000E00</Z>\n"
-"            </ECF>\n"
-"            <LLH>\n"
-"                <Lat>4.500000000000000E01</Lat>\n"
-"                <Lon>-1.020000000000000E02</Lon>\n"
-"                <HAE>3.400000000000000E00</HAE>\n"
-"            </LLH>\n"
-"        </IARP>\n"
-"        <ReferenceSurface>\n"
-"            <HAE>\n"
-"                <uIAXLL>\n"
-"                    <Lat>1.200000000000000E01</Lat>\n"
-"                    <Lon>2.400000000000000E01</Lon>\n"
-"                </uIAXLL>\n"
-"                <uIAYLL>\n"
-"                    <Lat>3.600000000000000E01</Lat>\n"
-"                    <Lon>4.800000000000000E01</Lon>\n"
-"                </uIAYLL>\n"
-"            </HAE>\n"
-"        </ReferenceSurface>\n"
-"        <ImageArea>\n"
-"            <X1Y1>\n"
-"                <X>3.500000000000000E00</X>\n"
-"                <Y>5.300000000000000E00</Y>\n"
-"            </X1Y1>\n"
-"            <X2Y2>\n"
-"                <X>5.300000000000000E00</X>\n"
-"                <Y>3.500000000000000E00</Y>\n"
-"            </X2Y2>\n"
-"            <Polygon size=\"3\">\n"
-"                <Vertex index=\"1\">\n"
-"                    <X>1.000000000000000E-01</X>\n"
-"                    <Y>3.000000000000000E-01</Y>\n"
-"                </Vertex>\n"
-"                <Vertex index=\"2\">\n"
-"                    <X>4.000000000000000E-01</X>\n"
-"                    <Y>2.000000000000000E-01</Y>\n"
-"                </Vertex>\n"
-"                <Vertex index=\"3\">\n"
-"                    <X>5.000000000000000E-01</X>\n"
-"                    <Y>9.000000000000000E-01</Y>\n"
-"                </Vertex>\n"
-"            </Polygon>\n"
-"        </ImageArea>\n"
-"        <ImageAreaCornerPoints>\n"
-"            <IACP index=\"1\">\n"
-"                <Lat>1.000000000000000E01</Lat>\n"
-"                <Lon>1.100000000000000E01</Lon>\n"
-"            </IACP>\n"
-"            <IACP index=\"2\">\n"
-"                <Lat>2.000000000000000E01</Lat>\n"
-"                <Lon>2.100000000000000E01</Lon>\n"
-"            </IACP>\n"
-"            <IACP index=\"3\">\n"
-"                <Lat>3.000000000000000E01</Lat>\n"
-"                <Lon>3.100000000000000E01</Lon>\n"
-"            </IACP>\n"
-"            <IACP index=\"4\">\n"
-"                <Lat>4.000000000000000E01</Lat>\n"
-"                <Lon>4.100000000000000E01</Lon>\n"
-"            </IACP>\n"
-"        </ImageAreaCornerPoints>\n"
-"        <ImageGrid>\n"
-"            <Identifier>Grid</Identifier>\n"
-"            <IARPLocation>\n"
-"                <Line>1.230000000000000E00</Line>\n"
-"                <Sample>3.210000000000000E00</Sample>\n"
-"            </IARPLocation>\n"
-"            <IAXExtent>\n"
-"                <LineSpacing>3.140000000000000E00</LineSpacing>\n"
-"                <FirstLine>4</FirstLine>\n"
-"                <NumLines>50</NumLines>\n"
-"            </IAXExtent>\n"
-"            <IAYExtent>\n"
-"                <SampleSpacing>6.280000000000000E00</SampleSpacing>\n"
-"                <FirstSample>8</FirstSample>\n"
-"                <NumSamples>100</NumSamples>\n"
-"            </IAYExtent>\n"
-"            <SegmentList>\n"
-"                <NumSegments>2</NumSegments>\n"
-"                <Segment>\n"
-"                    <Identifier>Segment1</Identifier>\n"
-"                    <StartLine>0</StartLine>\n"
-"                    <StartSample>1</StartSample>\n"
-"                    <EndLine>2</EndLine>\n"
-"                    <EndSample>3</EndSample>\n"
-"                    <SegmentPolygon size=\"3\">\n"
-"                        <SV index=\"1\">\n"
-"                            <Line>4.000000000000000E-01</Line>\n"
-"                            <Sample>6.000000000000000E-01</Sample>\n"
-"                        </SV>\n"
-"                        <SV index=\"2\">\n"
-"                            <Line>8.000000000000000E-01</Line>\n"
-"                            <Sample>1.200000000000000E00</Sample>\n"
-"                        </SV>\n"
-"                        <SV index=\"3\">\n"
-"                            <Line>1.200000000000000E00</Line>\n"
-"                            <Sample>1.800000000000000E00</Sample>\n"
-"                        </SV>\n"
-"                    </SegmentPolygon>\n"
-"                </Segment>\n"
-"                <Segment>\n"
-"                    <Identifier>Segment2</Identifier>\n"
-"                    <StartLine>1</StartLine>\n"
-"                    <StartSample>2</StartSample>\n"
-"                    <EndLine>3</EndLine>\n"
-"                    <EndSample>4</EndSample>\n"
-"                    <SegmentPolygon size=\"3\">\n"
-"                        <SV index=\"1\">\n"
-"                            <Line>4.000000000000000E-01</Line>\n"
-"                            <Sample>6.000000000000000E-01</Sample>\n"
-"                        </SV>\n"
-"                        <SV index=\"2\">\n"
-"                            <Line>8.000000000000000E-01</Line>\n"
-"                            <Sample>1.200000000000000E00</Sample>\n"
-"                        </SV>\n"
-"                        <SV index=\"3\">\n"
-"                            <Line>1.200000000000000E00</Line>\n"
-"                            <Sample>1.800000000000000E00</Sample>\n"
-"                        </SV>\n"
-"                    </SegmentPolygon>\n"
-"                </Segment>\n"
-"            </SegmentList>\n"
-"        </ImageGrid>\n"
-"    </SceneCoordinates>\n"
-"    <Data>\n"
-"        <SignalArrayFormat>CI4</SignalArrayFormat>\n"
-"        <NumBytesPVP>24</NumBytesPVP>\n"
-"        <NumCRSDChannels>2</NumCRSDChannels>\n"
-"        <SignalCompressionID>Compress</SignalCompressionID>\n"
-"        <Channel>\n"
-"            <Identifier>Channel</Identifier>\n"
-"            <NumVectors>2</NumVectors>\n"
-"            <NumSamples>3</NumSamples>\n"
-"            <SignalArrayByteOffset>0</SignalArrayByteOffset>\n"
-"            <PVPArrayByteOffset>1</PVPArrayByteOffset>\n"
-"            <CompressedSignalSize>3</CompressedSignalSize>\n"
-"        </Channel>\n"
-"        <Channel>\n"
-"            <Identifier>Channel</Identifier>\n"
-"            <NumVectors>2</NumVectors>\n"
-"            <NumSamples>3</NumSamples>\n"
-"            <SignalArrayByteOffset>0</SignalArrayByteOffset>\n"
-"            <PVPArrayByteOffset>1</PVPArrayByteOffset>\n"
-"            <CompressedSignalSize>3</CompressedSignalSize>\n"
-"        </Channel>\n"
-"        <NumSupportArrays>3</NumSupportArrays>\n"
-"        <SupportArray>\n"
-"            <Identifier>1.0</Identifier>\n"
-"            <NumRows>3</NumRows>\n"
-"            <NumCols>4</NumCols>\n"
-"            <BytesPerElement>8</BytesPerElement>\n"
-"            <ArrayByteOffset>0</ArrayByteOffset>\n"
-"        </SupportArray>\n"
-"        <SupportArray>\n"
-"            <Identifier>2.0</Identifier>\n"
-"            <NumRows>3</NumRows>\n"
-"            <NumCols>4</NumCols>\n"
-"            <BytesPerElement>4</BytesPerElement>\n"
-"            <ArrayByteOffset>96</ArrayByteOffset>\n"
-"        </SupportArray>\n"
-"        <SupportArray>\n"
-"            <Identifier>AddedSupportArray</Identifier>\n"
-"            <NumRows>3</NumRows>\n"
-"            <NumCols>4</NumCols>\n"
-"            <BytesPerElement>4</BytesPerElement>\n"
-"            <ArrayByteOffset>144</ArrayByteOffset>\n"
-"        </SupportArray>\n"
-"    </Data>\n"
-"    <Channel>\n"
-"        <RefChId>ChId</RefChId>\n"
-"        <FXFixedCRSD>true</FXFixedCRSD>\n"
-"        <TOAFixedCRSD>false</TOAFixedCRSD>\n"
-"        <SRPFixedCRSD>true</SRPFixedCRSD>\n"
-"        <Parameters>\n"
-"            <Identifier>CPI</Identifier>\n"
-"            <RefVectorIndex>1</RefVectorIndex>\n"
-"            <FXFixed>false</FXFixed>\n"
-"            <TOAFixed>true</TOAFixed>\n"
-"            <SRPFixed>true</SRPFixed>\n"
-"            <SignalNormal>false</SignalNormal>\n"
-"            <Polarization>\n"
-"                <TxPol>X</TxPol>\n"
-"                <RcvPol>RHC</RcvPol>\n"
-"            </Polarization>\n"
-"            <FxC>1.300000000000000E00</FxC>\n"
-"            <FxBW>8.000000000000000E-01</FxBW>\n"
-"            <FxBWNoise>5.000000000000000E-01</FxBWNoise>\n"
-"            <TOASaved>2.700000000000000E00</TOASaved>\n"
-"            <TOAExtended>\n"
-"                <TOAExtSaved>1.000000000000000E00</TOAExtSaved>\n"
-"                <LFMEclipse>\n"
-"                    <FxEarlyLow>1.000000000000000E00</FxEarlyLow>\n"
-"                    <FxEarlyHigh>2.000000000000000E00</FxEarlyHigh>\n"
-"                    <FxLateLow>1.000000000000000E00</FxLateLow>\n"
-"                    <FxLateHigh>2.000000000000000E00</FxLateHigh>\n"
-"                </LFMEclipse>\n"
-"            </TOAExtended>\n"
-"            <DwellTimes>\n"
-"                <CODId>CODPolynomial</CODId>\n"
-"                <DwellId>DwellPolynomial</DwellId>\n"
-"            </DwellTimes>\n"
-"            <ImageArea>\n"
-"                <X1Y1>\n"
-"                    <X>3.500000000000000E00</X>\n"
-"                    <Y>5.300000000000000E00</Y>\n"
-"                </X1Y1>\n"
-"                <X2Y2>\n"
-"                    <X>5.300000000000000E00</X>\n"
-"                    <Y>3.500000000000000E00</Y>\n"
-"                </X2Y2>\n"
-"                <Polygon size=\"3\">\n"
-"                    <Vertex index=\"1\">\n"
-"                        <X>1.000000000000000E-01</X>\n"
-"                        <Y>3.000000000000000E-01</Y>\n"
-"                    </Vertex>\n"
-"                    <Vertex index=\"2\">\n"
-"                        <X>4.000000000000000E-01</X>\n"
-"                        <Y>2.000000000000000E-01</Y>\n"
-"                    </Vertex>\n"
-"                    <Vertex index=\"3\">\n"
-"                        <X>5.000000000000000E-01</X>\n"
-"                        <Y>9.000000000000000E-01</Y>\n"
-"                    </Vertex>\n"
-"                </Polygon>\n"
-"            </ImageArea>\n"
-"            <Antenna>\n"
-"                <TxAPCId>TxAPCId</TxAPCId>\n"
-"                <TxAPATId>TxAPATId</TxAPATId>\n"
-"                <RcvAPCId>RcvAPCId</RcvAPCId>\n"
-"                <RcvAPATId>RcvAPATId</RcvAPATId>\n"
-"            </Antenna>\n"
-"            <TxRcv>\n"
-"                <TxWFId>TxWFId</TxWFId>\n"
-"                <RcvId>RcvId</RcvId>\n"
-"            </TxRcv>\n"
-"            <TgtRefLevel>\n"
-"                <PTRef>1.200000000000000E01</PTRef>\n"
-"            </TgtRefLevel>\n"
-"            <NoiseLevel>\n"
-"                <PNRef>5.000000000000000E-01</PNRef>\n"
-"                <BNRef>8.000000000000000E-01</BNRef>\n"
-"                <FxNoiseProfile>\n"
-"                    <Point>\n"
-"                        <Fx>3.000000000000000E-01</Fx>\n"
-"                        <PN>2.700000000000000E00</PN>\n"
-"                    </Point>\n"
-"                    <Point>\n"
-"                        <Fx>5.000000000000000E-01</Fx>\n"
-"                        <PN>2.700000000000000E00</PN>\n"
-"                    </Point>\n"
-"                </FxNoiseProfile>\n"
-"            </NoiseLevel>\n"
-"        </Parameters>\n"
-"        <AddedParameters>\n"
-"            <Parameter name=\"AddedParameter1\">Param</Parameter>\n"
-"            <Parameter name=\"AddedParameter2\">Param</Parameter>\n"
-"        </AddedParameters>\n"
-"    </Channel>\n"
-"    <PVP>\n"
-"        <TxTime>\n"
-"            <Offset>0</Offset>\n"
-"            <Size>1</Size>\n"
-"            <Format>F8</Format>\n"
-"        </TxTime>\n"
-"        <TxPos>\n"
-"            <Offset>1</Offset>\n"
-"            <Size>3</Size>\n"
-"            <Format>X=F8;Y=F8;Z=F8;</Format>\n"
-"        </TxPos>\n"
-"        <TxVel>\n"
-"            <Offset>4</Offset>\n"
-"            <Size>3</Size>\n"
-"            <Format>X=F8;Y=F8;Z=F8;</Format>\n"
-"        </TxVel>\n"
-"        <RcvTime>\n"
-"            <Offset>7</Offset>\n"
-"            <Size>1</Size>\n"
-"            <Format>F8</Format>\n"
-"        </RcvTime>\n"
-"        <RcvPos>\n"
-"            <Offset>8</Offset>\n"
-"            <Size>3</Size>\n"
-"            <Format>X=F8;Y=F8;Z=F8;</Format>\n"
-"        </RcvPos>\n"
-"        <RcvVel>\n"
-"            <Offset>11</Offset>\n"
-"            <Size>3</Size>\n"
-"            <Format>X=F8;Y=F8;Z=F8;</Format>\n"
-"        </RcvVel>\n"
-"        <SRPPos>\n"
-"            <Offset>14</Offset>\n"
-"            <Size>3</Size>\n"
-"            <Format>X=F8;Y=F8;Z=F8;</Format>\n"
-"        </SRPPos>\n"
-"        <aFDOP>\n"
-"            <Offset>17</Offset>\n"
-"            <Size>1</Size>\n"
-"            <Format>F8</Format>\n"
-"        </aFDOP>\n"
-"        <aFRR1>\n"
-"            <Offset>18</Offset>\n"
-"            <Size>1</Size>\n"
-"            <Format>F8</Format>\n"
-"        </aFRR1>\n"
-"        <aFRR2>\n"
-"            <Offset>19</Offset>\n"
-"            <Size>1</Size>\n"
-"            <Format>F8</Format>\n"
-"        </aFRR2>\n"
-"        <FX1>\n"
-"            <Offset>20</Offset>\n"
-"            <Size>1</Size>\n"
-"            <Format>F8</Format>\n"
-"        </FX1>\n"
-"        <FX2>\n"
-"            <Offset>21</Offset>\n"
-"            <Size>1</Size>\n"
-"            <Format>F8</Format>\n"
-"        </FX2>\n"
-"        <TOA1>\n"
-"            <Offset>22</Offset>\n"
-"            <Size>1</Size>\n"
-"            <Format>F8</Format>\n"
-"        </TOA1>\n"
-"        <TOA2>\n"
-"            <Offset>23</Offset>\n"
-"            <Size>1</Size>\n"
-"            <Format>F8</Format>\n"
-"        </TOA2>\n"
-"        <TDTropoSRP>\n"
-"            <Offset>24</Offset>\n"
-"            <Size>1</Size>\n"
-"            <Format>F8</Format>\n"
-"        </TDTropoSRP>\n"
-"        <SC0>\n"
-"            <Offset>25</Offset>\n"
-"            <Size>1</Size>\n"
-"            <Format>F8</Format>\n"
-"        </SC0>\n"
-"        <SCSS>\n"
-"            <Offset>26</Offset>\n"
-"            <Size>1</Size>\n"
-"            <Format>F8</Format>\n"
-"        </SCSS>\n"
-"        <AddedPVP>\n"
-"            <Name>newParam1</Name>\n"
-"            <Offset>27</Offset>\n"
-"            <Size>1</Size>\n"
-"            <Format>F8</Format>\n"
-"        </AddedPVP>\n"
-"        <AddedPVP>\n"
-"            <Name>newParam2</Name>\n"
-"            <Offset>28</Offset>\n"
-"            <Size>1</Size>\n"
-"            <Format>F8</Format>\n"
-"        </AddedPVP>\n"
-"    </PVP>\n"
-"    <SupportArray>\n"
-"        <IAZArray>\n"
-"            <Identifier>1</Identifier>\n"
-"            <ElementFormat>IAZ=F4;</ElementFormat>\n"
-"            <X0>0.000000000000000E00</X0>\n"
-"            <Y0>0.000000000000000E00</Y0>\n"
-"            <XSS>5.000000000000000E00</XSS>\n"
-"            <YSS>5.000000000000000E00</YSS>\n"
-"        </IAZArray>\n"
-"        <AntGainPhase>\n"
-"            <Identifier>2</Identifier>\n"
-"            <ElementFormat>Gain=F4;Phase=F4;</ElementFormat>\n"
-"            <X0>0.000000000000000E00</X0>\n"
-"            <Y0>0.000000000000000E00</Y0>\n"
-"            <XSS>5.000000000000000E00</XSS>\n"
-"            <YSS>5.000000000000000E00</YSS>\n"
-"        </AntGainPhase>\n"
-"        <AddedSupportArray>\n"
-"            <Identifier>AddedSupportArray</Identifier>\n"
-"            <ElementFormat>F4</ElementFormat>\n"
-"            <X0>0.000000000000000E00</X0>\n"
-"            <Y0>0.000000000000000E00</Y0>\n"
-"            <XSS>5.000000000000000E00</XSS>\n"
-"            <YSS>5.000000000000000E00</YSS>\n"
-"            <XUnits>XUnits</XUnits>\n"
-"            <YUnits>YUnits</YUnits>\n"
-"            <ZUnits>ZUnits</ZUnits>\n"
-"            <Parameter name=\"Parameter1\">Additional parameter</Parameter>\n"
-"            <Parameter name=\"Parameter2\">Additional parameter</Parameter>\n"
-"        </AddedSupportArray>\n"
-"    </SupportArray>\n"
-"    <Dwell>\n"
-"        <NumCODTimes>1</NumCODTimes>\n"
-"        <CODTime>\n"
-"            <Identifier>codPolynomial1</Identifier>\n"
-"            <CODTimePoly order1=\"1\" order2=\"1\">\n"
-"                <Coef exponent1=\"0\" exponent2=\"0\">0.000000000000000E00</Coef>\n"
-"                <Coef exponent1=\"0\" exponent2=\"1\">5.000000000000000E00</Coef>\n"
-"                <Coef exponent1=\"1\" exponent2=\"0\">5.000000000000000E00</Coef>\n"
-"                <Coef exponent1=\"1\" exponent2=\"1\">0.000000000000000E00</Coef>\n"
-"            </CODTimePoly>\n"
-"        </CODTime>\n"
-"        <NumDwellTimes>1</NumDwellTimes>\n"
-"        <DwellTime>\n"
-"            <Identifier>dwellPolynomial1</Identifier>\n"
-"            <DwellTimePoly order1=\"1\" order2=\"1\">\n"
-"                <Coef exponent1=\"0\" exponent2=\"0\">0.000000000000000E00</Coef>\n"
-"                <Coef exponent1=\"0\" exponent2=\"1\">2.000000000000000E00</Coef>\n"
-"                <Coef exponent1=\"1\" exponent2=\"0\">3.000000000000000E00</Coef>\n"
-"                <Coef exponent1=\"1\" exponent2=\"1\">0.000000000000000E00</Coef>\n"
-"            </DwellTimePoly>\n"
-"        </DwellTime>\n"
-"    </Dwell>\n"
-"    <ReferenceGeometry>\n"
-"        <SRP>\n"
-"            <ECF>\n"
-"                <X>1.000000000000000E00</X>\n"
-"                <Y>2.000000000000000E00</Y>\n"
-"                <Z>3.500000000000000E00</Z>\n"
-"            </ECF>\n"
-"            <IAC>\n"
-"                <X>1.500000000000000E00</X>\n"
-"                <Y>2.500000000000000E00</Y>\n"
-"                <Z>4.000000000000000E00</Z>\n"
-"            </IAC>\n"
-"        </SRP>\n"
-"        <ReferenceTime>0.000000000000000E00</ReferenceTime>\n"
-"        <SRPCODTime>2.300000000000000E01</SRPCODTime>\n"
-"        <SRPDwellTime>2.500000000000000E01</SRPDwellTime>\n"
-"        <Monostatic>\n"
-"            <ARPPos>\n"
-"                <X>1.000000000000000E01</X>\n"
-"                <Y>1.000000000000000E01</Y>\n"
-"                <Z>1.000000000000000E01</Z>\n"
-"            </ARPPos>\n"
-"            <ARPVel>\n"
-"                <X>1.000000000000000E01</X>\n"
-"                <Y>1.000000000000000E01</Y>\n"
-"                <Z>1.000000000000000E01</Z>\n"
-"            </ARPVel>\n"
-"            <SideOfTrack>L</SideOfTrack>\n"
-"            <SlantRange>2.000000000000000E01</SlantRange>\n"
-"            <GroundRange>2.000000000000000E01</GroundRange>\n"
-"            <DopplerConeAngle>3.000000000000000E01</DopplerConeAngle>\n"
-"            <GrazeAngle>3.000000000000000E01</GrazeAngle>\n"
-"            <IncidenceAngle>3.000000000000000E01</IncidenceAngle>\n"
-"            <AzimuthAngle>3.000000000000000E01</AzimuthAngle>\n"
-"            <TwistAngle>3.000000000000000E01</TwistAngle>\n"
-"            <SlopeAngle>3.000000000000000E01</SlopeAngle>\n"
-"            <LayoverAngle>3.000000000000000E01</LayoverAngle>\n"
-"        </Monostatic>\n"
-"    </ReferenceGeometry>\n"
-"    <Antenna>\n"
-"        <NumACFs>2</NumACFs>\n"
-"        <NumAPCs>1</NumAPCs>\n"
-"        <NumAntPats>1</NumAntPats>\n"
-"        <AntCoordFrame>\n"
-"            <Identifier>ACF1</Identifier>\n"
-"            <XAxisPoly>\n"
-"                <X order1=\"3\">\n"
-"                    <Coef exponent1=\"0\">1.000000000000000E00</Coef>\n"
-"                    <Coef exponent1=\"1\">2.000000000000000E00</Coef>\n"
-"                    <Coef exponent1=\"2\">3.000000000000000E00</Coef>\n"
-"                    <Coef exponent1=\"3\">4.000000000000000E00</Coef>\n"
-"                </X>\n"
-"                <Y order1=\"3\">\n"
-"                    <Coef exponent1=\"0\">1.000000000000000E00</Coef>\n"
-"                    <Coef exponent1=\"1\">2.000000000000000E00</Coef>\n"
-"                    <Coef exponent1=\"2\">3.000000000000000E00</Coef>\n"
-"                    <Coef exponent1=\"3\">4.000000000000000E00</Coef>\n"
-"                </Y>\n"
-"                <Z order1=\"3\">\n"
-"                    <Coef exponent1=\"0\">1.000000000000000E00</Coef>\n"
-"                    <Coef exponent1=\"1\">0.000000000000000E00</Coef>\n"
-"                    <Coef exponent1=\"2\">3.000000000000000E00</Coef>\n"
-"                    <Coef exponent1=\"3\">0.000000000000000E00</Coef>\n"
-"                </Z>\n"
-"            </XAxisPoly>\n"
-"            <YAxisPoly>\n"
-"                <X order1=\"1\">\n"
-"                    <Coef exponent1=\"0\">1.000000000000000E00</Coef>\n"
-"                    <Coef exponent1=\"1\">2.000000000000000E00</Coef>\n"
-"                </X>\n"
-"                <Y order1=\"1\">\n"
-"                    <Coef exponent1=\"0\">1.000000000000000E00</Coef>\n"
-"                    <Coef exponent1=\"1\">2.000000000000000E00</Coef>\n"
-"                </Y>\n"
-"                <Z order1=\"1\">\n"
-"                    <Coef exponent1=\"0\">1.000000000000000E00</Coef>\n"
-"                    <Coef exponent1=\"1\">2.000000000000000E00</Coef>\n"
-"                </Z>\n"
-"            </YAxisPoly>\n"
-"        </AntCoordFrame>\n"
-"        <AntCoordFrame>\n"
-"            <Identifier>ACF2</Identifier>\n"
-"            <XAxisPoly>\n"
-"                <X order1=\"1\">\n"
-"                    <Coef exponent1=\"0\">1.000000000000000E00</Coef>\n"
-"                    <Coef exponent1=\"1\">2.000000000000000E00</Coef>\n"
-"                </X>\n"
-"                <Y order1=\"1\">\n"
-"                    <Coef exponent1=\"0\">1.000000000000000E00</Coef>\n"
-"                    <Coef exponent1=\"1\">2.000000000000000E00</Coef>\n"
-"                </Y>\n"
-"                <Z order1=\"1\">\n"
-"                    <Coef exponent1=\"0\">1.000000000000000E00</Coef>\n"
-"                    <Coef exponent1=\"1\">2.000000000000000E00</Coef>\n"
-"                </Z>\n"
-"            </XAxisPoly>\n"
-"            <YAxisPoly>\n"
-"                <X order1=\"1\">\n"
-"                    <Coef exponent1=\"0\">1.000000000000000E00</Coef>\n"
-"                    <Coef exponent1=\"1\">2.000000000000000E00</Coef>\n"
-"                </X>\n"
-"                <Y order1=\"1\">\n"
-"                    <Coef exponent1=\"0\">1.000000000000000E00</Coef>\n"
-"                    <Coef exponent1=\"1\">2.000000000000000E00</Coef>\n"
-"                </Y>\n"
-"                <Z order1=\"1\">\n"
-"                    <Coef exponent1=\"0\">1.000000000000000E00</Coef>\n"
-"                    <Coef exponent1=\"1\">2.000000000000000E00</Coef>\n"
-"                </Z>\n"
-"            </YAxisPoly>\n"
-"        </AntCoordFrame>\n"
-"        <AntPhaseCenter>\n"
-"            <Identifier>APC</Identifier>\n"
-"            <ACFId>ACF1</ACFId>\n"
-"            <APCXYZ>\n"
-"                <X>5.000000000000000E00</X>\n"
-"                <Y>5.000000000000000E00</Y>\n"
-"                <Z>5.000000000000000E00</Z>\n"
-"            </APCXYZ>\n"
-"        </AntPhaseCenter>\n"
-"        <AntPattern>\n"
-"            <Identifier>APAT</Identifier>\n"
-"            <FreqZero>2.300000000000000E00</FreqZero>\n"
-"            <GainZero>2.300000000000000E00</GainZero>\n"
-"            <EBFreqShift>1</EBFreqShift>\n"
-"            <MLFreqDilation>0</MLFreqDilation>\n"
-"            <GainBSPoly order1=\"1\">\n"
-"                <Coef exponent1=\"0\">1.000000000000000E00</Coef>\n"
-"                <Coef exponent1=\"1\">2.000000000000000E00</Coef>\n"
-"            </GainBSPoly>\n"
-"            <EB>\n"
-"                <DCXPoly order1=\"1\">\n"
-"                    <Coef exponent1=\"0\">5.000000000000000E00</Coef>\n"
-"                    <Coef exponent1=\"1\">0.000000000000000E00</Coef>\n"
-"                </DCXPoly>\n"
-"                <DCYPoly order1=\"1\">\n"
-"                    <Coef exponent1=\"0\">0.000000000000000E00</Coef>\n"
-"                    <Coef exponent1=\"1\">5.000000000000000E00</Coef>\n"
-"                </DCYPoly>\n"
-"            </EB>\n"
-"            <Array>\n"
-"                <GainPoly order1=\"1\" order2=\"1\">\n"
-"                    <Coef exponent1=\"0\" exponent2=\"0\">0.000000000000000E00</Coef>\n"
-"                    <Coef exponent1=\"0\" exponent2=\"1\">1.000000000000000E00</Coef>\n"
-"                    <Coef exponent1=\"1\" exponent2=\"0\">1.000000000000000E00</Coef>\n"
-"                    <Coef exponent1=\"1\" exponent2=\"1\">5.000000000000000E00</Coef>\n"
-"                </GainPoly>\n"
-"                <PhasePoly order1=\"1\" order2=\"1\">\n"
-"                    <Coef exponent1=\"0\" exponent2=\"0\">0.000000000000000E00</Coef>\n"
-"                    <Coef exponent1=\"0\" exponent2=\"1\">1.000000000000000E00</Coef>\n"
-"                    <Coef exponent1=\"1\" exponent2=\"0\">1.000000000000000E00</Coef>\n"
-"                    <Coef exponent1=\"1\" exponent2=\"1\">5.000000000000000E00</Coef>\n"
-"                </PhasePoly>\n"
-"            </Array>\n"
-"            <Element>\n"
-"                <GainPoly order1=\"1\" order2=\"1\">\n"
-"                    <Coef exponent1=\"0\" exponent2=\"0\">0.000000000000000E00</Coef>\n"
-"                    <Coef exponent1=\"0\" exponent2=\"1\">1.000000000000000E00</Coef>\n"
-"                    <Coef exponent1=\"1\" exponent2=\"0\">1.000000000000000E00</Coef>\n"
-"                    <Coef exponent1=\"1\" exponent2=\"1\">5.000000000000000E00</Coef>\n"
-"                </GainPoly>\n"
-"                <PhasePoly order1=\"1\" order2=\"1\">\n"
-"                    <Coef exponent1=\"0\" exponent2=\"0\">0.000000000000000E00</Coef>\n"
-"                    <Coef exponent1=\"0\" exponent2=\"1\">1.000000000000000E00</Coef>\n"
-"                    <Coef exponent1=\"1\" exponent2=\"0\">1.000000000000000E00</Coef>\n"
-"                    <Coef exponent1=\"1\" exponent2=\"1\">5.000000000000000E00</Coef>\n"
-"                </PhasePoly>\n"
-"            </Element>\n"
-"            <GainPhaseArray>\n"
-"                <Freq>2.300000000000000E00</Freq>\n"
-"                <ArrayId>Parameter1</ArrayId>\n"
-"                <ElementId>Parameter2</ElementId>\n"
-"            </GainPhaseArray>\n"
-"            <GainPhaseArray>\n"
-"                <Freq>2.800000000000000E00</Freq>\n"
-"                <ArrayId>Parameter1</ArrayId>\n"
-"                <ElementId>Parameter2</ElementId>\n"
-"            </GainPhaseArray>\n"
-"        </AntPattern>\n"
-"    </Antenna>\n"
-"    <TxRcv>\n"
-"        <NumTxWFs>1</NumTxWFs>\n"
-"        <TxWFParameters>\n"
-"            <Identifier>TxWFParam</Identifier>\n"
-"            <PulseLength>3.000000000000000E00</PulseLength>\n"
-"            <RFBandwidth>2.300000000000000E00</RFBandwidth>\n"
-"            <FreqCenter>1.800000000000000E00</FreqCenter>\n"
-"            <LFMRate>1.000000000000000E00</LFMRate>\n"
-"            <Polarization>LHC</Polarization>\n"
-"            <Power>5.000000000000000E00</Power>\n"
-"        </TxWFParameters>\n"
-"        <NumRcvs>2</NumRcvs>\n"
-"        <RcvParameters>\n"
-"            <Identifier>RcvParam1</Identifier>\n"
-"            <WindowLength>3.000000000000000E00</WindowLength>\n"
-"            <SampleRate>2.300000000000000E00</SampleRate>\n"
-"            <IFFilterBW>2.300000000000000E00</IFFilterBW>\n"
-"            <FreqCenter>1.800000000000000E00</FreqCenter>\n"
-"            <LFMRate>1.000000000000000E00</LFMRate>\n"
-"            <Polarization>LHC</Polarization>\n"
-"            <PathGain>5.000000000000000E00</PathGain>\n"
-"        </RcvParameters>\n"
-"        <RcvParameters>\n"
-"            <Identifier>RcvParam2</Identifier>\n"
-"            <WindowLength>3.000000000000000E00</WindowLength>\n"
-"            <SampleRate>2.300000000000000E00</SampleRate>\n"
-"            <IFFilterBW>2.300000000000000E00</IFFilterBW>\n"
-"            <FreqCenter>1.800000000000000E00</FreqCenter>\n"
-"            <LFMRate>1.000000000000000E00</LFMRate>\n"
-"            <Polarization>LHC</Polarization>\n"
-"            <PathGain>5.000000000000000E00</PathGain>\n"
-"        </RcvParameters>\n"
-"    </TxRcv>\n"
-"    <ErrorParameters>\n"
-"        <Monostatic>\n"
-"            <PosVelErr>\n"
-"                <Frame>ECF</Frame>\n"
-"                <P1>1.000000000000000E00</P1>\n"
-"                <P2>1.000000000000000E00</P2>\n"
-"                <P3>1.000000000000000E00</P3>\n"
-"                <V1>1.000000000000000E00</V1>\n"
-"                <V2>1.000000000000000E00</V2>\n"
-"                <V3>1.000000000000000E00</V3>\n"
-"                <CorrCoefs>\n"
-"                    <P1P2>8.000000000000000E-01</P1P2>\n"
-"                    <P1P3>8.000000000000000E-01</P1P3>\n"
-"                    <P1V1>8.000000000000000E-01</P1V1>\n"
-"                    <P1V2>8.000000000000000E-01</P1V2>\n"
-"                    <P1V3>8.000000000000000E-01</P1V3>\n"
-"                    <P2P3>8.000000000000000E-01</P2P3>\n"
-"                    <P2V1>8.000000000000000E-01</P2V1>\n"
-"                    <P2V2>8.000000000000000E-01</P2V2>\n"
-"                    <P2V3>8.000000000000000E-01</P2V3>\n"
-"                    <P3V1>8.000000000000000E-01</P3V1>\n"
-"                    <P3V2>8.000000000000000E-01</P3V2>\n"
-"                    <P3V3>8.000000000000000E-01</P3V3>\n"
-"                    <V1V2>8.000000000000000E-01</V1V2>\n"
-"                    <V1V3>8.000000000000000E-01</V1V3>\n"
-"                    <V2V3>8.000000000000000E-01</V2V3>\n"
-"                </CorrCoefs>\n"
-"                <PositionDecorr>\n"
-"                    <CorrCoefZero>5.000000000000000E-01</CorrCoefZero>\n"
-"                    <DecorrRate>1.000000000000000E00</DecorrRate>\n"
-"                </PositionDecorr>\n"
-"            </PosVelErr>\n"
-"            <RadarSensor>\n"
-"                <RangeBias>5.000000000000000E-01</RangeBias>\n"
-"                <ClockFreqSF>1.000000000000000E00</ClockFreqSF>\n"
-"                <CollectionStartTime>1.000000000000000E00</CollectionStartTime>\n"
-"                <RangeBiasDecorr>\n"
-"                    <CorrCoefZero>5.000000000000000E-01</CorrCoefZero>\n"
-"                    <DecorrRate>1.000000000000000E00</DecorrRate>\n"
-"                </RangeBiasDecorr>\n"
-"            </RadarSensor>\n"
-"            <TropoError>\n"
-"                <TropoRangeVertical>5.000000000000000E00</TropoRangeVertical>\n"
-"                <TropoRangeSlant>5.000000000000000E00</TropoRangeSlant>\n"
-"                <TropoRangeDecorr>\n"
-"                    <CorrCoefZero>5.000000000000000E-01</CorrCoefZero>\n"
-"                    <DecorrRate>1.000000000000000E00</DecorrRate>\n"
-"                </TropoRangeDecorr>\n"
-"            </TropoError>\n"
-"            <IonoError>\n"
-"                <IonoRangeVertical>5.000000000000000E00</IonoRangeVertical>\n"
-"                <IonoRangeRateVertical>5.000000000000000E00</IonoRangeRateVertical>\n"
-"                <IonoRgRgRateCC>5.000000000000000E-01</IonoRgRgRateCC>\n"
-"                <IonoRangeVertDecorr>\n"
-"                    <CorrCoefZero>5.000000000000000E-01</CorrCoefZero>\n"
-"                    <DecorrRate>1.000000000000000E00</DecorrRate>\n"
-"                </IonoRangeVertDecorr>\n"
-"            </IonoError>\n"
-"        </Monostatic>\n"
-"    </ErrorParameters>\n"
-"    <ProductInfo>\n"
-"        <ProductName>ProductName</ProductName>\n"
-"        <Classification>Classification</Classification>\n"
-"        <ReleaseInfo>ReleaseInfo</ReleaseInfo>\n"
-"        <CountryCode>Profile</CountryCode>\n"
-"        <Profile>Profile</Profile>\n"
-"        <CreationInfo>\n"
-"            <Application>Application</Application>\n"
-"            <DateTime>2014-04-10T08:52:09.000000Z</DateTime>\n"
-"            <Site>Area51</Site>\n"
-"            <Parameter name=\"Param1\">Value1</Parameter>\n"
-"            <Parameter name=\"Param2\">Value2</Parameter>\n"
-"        </CreationInfo>\n"
-"        <Parameter name=\"Param1\">Value1</Parameter>\n"
-"    </ProductInfo>\n"
-"    <GeoInfo name=\"Airport\">\n"
-"        <Desc name=\"Airport ID\">51</Desc>\n"
-"        <GeoInfo name=\"Perimeter\">\n"
-"            <Polygon size=\"4\">\n"
-"                <Vertex index=\"1\">\n"
-"                    <Lat>0.000000000000000E00</Lat>\n"
-"                    <Lon>0.000000000000000E00</Lon>\n"
-"                </Vertex>\n"
-"                <Vertex index=\"2\">\n"
-"                    <Lat>1.000000000000000E-01</Lat>\n"
-"                    <Lon>0.000000000000000E00</Lon>\n"
-"                </Vertex>\n"
-"                <Vertex index=\"3\">\n"
-"                    <Lat>1.000000000000000E-01</Lat>\n"
-"                    <Lon>1.000000000000000E-01</Lon>\n"
-"                </Vertex>\n"
-"                <Vertex index=\"4\">\n"
-"                    <Lat>0.000000000000000E00</Lat>\n"
-"                    <Lon>0.000000000000000E00</Lon>\n"
-"                </Vertex>\n"
-"            </Polygon>\n"
-"        </GeoInfo>\n"
-"        <GeoInfo name=\"Runway\">\n"
-"            <Desc name=\"ID\">04/22</Desc>\n"
-"            <Line size=\"2\">\n"
-"                <Endpoint index=\"1\">\n"
-"                    <Lat>2.000000000000000E-02</Lat>\n"
-"                    <Lon>3.000000000000000E-02</Lon>\n"
-"                </Endpoint>\n"
-"                <Endpoint index=\"2\">\n"
-"                    <Lat>8.000000000000000E-02</Lat>\n"
-"                    <Lon>8.000000000000000E-02</Lon>\n"
-"                </Endpoint>\n"
-"            </Line>\n"
-"        </GeoInfo>\n"
-"        <GeoInfo name=\"Runway\">\n"
-"            <Desc name=\"ID\">09/27</Desc>\n"
-"            <Line size=\"2\">\n"
-"                <Endpoint index=\"1\">\n"
-"                    <Lat>5.000000000000000E-02</Lat>\n"
-"                    <Lon>2.000000000000000E-02</Lon>\n"
-"                </Endpoint>\n"
-"                <Endpoint index=\"2\">\n"
-"                    <Lat>5.000000000000000E-02</Lat>\n"
-"                    <Lon>8.000000000000000E-02</Lon>\n"
-"                </Endpoint>\n"
-"            </Line>\n"
-"        </GeoInfo>\n"
-"        <GeoInfo name=\"Control Tower\">\n"
-"            <Desc name=\"ID\">Main</Desc>\n"
-"            <Point>\n"
-"                <Lat>6.000000000000000E-01</Lat>\n"
-"                <Lon>4.000000000000000E-01</Lon>\n"
-"            </Point>\n"
-"        </GeoInfo>\n"
-"    </GeoInfo>\n"
-"    <GeoInfo name=\"Farm\">\n"
-"        <Polygon size=\"5\">\n"
-"            <Vertex index=\"1\">\n"
-"                <Lat>1.000000000000000E00</Lat>\n"
-"                <Lon>1.000000000000000E00</Lon>\n"
-"            </Vertex>\n"
-"            <Vertex index=\"2\">\n"
-"                <Lat>1.100000000000000E00</Lat>\n"
-"                <Lon>1.000000000000000E00</Lon>\n"
-"            </Vertex>\n"
-"            <Vertex index=\"3\">\n"
-"                <Lat>1.100000000000000E00</Lat>\n"
-"                <Lon>1.100000000000000E00</Lon>\n"
-"            </Vertex>\n"
-"            <Vertex index=\"4\">\n"
-"                <Lat>1.200000000000000E00</Lat>\n"
-"                <Lon>1.200000000000000E00</Lon>\n"
-"            </Vertex>\n"
-"            <Vertex index=\"5\">\n"
-"                <Lat>1.000000000000000E00</Lat>\n"
-"                <Lon>1.000000000000000E00</Lon>\n"
-"            </Vertex>\n"
-"        </Polygon>\n"
-"    </GeoInfo>\n"
-"    <MatchInfo>\n"
-"        <NumMatchTypes>2</NumMatchTypes>\n"
-"        <MatchType index=\"1\">\n"
-"            <TypeID>STEREO</TypeID>\n"
-"            <CurrentIndex>1</CurrentIndex>\n"
-"            <NumMatchCollections>1</NumMatchCollections>\n"
-"            <MatchCollection index=\"1\">\n"
-"                <CoreName>CollectionName</CoreName>\n"
-"                <MatchIndex>1</MatchIndex>\n"
-"                <Parameter name=\"param1\">Match1</Parameter>\n"
-"            </MatchCollection>\n"
-"        </MatchType>\n"
-"        <MatchType index=\"2\">\n"
-"            <TypeID>COHERENT</TypeID>\n"
-"            <CurrentIndex>1</CurrentIndex>\n"
-"            <NumMatchCollections>1</NumMatchCollections>\n"
-"            <MatchCollection index=\"2\">\n"
-"                <CoreName>CollectionName</CoreName>\n"
-"                <MatchIndex>1</MatchIndex>\n"
-"                <Parameter name=\"param1\">Match1</Parameter>\n"
-"            </MatchCollection>\n"
-"        </MatchType>\n"
-"    </MatchInfo>\n";
+    const char* xmlBody =R"(<ProductInfo>
+  <ProductName>EXAMPLE_PRODUCT</ProductName>
+  <Classification>UNCLASSIFIED</Classification>
+  <ReleaseInfo>Approved for public release</ReleaseInfo>
+  <CountryCode>USA</CountryCode>
+  <Profile>DEFAULT</Profile>
+  <CreationInfo>
+    <Application>ExampleApp</Application>
+    <DateTime>2024-12-30T12:00:00Z</DateTime>
+    <Site>ExampleSite</Site>
+  </CreationInfo>
+</ProductInfo>
+
+<SARInfo>
+  <CollectType>MONOSTATIC</CollectType>
+  <RadarMode>
+    <ModeType>SPOTLIGHT</ModeType>
+    <ModeID>MODE1</ModeID>
+  </RadarMode>
+</SARInfo>
+
+<TransmitInfo>
+  <SensorName>TX_SENSOR</SensorName>
+  <EventName>TX_EVENT</EventName>
+</TransmitInfo>
+
+<ReceiveInfo>
+  <SensorName>RX_SENSOR</SensorName>
+  <EventName>RX_EVENT</EventName>
+</ReceiveInfo>
+
+<Global>
+  <CollectionRefTime>2024-12-30T12:00:00Z</CollectionRefTime>
+  <Transmit>
+    <TxTime1>0.0</TxTime1>
+    <TxTime2>1.0</TxTime2>
+    <FxMin>950000000.0</FxMin>
+    <FxMax>1050000000.0</FxMax>
+  </Transmit>
+  <Receive>
+    <RcvStartTime1>0.0</RcvStartTime1>
+    <RcvStartTime2>1.0</RcvStartTime2>
+    <FrcvMin>950000000.0</FrcvMin>
+    <FrcvMax>1050000000.0</FrcvMax>
+  </Receive>
+</Global>
+
+<SceneCoordinates>
+  <EarthModel>WGS_84</EarthModel>
+  <IARP>
+    <ECF>
+      <X>1234567.0</X>
+      <Y>2345678.0</Y>
+      <Z>3456789.0</Z>
+    </ECF>
+    <LLH>
+      <Lat>38.0</Lat>
+      <Lon>-77.0</Lon>
+      <HAE>100.0</HAE>
+    </LLH>
+  </IARP>
+  <ReferenceSurface>
+    <Planar>
+      <uIAX>
+        <X>1.0</X>
+        <Y>0.0</Y>
+        <Z>0.0</Z>
+      </uIAX>
+      <uIAY>
+        <X>0.0</X>
+        <Y>1.0</Y>
+        <Z>0.0</Z>
+      </uIAY>
+    </Planar>
+  </ReferenceSurface>
+  <ImageArea>
+    <X1Y1>
+      <X>0.0</X>
+      <Y>0.0</Y>
+    </X1Y1>
+    <X2Y2>
+      <X>1000.0</X>
+      <Y>1000.0</Y>
+    </X2Y2>
+    <Polygon size="4">
+      <Vertex index="1">
+        <X>0.0</X>
+        <Y>0.0</Y>
+      </Vertex>
+      <Vertex index="2">
+        <X>1000.0</X>
+        <Y>0.0</Y>
+      </Vertex>
+      <Vertex index="3">
+        <X>1000.0</X>
+        <Y>1000.0</Y>
+      </Vertex>
+      <Vertex index="4">
+        <X>0.0</X>
+        <Y>1000.0</Y>
+      </Vertex>
+    </Polygon>
+  </ImageArea>
+  <ImageAreaCornerPoints>
+    <IACP index="1">
+      <Lat>38.0</Lat>
+      <Lon>-77.0</Lon>
+    </IACP>
+    <IACP index="2">
+      <Lat>38.0</Lat>
+      <Lon>-76.9</Lon>
+    </IACP>
+    <IACP index="3">
+      <Lat>38.1</Lat>
+      <Lon>-76.9</Lon>
+    </IACP>
+    <IACP index="4">
+      <Lat>38.1</Lat>
+      <Lon>-77.0</Lon>
+    </IACP>
+  </ImageAreaCornerPoints>
+</SceneCoordinates>
+
+<Data>
+  <Support>
+    <NumSupportArrays>1</NumSupportArrays>
+    <SupportArray>
+      <Identifier>SUPPORT1</Identifier>
+      <NumRows>10</NumRows>
+      <NumCols>10</NumCols>
+      <BytesPerElement>4</BytesPerElement>
+      <ArrayByteOffset>0</ArrayByteOffset>
+    </SupportArray>
+  </Support>
+  <Transmit>
+    <NumBytesPPP>128</NumBytesPPP>
+    <NumTxSequences>1</NumTxSequences>
+    <TxSequence>
+      <Identifier>TXSEQ1</Identifier>
+      <NumPulses>64</NumPulses>
+      <PPPArrayByteOffset>0</PPPArrayByteOffset>
+    </TxSequence>
+  </Transmit>
+  <Receive>
+    <SignalArrayFormat>CI2</SignalArrayFormat>
+    <NumBytesPVP>256</NumBytesPVP>
+    <NumCRSDChannels>1</NumCRSDChannels>
+    <Channel>
+      <Identifier>CHAN1</Identifier>
+      <NumVectors>128</NumVectors>
+      <NumSamples>1024</NumSamples>
+      <SignalArrayByteOffset>0</SignalArrayByteOffset>
+      <PVPArrayByteOffset>0</PVPArrayByteOffset>
+    </Channel>
+  </Receive>
+</Data>
+
+<TxSequence>
+  <RefTxID>TXSEQ1</RefTxID>
+  <TxWFType>LFM</TxWFType>
+  <Parameters>
+    <Identifier>TXSEQ1_PARAM</Identifier>
+    <RefPulseIndex>0</RefPulseIndex>
+    <FxResponseId>FXRESP1</FxResponseId>
+    <FxBWFixed>true</FxBWFixed>
+    <FxC>1000000000.0</FxC>
+    <FxBW>10000000.0</FxBW>
+    <TXmtMin>0.0001</TXmtMin>
+    <TXmtMax>0.001</TXmtMax>
+    <TxTime1>0.0</TxTime1>
+    <TxTime2>1.0</TxTime2>
+    <TxAPCId>APC1</TxAPCId>
+    <TxAPATId>APAT1</TxAPATId>
+    <TxRefPoint>
+      <ECF>
+        <X>1234567.0</X>
+        <Y>2345678.0</Y>
+        <Z>3456789.0</Z>
+      </ECF>
+      <IAC>
+        <X>0.0</X>
+        <Y>0.0</Y>
+      </IAC>
+    </TxRefPoint>
+    <TxPolarization>
+      <PolarizationID>H</PolarizationID>
+      <AmpH>1.0</AmpH>
+      <AmpV>0.0</AmpV>
+      <PhaseH>0.0</PhaseH>
+      <PhaseV>0.0</PhaseV>
+    </TxPolarization>
+    <TxRefRadIntensity>1.0</TxRefRadIntensity>
+    <TxRadIntErrorStdDev>0.01</TxRadIntErrorStdDev>
+    <TxRefLAtm>0.0</TxRefLAtm>
+  </Parameters>
+</TxSequence>
+
+<Channel>
+  <RefChId>CHAN1</RefChId>
+  <Parameters>
+    <Identifier>CHAN1</Identifier>
+    <RefVectorIndex>0</RefVectorIndex>
+    <RefFreqFixed>true</RefFreqFixed>
+    <FrcvFixed>true</FrcvFixed>
+    <SignalNormal>true</SignalNormal>
+    <F0Ref>1000000000.0</F0Ref>
+    <Fs>20000000.0</Fs>
+    <BWInst>10000000.0</BWInst>
+    <RcvStartTime1>0.0</RcvStartTime1>
+    <RcvStartTime2>1.0</RcvStartTime2>
+    <FrcvMin>950000000.0</FrcvMin>
+    <FrcvMax>1050000000.0</FrcvMax>
+    <RcvAPCId>APC2</RcvAPCId>
+    <RcvAPATId>APAT2</RcvAPATId>
+    <RcvRefPoint>
+      <ECF>
+        <X>1234567.0</X>
+        <Y>2345678.0</Y>
+        <Z>3456789.0</Z>
+      </ECF>
+      <IAC>
+        <X>0.0</X>
+        <Y>0.0</Y>
+      </IAC>
+    </RcvRefPoint>
+    <RcvPolarization>
+      <PolarizationID>V</PolarizationID>
+      <AmpH>0.0</AmpH>
+      <AmpV>1.0</AmpV>
+      <PhaseH>0.0</PhaseH>
+      <PhaseV>0.0</PhaseV>
+    </RcvPolarization>
+    <RcvRefIrradiance>1.0</RcvRefIrradiance>
+    <RcvIrradianceErrorStdDev>0.01</RcvIrradianceErrorStdDev>
+    <RcvRefLAtm>0.0</RcvRefLAtm>
+    <PNCRSD>0.0</PNCRSD>
+    <BNCRSD>1.0</BNCRSD>
+    <SARImage>
+      <TxId>TXSEQ1</TxId>
+      <RefVectorPulseIndex>0</RefVectorPulseIndex>
+      <TxPolarization>
+        <PolarizationID>H</PolarizationID>
+        <AmpH>1.0</AmpH>
+        <AmpV>0.0</AmpV>
+        <PhaseH>0.0</PhaseH>
+        <PhaseV>0.0</PhaseV>
+      </TxPolarization>
+      <DwellTimes>
+        <Polynomials>
+          <CODId>COD1</CODId>
+          <DwellId>DWELL1</DwellId>
+        </Polynomials>
+      </DwellTimes>
+      <ImageArea>
+        <X1Y1>
+          <X>0.0</X>
+          <Y>0.0</Y>
+        </X1Y1>
+        <X2Y2>
+          <X>1000.0</X>
+          <Y>1000.0</Y>
+        </X2Y2>
+        <Polygon size="4">
+          <Vertex index="1">
+            <X>0.0</X>
+            <Y>0.0</Y>
+          </Vertex>
+          <Vertex index="2">
+            <X>1000.0</X>
+            <Y>0.0</Y>
+          </Vertex>
+          <Vertex index="3">
+            <X>1000.0</X>
+            <Y>1000.0</Y>
+          </Vertex>
+          <Vertex index="4">
+            <X>0.0</X>
+            <Y>1000.0</Y>
+          </Vertex>
+        </Polygon>
+      </ImageArea>
+    </SARImage>
+  </Parameters>
+</Channel>
+
+<ReferenceGeometry>
+  <RefPoint>
+    <ECF>
+      <X>1234567.0</X>
+      <Y>2345678.0</Y>
+      <Z>3456789.0</Z>
+    </ECF>
+    <IAC>
+      <X>0.0</X>
+      <Y>0.0</Y>
+    </IAC>
+  </RefPoint>
+  <SARImage>
+    <CODTime>0.5</CODTime>
+    <DwellTime>0.001</DwellTime>
+    <ReferenceTime>0.5</ReferenceTime>
+    <ARPPos>
+      <X>1234567.0</X>
+      <Y>2345678.0</Y>
+      <Z>3456789.0</Z>
+    </ARPPos>
+    <ARPVel>
+      <X>100.0</X>
+      <Y>0.0</Y>
+      <Z>0.0</Z>
+    </ARPVel>
+    <BistaticAngle>30.0</BistaticAngle>
+    <BistaticAngleRate>0.0</BistaticAngleRate>
+    <SideOfTrack>R</SideOfTrack>
+    <SlantRange>10000.0</SlantRange>
+    <GroundRange>9000.0</GroundRange>
+    <DopplerConeAngle>45.0</DopplerConeAngle>
+    <SquintAngle>0.0</SquintAngle>
+    <AzimuthAngle>90.0</AzimuthAngle>
+    <GrazeAngle>10.0</GrazeAngle>
+    <IncidenceAngle>30.0</IncidenceAngle>
+    <TwistAngle>0.0</TwistAngle>
+    <SlopeAngle>5.0</SlopeAngle>
+    <LayoverAngle>0.0</LayoverAngle>
+  </SARImage>
+  <TxParameters>
+    <Time>0.5</Time>
+    <APCPos>
+      <X>1234567.0</X>
+      <Y>2345678.0</Y>
+      <Z>3456789.0</Z>
+    </APCPos>
+    <APCVel>
+      <X>100.0</X>
+      <Y>0.0</Y>
+      <Z>0.0</Z>
+    </APCVel>
+    <SideOfTrack>R</SideOfTrack>
+    <SlantRange>10000.0</SlantRange>
+    <GroundRange>9000.0</GroundRange>
+    <DopplerConeAngle>45.0</DopplerConeAngle>
+    <SquintAngle>0.0</SquintAngle>
+    <AzimuthAngle>90.0</AzimuthAngle>
+    <GrazeAngle>10.0</GrazeAngle>
+    <IncidenceAngle>30.0</IncidenceAngle>
+  </TxParameters>
+  <RcvParameters>
+    <Time>0.5</Time>
+    <APCPos>
+      <X>1234567.0</X>
+      <Y>2345678.0</Y>
+      <Z>3456789.0</Z>
+    </APCPos>
+    <APCVel>
+      <X>100.0</X>
+      <Y>0.0</Y>
+      <Z>0.0</Z>
+    </APCVel>
+    <SideOfTrack>R</SideOfTrack>
+    <SlantRange>10000.0</SlantRange>
+    <GroundRange>9000.0</GroundRange>
+    <DopplerConeAngle>45.0</DopplerConeAngle>
+    <SquintAngle>0.0</SquintAngle>
+    <AzimuthAngle>90.0</AzimuthAngle>
+    <GrazeAngle>10.0</GrazeAngle>
+    <IncidenceAngle>30.0</IncidenceAngle>
+  </RcvParameters>
+</ReferenceGeometry>
+
+<SupportArray>
+  <AntGainPhase>
+    <Identifier>AGP1</Identifier>
+    <ElementFormat>Gain=F4;Phase=F4;</ElementFormat>
+    <X0>0.0</X0>
+    <Y0>0.0</Y0>
+    <XSS>1.0</XSS>
+    <YSS>1.0</YSS>
+  </AntGainPhase>
+  <FxResponseArray>
+    <Identifier>FXRESP1</Identifier>
+    <ElementFormat>Amp=F4;Phase=F4;</ElementFormat>
+    <Fx0FXR>1000000000.0</Fx0FXR>
+    <FxSSFXR>1000000.0</FxSSFXR>
+  </FxResponseArray>
+</SupportArray>
+
+<PPP>
+  <TxTime>
+    <Offset>0</Offset>
+    <Size>2</Size>
+    <Format>Int=I8;Frac=F8;</Format>
+  </TxTime>
+  <TxPos>
+    <Offset>16</Offset>
+    <Size>3</Size>
+    <Format>X=F8;Y=F8;Z=F8;</Format>
+  </TxPos>
+  <TxVel>
+    <Offset>40</Offset>
+    <Size>3</Size>
+    <Format>X=F8;Y=F8;Z=F8;</Format>
+  </TxVel>
+  <FX1>
+    <Offset>64</Offset>
+    <Size>1</Size>
+    <Format>F8</Format>
+  </FX1>
+  <FX2>
+    <Offset>72</Offset>
+    <Size>1</Size>
+    <Format>F8</Format>
+  </FX2>
+  <TXmt>
+    <Offset>80</Offset>
+    <Size>1</Size>
+    <Format>F8</Format>
+  </TXmt>
+  <PhiX0>
+    <Offset>88</Offset>
+    <Size>2</Size>
+    <Format>Int=I8;Frac=F8;</Format>
+  </PhiX0>
+  <FxFreq0>
+    <Offset>104</Offset>
+    <Size>1</Size>
+    <Format>F8</Format>
+  </FxFreq0>
+  <FxRate>
+    <Offset>112</Offset>
+    <Size>1</Size>
+    <Format>F8</Format>
+  </FxRate>
+  <TxRadInt>
+    <Offset>120</Offset>
+    <Size>1</Size>
+    <Format>F8</Format>
+  </TxRadInt>
+  <TxACX>
+    <Offset>128</Offset>
+    <Size>3</Size>
+    <Format>X=F8;Y=F8;Z=F8;</Format>
+  </TxACX>
+  <TxACY>
+    <Offset>152</Offset>
+    <Size>3</Size>
+    <Format>X=F8;Y=F8;Z=F8;</Format>
+  </TxACY>
+  <TxEB>
+    <Offset>176</Offset>
+    <Size>2</Size>
+    <Format>DCX=F8;DCY=F8;</Format>
+  </TxEB>
+  <FxResponseIndex>
+    <Offset>192</Offset>
+    <Size>1</Size>
+    <Format>I8</Format>
+  </FxResponseIndex>
+</PPP>
+
+<PVP>
+  <RcvStart>
+    <Offset>0</Offset>
+    <Size>2</Size>
+    <Format>Int=I8;Frac=F8;</Format>
+  </RcvStart>
+  <RcvPos>
+    <Offset>16</Offset>
+    <Size>3</Size>
+    <Format>X=F8;Y=F8;Z=F8;</Format>
+  </RcvPos>
+  <RcvVel>
+    <Offset>40</Offset>
+    <Size>3</Size>
+    <Format>X=F8;Y=F8;Z=F8;</Format>
+  </RcvVel>
+  <FRCV1>
+    <Offset>64</Offset>
+    <Size>1</Size>
+    <Format>F8</Format>
+  </FRCV1>
+  <FRCV2>
+    <Offset>72</Offset>
+    <Size>1</Size>
+    <Format>F8</Format>
+  </FRCV2>
+  <RefPhi0>
+    <Offset>80</Offset>
+    <Size>2</Size>
+    <Format>Int=I8;Frac=F8;</Format>
+  </RefPhi0>
+  <RefFreq>
+    <Offset>96</Offset>
+    <Size>1</Size>
+    <Format>F8</Format>
+  </RefFreq>
+  <DFIC0>
+    <Offset>104</Offset>
+    <Size>1</Size>
+    <Format>F8</Format>
+  </DFIC0>
+  <FICRate>
+    <Offset>112</Offset>
+    <Size>1</Size>
+    <Format>F8</Format>
+  </FICRate>
+  <RcvACX>
+    <Offset>120</Offset>
+    <Size>3</Size>
+    <Format>X=F8;Y=F8;Z=F8;</Format>
+  </RcvACX>
+  <RcvACY>
+    <Offset>144</Offset>
+    <Size>3</Size>
+    <Format>X=F8;Y=F8;Z=F8;</Format>
+  </RcvACY>
+  <RcvEB>
+    <Offset>168</Offset>
+    <Size>2</Size>
+    <Format>DCX=F8;DCY=F8;</Format>
+  </RcvEB>
+  <SIGNAL>
+    <Offset>184</Offset>
+    <Size>1</Size>
+    <Format>I8</Format>
+  </SIGNAL>
+  <AmpSF>
+    <Offset>192</Offset>
+    <Size>1</Size>
+    <Format>F8</Format>
+  </AmpSF>
+  <DGRGC>
+    <Offset>200</Offset>
+    <Size>1</Size>
+    <Format>F8</Format>
+  </DGRGC>
+  <TxPulseIndex>
+    <Offset>208</Offset>
+    <Size>1</Size>
+    <Format>I8</Format>
+  </TxPulseIndex>
+</PVP>
+
+<Antenna>
+  <NumACFs>1</NumACFs>
+  <NumAPCs>2</NumAPCs>
+  <NumAntPats>1</NumAntPats>
+  <AntCoordFrame>
+    <Identifier>ACF1</Identifier>
+  </AntCoordFrame>
+  <AntPhaseCenter>
+    <Identifier>APC1</Identifier>
+    <ACFId>ACF1</ACFId>
+    <APCXYZ>
+      <X>0.0</X>
+      <Y>0.0</Y>
+      <Z>0.0</Z>
+    </APCXYZ>
+  </AntPhaseCenter>
+  <AntPhaseCenter>
+    <Identifier>APC2</Identifier>
+    <ACFId>ACF1</ACFId>
+    <APCXYZ>
+      <X>0.0</X>
+      <Y>0.0</Y>
+      <Z>0.0</Z>
+    </APCXYZ>
+  </AntPhaseCenter>
+  <AntPattern>
+    <Identifier>ANTPAT1</Identifier>
+    <FreqZero>1000000000.0</FreqZero>
+    <ArrayGPId>AGP1</ArrayGPId>
+    <ElementGPId>EGP1</ElementGPId>
+    <EBFreqShift>
+      <DCXSF>1.0</DCXSF>
+      <DCYSF>1.0</DCYSF>
+    </EBFreqShift>
+    <MLFreqDilation>
+      <DCXSF>1.0</DCXSF>
+      <DCYSF>1.0</DCYSF>
+    </MLFreqDilation>
+    <GainBSPoly order1="1">
+      <Coef exponent1="0">1.0</Coef>
+    </GainBSPoly>
+    <AntPolRef>
+      <AmpX>1.0</AmpX>
+      <AmpY>0.0</AmpY>
+      <PhaseX>0.0</PhaseX>
+      <PhaseY>0.0</PhaseY>
+    </AntPolRef>
+  </AntPattern>
+</Antenna>
+
+<ErrorParameters>
+  <SARImage>
+    <Monostatic>
+      <PosVelError>
+        <Frame>ECF</Frame>
+        <PVCov>
+          <Entry index1="1" index2="1">1.0</Entry>
+        </PVCov>
+      </PosVelError>
+      <RadarSensor>
+        <TimeFreqCov>
+          <Entry index1="1" index2="1">1.0</Entry>
+        </TimeFreqCov>
+      </RadarSensor>
+    </Monostatic>
+  </SARImage>
+</ErrorParameters>
+
+<GeoInfo name="ExampleGeoInfo">
+  <Desc name="Description">Example geographic info</Desc>
+  <Point>
+    <Lat>38.0</Lat>
+    <Lon>-77.0</Lon>
+  </Point>
+</GeoInfo>
+)";
     return std::string(xmlBody);
 }
 
@@ -915,15 +685,23 @@ void runTest(const std::string& testName, const std::string& version)
     auto xmlString = testCRSDXML(version);
     io::StringStream crsdStream;
     crsdStream.write(xmlString.c_str(), xmlString.size());
-
+    
     xml::lite::MinidomParser xmlParser;
-    xmlParser.preserveCharacterData(true);
-    xmlParser.parse(crsdStream, crsdStream.available());
+    xmlParser.preserveCharacterData(true);  
+    xmlParser.parse(crsdStream, crsdStream.available());      
     const std::unique_ptr<crsd::Metadata> metadata =
             crsd::CRSDXMLControl().fromXML(xmlParser.getDocument());
-
+    
     // ProductInfo
-    TEST_ASSERT_EQ(metadata->productInfo.productName, "ProductName");
+    TEST_ASSERT_EQ(metadata->productInfo.productName, "EXAMPLE_PRODUCT");
+    TEST_ASSERT_EQ(metadata->productInfo.classification, "UNCLASSIFIED");
+    TEST_ASSERT_EQ(metadata->productInfo.releaseInfo, "Approved for public release");
+    TEST_ASSERT_EQ(metadata->productInfo.countryCode, "USA");
+    TEST_ASSERT_EQ(metadata->productInfo.profile, "DEFAULT");
+    TEST_ASSERT_EQ(metadata->productInfo.creationInfo[0].application, "ExampleApp");
+    TEST_ASSERT_EQ(metadata->productInfo.creationInfo[0].dateTime.getYear(), 2024);
+    TEST_ASSERT_EQ(metadata->productInfo.creationInfo[0].site, "ExampleSite");
+    
 
     // // CollectionID
     // TEST_ASSERT_EQ(metadata->collectionID.collectorName, "Collector");

@@ -76,6 +76,16 @@ Data::Transmit::Transmit(std::string str, size_t bytesPPP) :
 {
 }
 
+Data::Receive::Receive() :
+    numBytesPVP(0)
+{
+}
+
+Data::Receive::Receive(size_t bytesPVP) :
+    numBytesPVP(bytesPVP)
+{
+}
+
 Data::Processing::Processing()
 {
 }

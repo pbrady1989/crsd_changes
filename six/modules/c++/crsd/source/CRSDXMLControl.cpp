@@ -141,10 +141,14 @@ std::unique_ptr<Metadata> CRSDXMLControl::fromXML(const std::u8string& xmlString
 std::unique_ptr<Metadata> CRSDXMLControl::fromXML(const xml::lite::Document* doc,
                                      const std::vector<std::string>& schemaPaths)
 {
+    
     if(!schemaPaths.empty())
     {
+        
+        std::cout << "schemaPaths.size():" << schemaPaths.size() << std::endl;
         six::XMLControl::validate(doc, schemaPaths, mLog);
     }
+    
     std::unique_ptr<Metadata> metadata = fromXMLImpl(doc);
     const xml::lite::Uri uri(doc->getRootElement()->getUri());
     metadata->setVersion(uriToVersion(uri));

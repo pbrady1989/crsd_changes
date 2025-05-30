@@ -49,13 +49,13 @@ void Ppp::initialize()
 {
     // Default size and formats for each PPP
     // listed in Table 11-6 CRSD1.0 Spec
-    setDefaultValues(2,"Int=I8;Frac=F8", txTime);
+    setDefaultValues(2,"Int=I8;Frac=F8;", txTime);
     setDefaultValues(3,"X=F8;Y=F8;Z=F8;", txPos);
     setDefaultValues(3,"X=F8;Y=F8;Z=F8;", txVel);
     setDefaultValues(1,"F8", fx1);
     setDefaultValues(1,"F8", fx2);
     setDefaultValues(1,"F8", txmt);
-    setDefaultValues(2,"Int=I8;Frac=F8", phiX0);
+    setDefaultValues(2,"Int=I8;Frac=F8;", phiX0);
     setDefaultValues(1,"F8", fxFreq0);
     setDefaultValues(1,"F8", fxRate);
     setDefaultValues(1,"F8", txRadInt);

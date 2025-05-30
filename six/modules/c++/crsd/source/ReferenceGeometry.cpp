@@ -28,7 +28,7 @@ namespace crsd
 
 RefPoint::RefPoint() :
     ecf(six::Init::undefined<Vector3>()),
-    iac(six::Init::undefined<Vector3>())
+    iac(six::Init::undefined<Vector2>())
 {
 }
 

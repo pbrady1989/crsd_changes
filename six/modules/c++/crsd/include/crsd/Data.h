@@ -461,7 +461,7 @@ struct Data
          *  \param vectors Set number of vectors
          *  \param samples Set number of samples
          */
-        Receive(size_t vectors, size_t samples);
+        Receive(size_t numBytesPVP);
 
         /*
          *  \func Channel

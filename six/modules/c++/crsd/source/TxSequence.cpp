@@ -35,7 +35,7 @@ TxPolarization::TxPolarization() :
 
 TxRefPoint::TxRefPoint() :
     ecf(six::Init::undefined<six::Vector3>()),
-    iac(six::Init::undefined<six::Vector3>())
+    iac(six::Init::undefined<six::Vector2>())
 {
 }
 

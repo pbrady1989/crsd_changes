@@ -129,7 +129,7 @@ struct RcvRefPoint
 
     //! SRP position in Image Area Coordinates (IAX,
     //! IAY, IAZ).
-    Vector3 iac;
+    Vector2 iac;
 };
 
 /*!

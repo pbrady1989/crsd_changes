@@ -353,7 +353,7 @@ XMLElem CRSDXMLParser::toXML(const TxSequence& txSequence, XMLElem parent)
         createString("TxAPATId", txSequence.parameters[ii].txAPATId, parametersXML);
         XMLElem txRefPointXML = newElement("TxRefPoint", parametersXML);
         mCommon.createVector3D("ECF", txSequence.parameters[ii].txRefPoint.ecf, txRefPointXML);
-        mCommon.createVector3D("IAC", txSequence.parameters[ii].txRefPoint.iac, txRefPointXML);
+        mCommon.createVector2D("IAC", txSequence.parameters[ii].txRefPoint.iac, txRefPointXML);
         XMLElem txPolXML = newElement("TxPolarization", parametersXML);
         createString("PolarizationID", txSequence.parameters[ii].txPolarization.polarizationID, txPolXML);
         createDouble("AmpH",txSequence.parameters[ii].txPolarization.ampH, txPolXML);
@@ -391,7 +391,7 @@ XMLElem CRSDXMLParser::toXML(const Channel& channel, XMLElem parent)
         createString("RcvAPATId", channel.parameters[ii].rcvAPATId, parametersXML);
         XMLElem refPointXML = newElement("RcvRefPoint", parametersXML);
         mCommon.createVector3D("ECF", channel.parameters[ii].rcvRefPoint.ecf, refPointXML);
-        mCommon.createVector3D("IAC", channel.parameters[ii].rcvRefPoint.iac, refPointXML);
+        mCommon.createVector2D("IAC", channel.parameters[ii].rcvRefPoint.iac, refPointXML);
         XMLElem polXML = newElement("RcvPolarization", parametersXML);
         createString("PolarizationID", channel.parameters[ii].rcvPolarization.polarizationID, polXML);
         createDouble("AmpH", channel.parameters[ii].rcvPolarization.ampH, polXML);
@@ -607,7 +607,7 @@ XMLElem CRSDXMLParser::toXML(const ReferenceGeometry& refGeo, XMLElem parent)
     XMLElem refGeoXML = newElement("ReferenceGeometry", parent);
     XMLElem srpXML = newElement("RefPoint", refGeoXML);
     mCommon.createVector3D("ECF", refGeo.refPoint.ecf, srpXML);
-    mCommon.createVector3D("IAC", refGeo.refPoint.iac, srpXML);
+    mCommon.createVector2D("IAC", refGeo.refPoint.iac, srpXML);
     if (refGeo.sarParameters.get())
     {
         XMLElem sarXML = newElement("SARImage", refGeoXML);
@@ -895,6 +895,7 @@ XMLElem CRSDXMLParser::toXML(const GeoInfo& geoInfo, XMLElem parent)
 std::unique_ptr<Metadata> CRSDXMLParser::fromXML(
         const xml::lite::Document* doc)
 {
+    
     std::unique_ptr<Metadata> crsd(new Metadata());
 
     const auto root = doc->getRootElement();
@@ -926,61 +927,88 @@ std::unique_ptr<Metadata> CRSDXMLParser::fromXML(
 
     // Parse XML for each section (required sections here)
     fromXML(productInfoXML, crsd->productInfo);
+    
     fromXML(globalXML, crsd->global);
+    
     fromXML(sceneCoordsXML, crsd->sceneCoordinates);
+    
     fromXML(dataXML, crsd->data);
+    
     fromXML(refGeoXML, crsd->referenceGeometry);
+    
     fromXML(supportArrayXML, crsd->supportArray);
+    
     fromXML(antennaXML, crsd->antenna);
+    
     if(pvpXML)
     {
+        
         crsd->pvp.reset(new Pvp());
         fromXML(pvpXML, *(crsd->pvp));
+        
     }
     if(pppXML)
     {
+        
         crsd->ppp.reset(new Ppp());
         fromXML(pppXML, *(crsd->ppp));
+        
     }
     if(dwellXML)
     {
+        
         crsd->dwell.reset(new Dwell());
         fromXML(dwellXML, *(crsd->dwell));
+        
     }
     if(channelXML)
     {
+        
         crsd->channel.reset(new Channel());
         fromXML(channelXML, *(crsd->channel));
+        
     }
     if(txSequenceXML)
     {
+        
         crsd->txSequence.reset(new TxSequence());
         fromXML(txSequenceXML, *(crsd->txSequence));
+        
     }
     if(receiveInfoXML)
     {
+        
         crsd->receiveInfo.reset(new TransmitInfo());
         fromXML(receiveInfoXML, *(crsd->receiveInfo));
+        
     }
     if(transmitInfoXML)
     {
+        
         crsd->transmitInfo.reset(new TransmitInfo());
         fromXML(transmitInfoXML, *(crsd->transmitInfo));
+        
     }
     if(sarInfoXML)
     {
+        
         crsd->sarInfo.reset(new SARInfo());
         fromXML(sarInfoXML, *(crsd->sarInfo));
+        
     }
-    if(errParamXML)
-    {
-        crsd->errorParameters.reset(new ErrorParameters());
-        fromXML(errParamXML, *(crsd->errorParameters));
-    }
-    for (size_t ii = 0; ii < geoInfoXMLVec.size(); ++ii)
-    {
-        fromXML(geoInfoXMLVec[ii], crsd->geoInfo[ii]);
-    }
+    // if(errParamXML)
+    // {
+    //     
+    //     crsd->errorParameters.reset(new ErrorParameters());
+    //     fromXML(errParamXML, *(crsd->errorParameters));
+    //     
+    // }
+    // for (size_t ii = 0; ii < geoInfoXMLVec.size(); ++ii)
+    // {
+    //     
+    //     fromXML(geoInfoXMLVec[ii], crsd->geoInfo[ii]);
+    //     
+    // }
 
     return crsd;
 }
@@ -990,7 +1018,7 @@ void CRSDXMLParser::fromXML(const xml::lite::Element* productInfoXML, ProductInf
     parseString(getFirstAndOnly(productInfoXML,"ProductName"),productInfo.productName);
     parseString(getFirstAndOnly(productInfoXML,"Classification"),productInfo.classification);
     parseString(getFirstAndOnly(productInfoXML,"ReleaseInfo"),productInfo.releaseInfo);
-    parseOptionalString(productInfoXML,"CoundtryCode",productInfo.countryCode);
+    parseOptionalString(productInfoXML,"CountryCode",productInfo.countryCode);
     parseOptionalString(productInfoXML,"Profile",productInfo.profile);
 
     // CreationInfo
@@ -1116,7 +1144,7 @@ void CRSDXMLParser::parseTxSequenceParameters(
     parseString(getFirstAndOnly(paramXML, "TxAPATId"), param.txAPATId);
     XMLElem txRefPointXML = getFirstAndOnly(paramXML, "TxRefPoint");
     mCommon.parseVector3D(getFirstAndOnly(txRefPointXML, "ECF"), param.txRefPoint.ecf);
-    mCommon.parseVector3D(getFirstAndOnly(txRefPointXML, "IAC"), param.txRefPoint.iac);
+    mCommon.parseVector2D(getFirstAndOnly(txRefPointXML, "IAC"), param.txRefPoint.iac);
     XMLElem txPolXML = getFirstAndOnly(paramXML, "TxPolarization");
     param.txPolarization.polarizationID = PolarizationType::toType(getFirstAndOnly(txPolXML, "PolarizationID")->getCharacterData());
     parseDouble(getFirstAndOnly(txPolXML, "AmpH"), param.txPolarization.ampH);
@@ -1134,7 +1162,6 @@ void CRSDXMLParser::fromXML(const xml::lite::Element* txSequenceXML, TxSequence&
     parseString(getFirstAndOnly(txSequenceXML,"RefTxID"),txSequence.refTxId);
     txSequence.txWFType = six::toType<six::TxWFType>(getFirstAndOnly(txSequenceXML,"TxWFType")->getCharacterData());
 
-    //XMLElem parametersXML = getFirstAndOnly(txSequenceXML, "Parameters");
     std::vector<XMLElem> parametersXML;
     txSequenceXML->getElementsByTagName("Parameters", parametersXML);
     txSequence.parameters.resize(parametersXML.size());
@@ -1301,14 +1328,15 @@ void CRSDXMLParser::fromXML(const xml::lite::Element* dataXML, Data& data)
         parseUInt(getFirstAndOnly(supportsXML[ii], "BytesPerElement"), numBytes);
         data.setSupportArray(id, numRows, numCols, numBytes, offset);
     }
-
     // Transmit
     XMLElem transmitXML = getOptional(dataXML, "Transmit");
     if(transmitXML)
     {
+        data.transmitParameters.reset(new crsd::Data::Transmit());
         parseUInt(getFirstAndOnly(transmitXML, "NumBytesPPP"), data.transmitParameters->numBytesPPP);
         std::vector<XMLElem> txSequenceXML;
         supportXML->getElementsByTagName("TxSequence", txSequenceXML);
+        data.transmitParameters->txSequence.resize(txSequenceXML.size());
         for (size_t ii = 0; ii < txSequenceXML.size(); ++ii)
         {
             parseString(getFirstAndOnly(txSequenceXML[ii], "Identifier"), data.transmitParameters->txSequence[ii].identifier);
@@ -1316,11 +1344,11 @@ void CRSDXMLParser::fromXML(const xml::lite::Element* dataXML, Data& data)
             parseUInt(getFirstAndOnly(txSequenceXML[ii], "PPPArrayByteOffset"), data.transmitParameters->txSequence[ii].pppArrayByteOffset);
         }
     }
-
     // Receive
     XMLElem receiveXML = getOptional(dataXML, "Receive");
     if(receiveXML)
     {
+        data.receiveParameters.reset(new crsd::Data::Receive());
         const xml::lite::Element* signalXML = getFirstAndOnly(receiveXML, "SignalArrayFormat");
         data.receiveParameters->signalArrayFormat = SignalArrayFormat::toType(signalXML->getCharacterData());
         parseUInt(getFirstAndOnly(receiveXML, "NumBytesPVP"), data.receiveParameters->numBytesPVP);
@@ -1331,21 +1359,22 @@ void CRSDXMLParser::fromXML(const xml::lite::Element* dataXML, Data& data)
             parseUInt(getFirstAndOnly(sigCompressXML, "CompressedSignalSize"), data.receiveParameters->signalCompression->compressedSignalSize); 
             std::vector<XMLElem> processXML;
             sigCompressXML->getElementsByTagName("Processing", processXML);
+            data.receiveParameters->signalCompression->processing.resize(processXML.size());
             for (size_t ii = 0; ii < processXML.size(); ++ii)
             {
                 parseString(getFirstAndOnly(processXML[ii], "Type"), data.receiveParameters->signalCompression->processing[ii].type);
                 mCommon.parseParameters(processXML[ii], "Parameter", data.receiveParameters->signalCompression->processing[ii].parameter);
             }
         }
-
         std::vector<XMLElem> channelXML;
         receiveXML->getElementsByTagName("Channel", channelXML);
+        data.receiveParameters->channels.resize(channelXML.size());
         for (size_t ii = 0; ii < channelXML.size(); ++ii)
         {
             parseString(getFirstAndOnly(channelXML[ii], "Identifier"), data.receiveParameters->channels[ii].identifier);
             parseUInt(getFirstAndOnly(channelXML[ii], "NumVectors"), data.receiveParameters->channels[ii].numVectors);
             parseUInt(getFirstAndOnly(channelXML[ii], "NumSamples"), data.receiveParameters->channels[ii].numSamples);
-            parseUInt(getFirstAndOnly(channelXML[ii], "SignalArrayArrayByteOffset"), data.receiveParameters->channels[ii].signalArrayByteOffset);
+            parseUInt(getFirstAndOnly(channelXML[ii], "SignalArrayByteOffset"), data.receiveParameters->channels[ii].signalArrayByteOffset);
             parseUInt(getFirstAndOnly(channelXML[ii], "PVPArrayByteOffset"), data.receiveParameters->channels[ii].pvpArrayByteOffset);
         }
     }
@@ -1366,21 +1395,22 @@ void CRSDXMLParser::fromXML(const xml::lite::Element* channelXML, Channel& chann
 
 void CRSDXMLParser::fromXML(const xml::lite::Element* pvpXML, Pvp& pvp)
 {
-    parsePVPType(pvp, getFirstAndOnly(pvpXML, "RcvTime"), pvp.rcvStart);
-    parsePVPType(pvp, getFirstAndOnly(pvpXML, "RcvPos"), pvp.rcvPos);
-    parsePVPType(pvp, getFirstAndOnly(pvpXML, "RcvVel"), pvp.rcvVel);
-    parsePVPType(pvp, getFirstAndOnly(pvpXML, "FRCV1"), pvp.frcv1);
-    parsePVPType(pvp, getFirstAndOnly(pvpXML, "FRCV2"), pvp.frcv2);
-    parsePVPType(pvp, getFirstAndOnly(pvpXML, "RefPhi0"), pvp.refPhi0);
-    parsePVPType(pvp, getFirstAndOnly(pvpXML, "RefFreq"), pvp.refFreq);
-    parsePVPType(pvp, getFirstAndOnly(pvpXML, "DFIC0"), pvp.dfiC0);
-    parsePVPType(pvp, getFirstAndOnly(pvpXML, "FICRate"), pvp.ficRate);
-    parsePVPType(pvp, getFirstAndOnly(pvpXML, "RcvACX"), pvp.rcvACX);
-    parsePVPType(pvp, getFirstAndOnly(pvpXML, "RcvACY"), pvp.rcvACY);
-    parsePVPType(pvp, getFirstAndOnly(pvpXML, "RcvEB"), pvp.rcvEB);
-    parsePVPType(pvp, getFirstAndOnly(pvpXML, "SIGNAL"), pvp.signal);
+    
+    parsePVPType(pvp, getFirstAndOnly(pvpXML, "RcvStart"), pvp.rcvStart); 
+    parsePVPType(pvp, getFirstAndOnly(pvpXML, "RcvPos"), pvp.rcvPos); 
+    parsePVPType(pvp, getFirstAndOnly(pvpXML, "RcvVel"), pvp.rcvVel); 
+    parsePVPType(pvp, getFirstAndOnly(pvpXML, "FRCV1"), pvp.frcv1); 
+    parsePVPType(pvp, getFirstAndOnly(pvpXML, "FRCV2"), pvp.frcv2); 
+    parsePVPType(pvp, getFirstAndOnly(pvpXML, "RefPhi0"), pvp.refPhi0); 
+    parsePVPType(pvp, getFirstAndOnly(pvpXML, "RefFreq"), pvp.refFreq); 
+    parsePVPType(pvp, getFirstAndOnly(pvpXML, "DFIC0"), pvp.dfiC0); 
+    parsePVPType(pvp, getFirstAndOnly(pvpXML, "FICRate"), pvp.ficRate); 
+    parsePVPType(pvp, getFirstAndOnly(pvpXML, "RcvACX"), pvp.rcvACX); 
+    parsePVPType(pvp, getFirstAndOnly(pvpXML, "RcvACY"), pvp.rcvACY); 
+    parsePVPType(pvp, getFirstAndOnly(pvpXML, "RcvEB"), pvp.rcvEB); 
+    parsePVPType(pvp, getFirstAndOnly(pvpXML, "SIGNAL"), pvp.signal); 
     parsePVPType(pvp, getFirstAndOnly(pvpXML, "AmpSF"), pvp.ampSF);
-    parsePVPType(pvp, getFirstAndOnly(pvpXML, "DGRGC"), pvp.dgrgc);
+    parsePVPType(pvp, getFirstAndOnly(pvpXML, "DGRGC"), pvp.dgrgc); 
     parseOptionalPVPType(pvpXML, "TxPulseIndex", pvp, pvp.txPulseIndex);
 
     std::vector<XMLElem> addedParamsXML;
@@ -1461,10 +1491,13 @@ void CRSDXMLParser::fromXML(const xml::lite::Element* refGeoXML, ReferenceGeomet
 {
     XMLElem srpXML = getFirstAndOnly(refGeoXML, "RefPoint");
     mCommon.parseVector3D(getFirstAndOnly(srpXML, "ECF"), refGeo.refPoint.ecf);
-    mCommon.parseVector3D(getFirstAndOnly(srpXML, "IAC"), refGeo.refPoint.iac);
+    
+    mCommon.parseVector2D(getFirstAndOnly(srpXML, "IAC"), refGeo.refPoint.iac);
+    
     XMLElem sarXML = getOptional(refGeoXML, "SARImage");
     if (sarXML)
     {
+        refGeo.sarParameters.reset(new crsd::SARImage());
         parseDouble(getFirstAndOnly(sarXML, "ReferenceTime"), refGeo.sarParameters->referenceTime);
         parseDouble(getFirstAndOnly(sarXML, "CODTime"), refGeo.sarParameters->codTime);
         parseDouble(getFirstAndOnly(sarXML, "DwellTime"), refGeo.sarParameters->dwellTime);
@@ -1489,6 +1522,7 @@ void CRSDXMLParser::fromXML(const xml::lite::Element* refGeoXML, ReferenceGeomet
     XMLElem txXML = getOptional(refGeoXML, "TxParameters");
     if (txXML)
     {
+        refGeo.txParameters.reset(new crsd::OneWayParams());
         parseDouble(getFirstAndOnly(txXML, "Time"), refGeo.txParameters->time);
         mCommon.parseVector3D(getFirstAndOnly(txXML, "APCPos"), refGeo.txParameters->apcPos);
         mCommon.parseVector3D(getFirstAndOnly(txXML, "APCVel"), refGeo.txParameters->apcPos);
@@ -1506,6 +1540,7 @@ void CRSDXMLParser::fromXML(const xml::lite::Element* refGeoXML, ReferenceGeomet
     XMLElem rcvXML = getOptional(refGeoXML, "RcvParameters");
     if (rcvXML)
     {
+        refGeo.rcvParameters.reset(new crsd::OneWayParams());
         parseDouble(getFirstAndOnly(rcvXML, "Time"), refGeo.rcvParameters->time);
         mCommon.parseVector3D(getFirstAndOnly(rcvXML, "APCPos"), refGeo.rcvParameters->apcPos);
         mCommon.parseVector3D(getFirstAndOnly(rcvXML, "APCVel"), refGeo.rcvParameters->apcPos);
@@ -1583,6 +1618,7 @@ void CRSDXMLParser::fromXML(const xml::lite::Element* antennaXML, Antenna& anten
         throw except::Exception(Ctxt(
                 "Incorrect number of AntCoordFrames provided"));
     }
+    antenna.antCoordFrame.resize(antCoordFrameXMLVec.size());
     for( size_t ii = 0; ii < antCoordFrameXMLVec.size(); ++ii)
     {
         parseString(getFirstAndOnly(antCoordFrameXMLVec[ii], "Identifier"), antenna.antCoordFrame[ii].identifier);
@@ -1596,6 +1632,7 @@ void CRSDXMLParser::fromXML(const xml::lite::Element* antennaXML, Antenna& anten
         throw except::Exception(Ctxt(
                 "Incorrect number of AntPhaseCenters provided"));
     }
+    antenna.antPhaseCenter.resize(antPhaseCenterXMLVec.size());
     for( size_t ii = 0; ii < antPhaseCenterXMLVec.size(); ++ii)
     {
         parseString(getFirstAndOnly(antPhaseCenterXMLVec[ii], "Identifier"), antenna.antPhaseCenter[ii].identifier);
@@ -1610,6 +1647,7 @@ void CRSDXMLParser::fromXML(const xml::lite::Element* antennaXML, Antenna& anten
         throw except::Exception(Ctxt(
                 "Incorrect number of AntPatterns provided"));
     }
+    antenna.antPattern.resize(antPatternXMLVec.size());
     for( size_t ii = 0; ii < antPatternXMLVec.size(); ++ii)
     {
         parseString(getFirstAndOnly(antPatternXMLVec[ii], "Identifier"), antenna.antPattern[ii].identifier);
@@ -1627,10 +1665,10 @@ void CRSDXMLParser::fromXML(const xml::lite::Element* antennaXML, Antenna& anten
 
         // Parse EB
         XMLElem antPolRefXML = getFirstAndOnly(antPatternXMLVec[ii], "AntPolRef");
-        parseDouble(getFirstAndOnly(antPolRefXML, "ampX"), antenna.antPattern[ii].antPolRef.ampX);
-        parseDouble(getFirstAndOnly(antPolRefXML, "ampY"), antenna.antPattern[ii].antPolRef.ampY);
-        parseDouble(getFirstAndOnly(antPolRefXML, "phaseX"), antenna.antPattern[ii].antPolRef.phaseX);
-        parseDouble(getFirstAndOnly(antPolRefXML, "phaseY"), antenna.antPattern[ii].antPolRef.phaseY);
+        parseDouble(getFirstAndOnly(antPolRefXML, "AmpX"), antenna.antPattern[ii].antPolRef.ampX);
+        parseDouble(getFirstAndOnly(antPolRefXML, "AmpY"), antenna.antPattern[ii].antPolRef.ampY);
+        parseDouble(getFirstAndOnly(antPolRefXML, "PhaseX"), antenna.antPattern[ii].antPolRef.phaseX);
+        parseDouble(getFirstAndOnly(antPolRefXML, "PhaseY"), antenna.antPattern[ii].antPolRef.phaseY);
     }
 }
 
@@ -1937,7 +1975,7 @@ void CRSDXMLParser::parseChannelParameters(
     parseString(getFirstAndOnly(paramXML, "RcvAPATId"), param.rcvAPATId);
     XMLElem rcvRefPointXML = getFirstAndOnly(paramXML, "RcvRefPoint");
     mCommon.parseVector3D(getFirstAndOnly(rcvRefPointXML, "ECF"), param.rcvRefPoint.ecf);
-    mCommon.parseVector3D(getFirstAndOnly(rcvRefPointXML, "IAC"), param.rcvRefPoint.iac);
+    mCommon.parseVector2D(getFirstAndOnly(rcvRefPointXML, "IAC"), param.rcvRefPoint.iac);
     XMLElem rcvPolXML = getFirstAndOnly(paramXML, "RcvPolarization");
     param.rcvPolarization.polarizationID = PolarizationType::toType(getFirstAndOnly(rcvPolXML, "PolarizationID")->getCharacterData());
     parseDouble(getFirstAndOnly(rcvPolXML, "AmpH"), param.rcvPolarization.ampH);

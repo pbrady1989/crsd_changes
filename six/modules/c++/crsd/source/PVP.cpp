@@ -49,12 +49,12 @@ void Pvp::initialize()
 {
     // Default size and formats for each PVP
     // listed in Table 11-6 CRSD1.0 Spec
-    setDefaultValues(2,"Int=I8;Frac=F8", rcvStart);
+    setDefaultValues(2,"Int=I8;Frac=F8;", rcvStart);
     setDefaultValues(3,"X=F8;Y=F8;Z=F8;", rcvPos);
     setDefaultValues(3,"X=F8;Y=F8;Z=F8;", rcvVel);
     setDefaultValues(1,"F8", frcv1);
     setDefaultValues(1,"F8", frcv2);
-    setDefaultValues(2,"Int=I8;Frac=F8", refPhi0);
+    setDefaultValues(2,"Int=I8;Frac=F8;", refPhi0);
     setDefaultValues(1,"F8", refFreq);
     setDefaultValues(1,"F8", dfiC0);
     setDefaultValues(1,"F8", ficRate);

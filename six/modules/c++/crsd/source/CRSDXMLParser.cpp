@@ -1335,7 +1335,7 @@ void CRSDXMLParser::fromXML(const xml::lite::Element* dataXML, Data& data)
         data.transmitParameters.reset(new crsd::Data::Transmit());
         parseUInt(getFirstAndOnly(transmitXML, "NumBytesPPP"), data.transmitParameters->numBytesPPP);
         std::vector<XMLElem> txSequenceXML;
-        supportXML->getElementsByTagName("TxSequence", txSequenceXML);
+        transmitXML->getElementsByTagName("TxSequence", txSequenceXML);
         data.transmitParameters->txSequence.resize(txSequenceXML.size());
         for (size_t ii = 0; ii < txSequenceXML.size(); ++ii)
         {

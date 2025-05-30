@@ -132,6 +132,10 @@ public:
             int64_t pvpBlockSize, int64_t pppBlockSize, int64_t signalBlockSize);
 
     //! Set required elements
+    void setType(std::string type)
+    {
+        mType = type;
+    }
     void setXMLBlockSize(int64_t size)
     {
         mXmlBlockSize = size;
@@ -174,6 +178,10 @@ public:
     }
 
     //! Get required elements
+    std::string getType() const
+    {
+        return mType;
+    }
     int64_t getXMLBlockSize() const
     {
         return mXmlBlockSize;
@@ -251,6 +259,7 @@ private:
 private:
     // File type header
     std::string mVersion;
+    std::string mType;
 
     // Required key-value pairs
     int64_t mXmlBlockSize;

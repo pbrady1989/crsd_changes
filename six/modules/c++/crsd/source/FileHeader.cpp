@@ -49,13 +49,11 @@ FileHeader::FileHeader() :
 
 void FileHeader::read(io::SeekableInputStream& inStream)
 {
-    if (!isCRSD(inStream))
-    {
-        throw except::Exception(Ctxt("Not a CRSD file"));
-    }
-
     // Read mVersion first
     mVersion = readVersion(inStream);
+
+     // Read mType (CRSD type) first
+    mType = readType(inStream);
 
     // Block read the header for more efficient IO
     KeyValuePair headerEntry;
@@ -144,7 +142,18 @@ void FileHeader::read(io::SeekableInputStream& inStream)
         mClassification.empty() ||
         mReleaseInfo.empty())
     {
-        throw except::Exception(Ctxt("CRSD header information is incomplete"));
+        std::ostringstream err;
+        err << "CRSD header information is incomplete" << " ,  mXmlBlockSize=" << std::to_string(mXmlBlockSize) 
+                  << " , mXmlBlockByteOffset=" << std::to_string(mXmlBlockByteOffset) 
+                  << " ,  mPvpBlockSize=" << std::to_string(mPvpBlockSize) 
+                  << " , mPvpBlockByteOffset=" << std::to_string(mPvpBlockByteOffset) 
+                  << " ,  mPppBlockSize=" << std::to_string(mPppBlockSize) 
+                  << " , mPppBlockByteOffset=" << std::to_string(mPppBlockByteOffset) 
+                  << " ,  mSignalBlockSize=" << std::to_string(mSignalBlockSize) 
+                  << " , mSignalBlockByteOffset=" << std::to_string(mSignalBlockByteOffset) 
+                  << " ,  mClassification=" << mClassification
+                  << " , mReleaseInfo=" << mReleaseInfo;
+        throw except::Exception(Ctxt(err.str()));
     }
 }
 
@@ -156,31 +165,39 @@ std::string FileHeader::toString() const
     // Send the values as they are, no calculating
 
     // File type
-    os << FILE_TYPE << "/" << mVersion << LINE_TERMINATOR;
+    os << mType << "/" << mVersion << LINE_TERMINATOR;
 
-    // Classification fields, if present
-    if (mSupportBlockSize > 0)
-    {
-        os << "SUPPORT_BLOCK_SIZE" << KVP_DELIMITER << mSupportBlockSize
-           << LINE_TERMINATOR
-           << "SUPPORT_BLOCK_BYTE_OFFSET" << KVP_DELIMITER
-           << mSupportBlockByteOffset << LINE_TERMINATOR;
-    }
+    // SUPPORT block is required fields, if present
+    os << "SUPPORT_BLOCK_SIZE" << KVP_DELIMITER << mSupportBlockSize
+        << LINE_TERMINATOR
+        << "SUPPORT_BLOCK_BYTE_OFFSET" << KVP_DELIMITER
+        << mSupportBlockByteOffset << LINE_TERMINATOR;
 
-    // Required fields.
+    // XML is Required.
     os << "XML_BLOCK_SIZE" << KVP_DELIMITER << mXmlBlockSize << LINE_TERMINATOR
-       << "XML_BLOCK_BYTE_OFFSET" << KVP_DELIMITER << mXmlBlockByteOffset
-       << LINE_TERMINATOR
-       << "PVP_BLOCK_SIZE" << KVP_DELIMITER << mPvpBlockSize << LINE_TERMINATOR
-       << "PVP_BLOCK_BYTE_OFFSET" << KVP_DELIMITER << mPvpBlockByteOffset
-       << "PPP_BLOCK_SIZE" << KVP_DELIMITER << mPppBlockSize << LINE_TERMINATOR
-       << "PPP_BLOCK_BYTE_OFFSET" << KVP_DELIMITER << mPppBlockByteOffset
-       << LINE_TERMINATOR
-       << "SIGNAL_BLOCK_SIZE" << KVP_DELIMITER << mSignalBlockSize
-       << LINE_TERMINATOR
-       << "SIGNAL_BLOCK_BYTE_OFFSET" << KVP_DELIMITER << mSignalBlockByteOffset
-       << LINE_TERMINATOR
-       << "CLASSIFICATION" << KVP_DELIMITER << mClassification
+       << "XML_BLOCK_BYTE_OFFSET" << KVP_DELIMITER << mXmlBlockByteOffset << LINE_TERMINATOR;
+    
+    if (mPppBlockSize > 0)
+    {
+        os << "PPP_BLOCK_SIZE" << KVP_DELIMITER << mPppBlockSize << LINE_TERMINATOR
+           << "PPP_BLOCK_BYTE_OFFSET" << KVP_DELIMITER << mPppBlockByteOffset
+           << LINE_TERMINATOR;
+    }
+    if (mPvpBlockSize)
+    {
+        os << "PVP_BLOCK_SIZE" << KVP_DELIMITER << mPvpBlockSize << LINE_TERMINATOR
+       << "PVP_BLOCK_BYTE_OFFSET" << KVP_DELIMITER << mPvpBlockByteOffset << LINE_TERMINATOR;
+    }
+    if (mSignalBlockSize > 0)
+    {
+        os << "SIGNAL_BLOCK_SIZE" << KVP_DELIMITER << mSignalBlockSize
+           << LINE_TERMINATOR
+           << "SIGNAL_BLOCK_BYTE_OFFSET" << KVP_DELIMITER << mSignalBlockByteOffset
+           << LINE_TERMINATOR;
+    }
+    
+    // Required classification and release info
+    os << "CLASSIFICATION" << KVP_DELIMITER << mClassification
        << LINE_TERMINATOR
        << "RELEASE_INFO" << KVP_DELIMITER << mReleaseInfo << LINE_TERMINATOR
        << SECTION_TERMINATOR << LINE_TERMINATOR;

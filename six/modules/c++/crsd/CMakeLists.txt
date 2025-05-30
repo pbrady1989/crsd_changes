@@ -27,6 +27,13 @@ coda_add_module(
         source/CRSDWriter.cpp
         source/CRSDReader.cpp)
 
+coda_add_tests(
+    MODULE_NAME ${MODULE_NAME}
+    DIRECTORY "unittests"
+    UNITTEST
+    SOURCES
+        test_file_header.cpp)
+
 # coda_add_tests(
 #     MODULE_NAME ${MODULE_NAME}
 #     DIRECTORY "tests"

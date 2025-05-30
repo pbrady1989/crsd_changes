@@ -44,7 +44,9 @@ class BaseFileHeader
 {
 public:
     //! Type of file is CRSD
-    static const char FILE_TYPE[];
+    static const char FILE_TYPE_SAR[];
+    static const char FILE_TYPE_TX[];
+    static const char FILE_TYPE_RX[];
     //! Key value pair delimiter ":="
     static const char KVP_DELIMITER[];
     //! Line delimiter "\n"
@@ -74,6 +76,23 @@ public:
      */
     static
     std::string readVersion(io::SeekableInputStream& inStream);
+
+    /*
+     *  \func readType
+     *
+     *  \brief Reads type of CRSD file
+     *
+     *  Given a Seekable input stream of a CRSD file, reads the version
+     *  of the CRSD
+     *
+     *  \param inStream Input Stream of CRSD file
+     *
+     *  \return Type string
+     *
+     *  \throws except::Exception if file is not CRSD
+     */
+    static
+    std::string readType(io::SeekableInputStream& inStream);
 
     /*
      *  \func read

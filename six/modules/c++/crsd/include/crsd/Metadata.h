@@ -79,6 +79,12 @@ struct Metadata final : MetadataBase
     //! Set CRSD version
     void setVersion(const std::string& version);
 
+    //! Get CRSD type
+    CRSDType getType() const;
+
+    //! Set CRSD version
+    void setType(const std::string& type);
+
     //!  SARInfo Block 
     ProductInfo productInfo;
 
@@ -151,6 +157,9 @@ private:
 
     //! Stores file Version
     std::string mVersion;
+
+    //! Stores CRSD type (SAR, TX, RX)
+    std::string mType;
 };
 
 //! Ostream operator

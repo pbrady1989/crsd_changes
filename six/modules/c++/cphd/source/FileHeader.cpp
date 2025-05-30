@@ -59,7 +59,7 @@ void FileHeader::read(io::SeekableInputStream& inStream)
     KeyValuePair headerEntry;
     std::string headerBlock;
     blockReadHeader(inStream, 1024, headerBlock);
-
+std::cout << headerBlock << std::endl;
     // Read each line with its tokens
     if (!headerBlock.empty())
     {

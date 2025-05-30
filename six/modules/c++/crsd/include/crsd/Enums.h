@@ -45,14 +45,14 @@ SIX_Enum_ENUM_3(SampleType,
 );
 
 /*!
- *  \struct DomainType
+ *  \struct CRSDType
  *
- *  Enumeration used to represent DomainTypes
+ *  Enumeration used to represent CRSDTypes
  */
-SIX_Enum_ENUM_3(DomainType,
-    FX, 1,
-    TOA, 2,
-    RE08I_IM08I, 3
+SIX_Enum_ENUM_3(CRSDType,
+    SAR, 1,
+    TX, 2,
+    RX, 3
 );
 
 /*!

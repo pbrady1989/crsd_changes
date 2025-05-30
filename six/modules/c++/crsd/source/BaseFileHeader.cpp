@@ -30,7 +30,9 @@
 
 namespace crsd
 {
-const char BaseFileHeader::FILE_TYPE[] = "CRSD";
+const char BaseFileHeader::FILE_TYPE_SAR[] = "CRSDsar";
+const char BaseFileHeader::FILE_TYPE_TX[] = "CRSDtx";
+const char BaseFileHeader::FILE_TYPE_RX[] = "CRSDrx";
 const char BaseFileHeader::KVP_DELIMITER[] = " := ";
 const char BaseFileHeader::LINE_TERMINATOR = '\n';
 const char BaseFileHeader::SECTION_TERMINATOR = '\f';
@@ -40,10 +42,11 @@ bool BaseFileHeader::isCRSD(io::SeekableInputStream& inStream)
 {
     inStream.seek(0, io::Seekable::START);
 
-    char buf[4] = {'\0', '\0', '\0', '\0'};
-    inStream.read(buf, 4);
-
-    return (::strncmp(buf, FILE_TYPE, 4) == 0);
+    char buf[7] = {'\0', '\0', '\0', '\0', '\0', '\0', '\0'};
+    inStream.read(buf, 7);
+    return (  (::strncmp(buf, FILE_TYPE_SAR, 7) == 0)
+           || (::strncmp(buf, FILE_TYPE_TX, 6) == 0)
+           || (::strncmp(buf, FILE_TYPE_RX, 6) == 0));
 }
 
 std::string BaseFileHeader::readVersion(io::SeekableInputStream& inStream)
@@ -51,15 +54,37 @@ std::string BaseFileHeader::readVersion(io::SeekableInputStream& inStream)
     char buf[128];
     inStream.seek(0, io::Seekable::START);
     inStream.readln(buf, sizeof(buf));
-
     const KeyValuePair kvPair(tokenize(buf, "/"));
-    if (kvPair.first != FILE_TYPE)
+    if ( (kvPair.first  != FILE_TYPE_SAR) 
+       && (kvPair.first != FILE_TYPE_TX) 
+       && (kvPair.first != FILE_TYPE_RX) )
     {
         throw except::Exception(Ctxt("Not a CRSD file"));
     }
 
     // Remove any trailing whitespace from the version
     std::string ret = kvPair.second;
+    str::trim(ret);
+
+    return ret;
+}
+
+std::string BaseFileHeader::readType(io::SeekableInputStream& inStream)
+{
+    char buf[128];
+    inStream.seek(0, io::Seekable::START);
+    inStream.readln(buf, sizeof(buf));
+
+    const KeyValuePair kvPair(tokenize(buf, "/"));
+    if ( (kvPair.first  != FILE_TYPE_SAR) 
+       && (kvPair.first != FILE_TYPE_TX) 
+       && (kvPair.first != FILE_TYPE_RX) )
+    {
+        throw except::Exception(Ctxt("Not a CRSD file"));
+    }
+
+    // Remove any trailing whitespace from the type
+    std::string ret = kvPair.first;
     str::trim(ret);
 
     return ret;

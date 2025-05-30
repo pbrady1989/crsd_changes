@@ -53,6 +53,7 @@ std::string BaseFileHeader::readVersion(io::SeekableInputStream& inStream)
     inStream.readln(buf, sizeof(buf));
 
     const KeyValuePair kvPair(tokenize(buf, "/"));
+    std::cout << "buf:" << buf << std::endl;
     if (kvPair.first != FILE_TYPE)
     {
         throw except::Exception(Ctxt("Not a CPHD file"));

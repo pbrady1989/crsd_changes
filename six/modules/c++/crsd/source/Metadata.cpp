@@ -19,7 +19,8 @@
  * see <http://www.gnu.org/licenses/>.
  *
  */
-#include <cphd/Metadata.h>
+#include <crsd/Metadata.h>
+#include <crsd/Enums.h>
 
 namespace cphd
 {
@@ -72,6 +73,15 @@ std::string Metadata::getVersion() const
 void Metadata::setVersion(const std::string& version)
 {
     mVersion = version;
+}
+
+CRSDType Metadata::getType() const
+{
+    return mType;
+}
+void Metadata::setType(const std::string& type)
+{
+    mType = type;
 }
 
 bool Metadata::operator==(const Metadata& other) const

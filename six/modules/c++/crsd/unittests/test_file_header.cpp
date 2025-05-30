@@ -1,10 +1,10 @@
 /* =========================================================================
- * This file is part of cphd-c++
+ * This file is part of crsd-c++
  * =========================================================================
  *
  * (C) Copyright 2004 - 2019, MDA Information Systems LLC
  *
- * cphd-c++ is free software; you can redistribute it and/or modify
+ * crsd-c++ is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
@@ -20,16 +20,18 @@
  *
  */
 
-#include <cphd/FileHeader.h>
+#include <crsd/FileHeader.h>
 #include <io/ByteStream.h>
 #include "TestCase.h"
 
-const char* FILE_TYPE_HEADER = "CPHD/1.0\n";
-const char* FILE_HEADER_CONTENT = "CPHD/1.0\n"
+const char* FILE_TYPE_HEADER = "CRSDsar/1.0\n";
+const char* FILE_HEADER_CONTENT = "CRSDsar/1.0\n"
         "XML_BLOCK_SIZE := 3\n"
         "XML_BLOCK_BYTE_OFFSET := 10\n"
         "SUPPORT_BLOCK_SIZE := 4\n"
         "SUPPORT_BLOCK_BYTE_OFFSET := 15\n"
+        "PPP_BLOCK_SIZE := 3\n"
+        "PPP_BLOCK_BYTE_OFFSET := 3\n"
         "PVP_BLOCK_SIZE := 5\n"
         "PVP_BLOCK_BYTE_OFFSET := 19\n"
         "SIGNAL_BLOCK_SIZE := 6\n"
@@ -42,19 +44,28 @@ TEST_CASE(testReadVersion)
 {
     io::ByteStream fileTypeHeader;
     fileTypeHeader.write(FILE_TYPE_HEADER, strlen(FILE_TYPE_HEADER));
-    TEST_ASSERT_EQ(cphd::FileHeader::readVersion(fileTypeHeader), "1.0");
+    TEST_ASSERT_EQ(crsd::FileHeader::readVersion(fileTypeHeader), "1.0");
+}
+
+TEST_CASE(testReadType)
+{
+    io::ByteStream crsdTypeHeader;
+    crsdTypeHeader.write(FILE_TYPE_HEADER, strlen(FILE_TYPE_HEADER));
+    TEST_ASSERT_EQ(crsd::FileHeader::readType(crsdTypeHeader), "CRSDsar");
 }
 
 TEST_CASE(testCanReadHeaderWithoutBreaking)
 {
     io::ByteStream fileHeaderContentWithSupport;
     fileHeaderContentWithSupport.write(FILE_HEADER_CONTENT, strlen(FILE_HEADER_CONTENT));
-    cphd::FileHeader headerWithSupport;
+    crsd::FileHeader headerWithSupport;
     headerWithSupport.read(fileHeaderContentWithSupport);
     TEST_ASSERT_EQ(headerWithSupport.getXMLBlockSize(), 3);
     TEST_ASSERT_EQ(headerWithSupport.getXMLBlockByteOffset(), 10);
     TEST_ASSERT_EQ(headerWithSupport.getSupportBlockSize(), 4);
     TEST_ASSERT_EQ(headerWithSupport.getSupportBlockByteOffset(), 15);
+    TEST_ASSERT_EQ(headerWithSupport.getPppBlockSize(), 3);
+    TEST_ASSERT_EQ(headerWithSupport.getPppBlockByteOffset(), 3);
     TEST_ASSERT_EQ(headerWithSupport.getPvpBlockSize(), 5);
     TEST_ASSERT_EQ(headerWithSupport.getPvpBlockByteOffset(), 19);
     TEST_ASSERT_EQ(headerWithSupport.getSignalBlockSize(), 6);
@@ -63,33 +74,39 @@ TEST_CASE(testCanReadHeaderWithoutBreaking)
     TEST_ASSERT_EQ(headerWithSupport.getReleaseInfo(), "UNRESTRICTED");
 
     io::ByteStream fileHeaderContentWithoutSupport;
-    std::string fileHeaderTxtNoSupport = "CPHD/1.0\n"
-            "XML_BLOCK_SIZE := 3\n"
-            "XML_BLOCK_BYTE_OFFSET := 10\n"
-            "PVP_BLOCK_SIZE := 5\n"
-            "PVP_BLOCK_BYTE_OFFSET := 15\n"
-            "SIGNAL_BLOCK_SIZE := 6\n"
-            "SIGNAL_BLOCK_BYTE_OFFSET := 20\n"
-            "CLASSIFICATION := UNCLASSIFIED\n"
-            "RELEASE_INFO := UNRESTRICTED\n"
-            "\f\n";
+    std::string fileHeaderTxtNoSupport =  "CRSDsar/1.0\n"
+        "XML_BLOCK_SIZE := 3\n"
+        "XML_BLOCK_BYTE_OFFSET := 10\n"
+        "PPP_BLOCK_SIZE := 3\n"
+        "PPP_BLOCK_BYTE_OFFSET := 3\n"
+        "PVP_BLOCK_SIZE := 5\n"
+        "PVP_BLOCK_BYTE_OFFSET := 19\n"
+        "SIGNAL_BLOCK_SIZE := 6\n"
+        "SIGNAL_BLOCK_BYTE_OFFSET := 24\n"
+        "CLASSIFICATION := UNCLASSIFIED\n"
+        "RELEASE_INFO := UNRESTRICTED\n"
+        "\f\n";
     fileHeaderContentWithoutSupport.write(fileHeaderTxtNoSupport);
-    cphd::FileHeader headerWithoutSupport;
+    crsd::FileHeader headerWithoutSupport;
     headerWithoutSupport.read(fileHeaderContentWithoutSupport);
     TEST_ASSERT_EQ(headerWithoutSupport.getXMLBlockSize(), 3);
     TEST_ASSERT_EQ(headerWithoutSupport.getXMLBlockByteOffset(), 10);
     TEST_ASSERT_EQ(headerWithoutSupport.getSupportBlockSize(), 0);
     TEST_ASSERT_EQ(headerWithoutSupport.getSupportBlockByteOffset(), 0);
+    TEST_ASSERT_EQ(headerWithoutSupport.getPppBlockSize(), 3);
+    TEST_ASSERT_EQ(headerWithoutSupport.getPppBlockByteOffset(), 3);
     TEST_ASSERT_EQ(headerWithoutSupport.getPvpBlockSize(), 5);
-    TEST_ASSERT_EQ(headerWithoutSupport.getPvpBlockByteOffset(), 15);
+    TEST_ASSERT_EQ(headerWithoutSupport.getPvpBlockByteOffset(), 19);
     TEST_ASSERT_EQ(headerWithoutSupport.getSignalBlockSize(), 6);
-    TEST_ASSERT_EQ(headerWithoutSupport.getSignalBlockByteOffset(), 20);
+    TEST_ASSERT_EQ(headerWithoutSupport.getSignalBlockByteOffset(), 24);
     TEST_ASSERT_EQ(headerWithoutSupport.getClassification(), "UNCLASSIFIED");
     TEST_ASSERT_EQ(headerWithoutSupport.getReleaseInfo(), "UNRESTRICTED");
 
-    std::string fileHeaderTxtNoClass = "CPHD/1.0\n"
+    std::string fileHeaderTxtNoClass = "CRSDsar/1.0\n"
             "XML_BLOCK_SIZE := 3\n"
             "XML_BLOCK_BYTE_OFFSET := 10\n"
+            "PPP_BLOCK_SIZE := 3\n"
+            "PPP_BLOCK_BYTE_OFFSET := 3\n"
             "PVP_BLOCK_SIZE := 5\n"
             "PVP_BLOCK_BYTE_OFFSET := 15\n"
             "SIGNAL_BLOCK_SIZE := 6\n"
@@ -98,9 +115,9 @@ TEST_CASE(testCanReadHeaderWithoutBreaking)
             "\f\n";
     io::ByteStream fileHeaderContentWithoutClassification;
     fileHeaderContentWithoutClassification.write(fileHeaderTxtNoClass);
-    TEST_THROWS(cphd::FileHeader().read(fileHeaderContentWithoutClassification));
+    TEST_THROWS(crsd::FileHeader().read(fileHeaderContentWithoutClassification));
 
-    std::string fileHeaderTxtInvalid = "CPHD/1.0\n"
+    std::string fileHeaderTxtInvalid = "CRSDsar/1.0\n"
             "XML_BLOCK_SIZE := foo\n"
             "XML_BLOCK_BYTE_OFFSET := 10\n"
             "PVP_BLOCK_SIZE := 5\n"
@@ -112,22 +129,20 @@ TEST_CASE(testCanReadHeaderWithoutBreaking)
             "\f\n";
     io::ByteStream fileHeaderContentWithInvalidValue;
     fileHeaderContentWithInvalidValue.write(fileHeaderTxtInvalid);
-    TEST_THROWS(cphd::FileHeader().read(fileHeaderContentWithInvalidValue));
+    TEST_THROWS(crsd::FileHeader().read(fileHeaderContentWithInvalidValue));
 }
 
 TEST_CASE(testRoundTripHeader)
 {
     io::ByteStream headerContent;
     headerContent.write(FILE_HEADER_CONTENT, strlen(FILE_HEADER_CONTENT));
-    cphd::FileHeader header;
+    crsd::FileHeader header;
     header.read(headerContent);
     std::string outString = header.toString();
-
     io::ByteStream roundTrippedContent;
     roundTrippedContent.write(outString);
-    cphd::FileHeader roundTrippedHeader;
+    crsd::FileHeader roundTrippedHeader;
     roundTrippedHeader.read(roundTrippedContent);
-
     TEST_ASSERT_EQ(header.getXMLBlockSize(),
             roundTrippedHeader.getXMLBlockSize());
     TEST_ASSERT_EQ(header.getXMLBlockByteOffset(),
@@ -136,6 +151,10 @@ TEST_CASE(testRoundTripHeader)
             roundTrippedHeader.getSupportBlockSize());
     TEST_ASSERT_EQ(header.getSupportBlockByteOffset(),
             roundTrippedHeader.getSupportBlockByteOffset());
+    TEST_ASSERT_EQ(header.getPppBlockSize(),
+            roundTrippedHeader.getPppBlockSize());
+    TEST_ASSERT_EQ(header.getPppBlockByteOffset(),
+            roundTrippedHeader.getPppBlockByteOffset());
     TEST_ASSERT_EQ(header.getPvpBlockSize(),
             roundTrippedHeader.getPvpBlockSize());
     TEST_ASSERT_EQ(header.getPvpBlockByteOffset(),
@@ -152,6 +171,7 @@ TEST_CASE(testRoundTripHeader)
 
 TEST_MAIN(
         TEST_CHECK(testReadVersion);
+        TEST_CHECK(testReadType);
         TEST_CHECK(testCanReadHeaderWithoutBreaking);
         TEST_CHECK(testRoundTripHeader);
         )

@@ -843,6 +843,91 @@ void runTest(const std::string& testName, const std::string& version)
     TEST_ASSERT_EQ(metadata->channel->parameters[0].rcvRefLAtm, 0.0);
     TEST_ASSERT_EQ(metadata->channel->parameters[0].pncrsd, 0.0);
     TEST_ASSERT_EQ(metadata->channel->parameters[0].bncrsd, 1.0);
+    TEST_ASSERT_TRUE(metadata->channel->parameters[0].sarImage.get() != nullptr);
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].sarImage->txID, "TXSEQ1");
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].sarImage->refVectorPulseIndex, 0);
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].sarImage->txPolarization.polarizationID.toString(), "H");
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].sarImage->txPolarization.ampH, 1.0);
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].sarImage->txPolarization.ampV, 0.0);
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].sarImage->txPolarization.phaseH, 0.0);
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].sarImage->txPolarization.phaseV, 0.0);  
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].sarImage->dwellTime.codId, "COD1");    
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].sarImage->dwellTime.dwellId, "DWELL1");
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].sarImage->imageArea.x1y1[0], 0.0);
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].sarImage->imageArea.x1y1[1], 0.0);
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].sarImage->imageArea.x2y2[0], 1000.0);
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].sarImage->imageArea.x2y2[1], 1000.0);
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].sarImage->imageArea.polygon.size(), 4);
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].sarImage->imageArea.polygon[0][0], 0.0);
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].sarImage->imageArea.polygon[0][1], 0.0);
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].sarImage->imageArea.polygon[1][0], 1000.0);
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].sarImage->imageArea.polygon[1][1], 0.0);
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].sarImage->imageArea.polygon[2][0], 1000.0);
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].sarImage->imageArea.polygon[2][1], 1000.0);
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].sarImage->imageArea.polygon[3][0], 0.0);
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].sarImage->imageArea.polygon[3][1], 1000.0);
+
+    // ReferenceGeometry
+    
+    TEST_ASSERT_EQ(metadata->referenceGeometry.refPoint.ecf[0], 1234567.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.refPoint.ecf[1], 2345678.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.refPoint.ecf[2], 3456789.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.refPoint.iac[0], 0.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.refPoint.iac[1], 0.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.sarParameters->codTime, 0.5);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.sarParameters->dwellTime, 0.001);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.sarParameters->referenceTime, 0.5);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.sarParameters->arpPos[0], 1234567.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.sarParameters->arpPos[1], 2345678.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.sarParameters->arpPos[2], 3456789.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.sarParameters->arpVel[0], 100.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.sarParameters->arpVel[1], 0.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.sarParameters->arpVel[2], 0.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.sarParameters->bistaticAngle, 30.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.sarParameters->bistaticAngleRate, 0.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.sarParameters->sideOfTrack.toString(), "R");
+    TEST_ASSERT_EQ(metadata->referenceGeometry.sarParameters->slantRange, 10000.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.sarParameters->groundRange, 9000.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.sarParameters->dopplerConeAngle, 45.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.sarParameters->squintAngle, 0.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.sarParameters->azimuthAngle, 90.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.sarParameters->grazeAngle, 10.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.sarParameters->incidenceAngle, 30.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.sarParameters->twistAngle, 0.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.sarParameters->slopeAngle, 5.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.sarParameters->layoverAngle, 0.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.txParameters->time, 0.5);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.txParameters->apcPos[0], 1234567.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.txParameters->apcPos[1], 2345678.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.txParameters->apcPos[2], 3456789.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.txParameters->apcVel[0], 100.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.txParameters->apcVel[1], 0.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.txParameters->apcVel[2], 0.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.txParameters->sideOfTrack.toString(), "R");
+    TEST_ASSERT_EQ(metadata->referenceGeometry.txParameters->slantRange, 10000.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.txParameters->groundRange, 9000.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.txParameters->dopplerConeAngle, 45.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.txParameters->squintAngle, 0.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.txParameters->azimuthAngle, 90.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.txParameters->grazeAngle, 10.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.txParameters->incidenceAngle, 30.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.rcvParameters->time, 0.5);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.rcvParameters->apcPos[0], 1234567.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.rcvParameters->apcPos[1], 2345678.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.rcvParameters->apcPos[2], 3456789.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.rcvParameters->apcVel[0], 100.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.rcvParameters->apcVel[1], 0.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.rcvParameters->apcVel[2], 0.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.rcvParameters->sideOfTrack.toString(), "R");
+    TEST_ASSERT_EQ(metadata->referenceGeometry.rcvParameters->slantRange, 10000.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.rcvParameters->groundRange, 9000.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.rcvParameters->dopplerConeAngle, 45.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.rcvParameters->squintAngle, 0.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.rcvParameters->azimuthAngle, 90.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.rcvParameters->grazeAngle, 10.0);
+    TEST_ASSERT_EQ(metadata->referenceGeometry.rcvParameters->incidenceAngle, 30.0);
+
+
 }
 }
 

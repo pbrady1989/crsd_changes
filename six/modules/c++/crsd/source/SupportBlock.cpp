@@ -1,10 +1,10 @@
 /* =========================================================================
- * This file is part of cphd-c++
+ * This file is part of crsd-c++
  * =========================================================================
  *
  * (C) Copyright 2004 - 2019, MDA Information Systems LLC
  *
- * cphd-c++ is free software; you can redistribute it and/or modify
+ * crsd-c++ is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
@@ -19,7 +19,7 @@
  * see <http://www.gnu.org/licenses/>.
  *
  */
-#include <cphd/SupportBlock.h>
+#include <crsd/SupportBlock.h>
 
 #include <limits>
 #include <sstream>
@@ -33,13 +33,13 @@
 
 #include <six/Init.h>
 
-#include <cphd/ByteSwap.h>
-#include <cphd/FileHeader.h>
+#include <crsd/ByteSwap.h>
+#include <crsd/FileHeader.h>
 
-namespace cphd
+namespace crsd
 {
 SupportBlock::SupportBlock(const std::string& pathname,
-                           const cphd::Data& data,
+                           const crsd::Data& data,
                            int64_t startSupport,
                            int64_t sizeSupport) :
     mInStream(std::make_shared<io::FileInputStream>(pathname)),
@@ -51,7 +51,7 @@ SupportBlock::SupportBlock(const std::string& pathname,
 }
 
 SupportBlock::SupportBlock(std::shared_ptr<io::SeekableInputStream> inStream,
-                           const cphd::Data& data,
+                           const crsd::Data& data,
                            int64_t startSupport,
                            int64_t sizeSupport) :
     mInStream(inStream),
@@ -62,7 +62,7 @@ SupportBlock::SupportBlock(std::shared_ptr<io::SeekableInputStream> inStream,
     initialize();
 }
 SupportBlock::SupportBlock(std::shared_ptr<io::SeekableInputStream> inStream,
-    const cphd::Data& data, const cphd::FileHeader& fileHeader):
+    const crsd::Data& data, const crsd::FileHeader& fileHeader):
     SupportBlock(inStream, data,
         fileHeader.getSupportBlockByteOffset(), fileHeader.getSupportBlockSize())
 {
@@ -101,7 +101,7 @@ void SupportBlock::read(const std::string& id,
         throw except::Exception(Ctxt(ostr.str()));
     }
     // Perform the read
-    // Compute the byte offset into this SupportArray in the CPHD file
+    // Compute the byte offset into this SupportArray in the CRSD file
     // First to the start of the first support array we're going to read
     int64_t inOffset = getFileOffset(id);
     auto dataPtr = data.data;
@@ -111,7 +111,7 @@ void SupportBlock::read(const std::string& id,
 
     if ((std::endian::native == std::endian::little) && mData.getElementSize(id) > 1)
     {
-        cphd::byteSwap(dataPtr, mData.getElementSize(id),
+        crsd::byteSwap(dataPtr, mData.getElementSize(id),
                        mData.getSupportArrayById(id).numRows *
                        mData.getSupportArrayById(id).numCols,
                        numThreads);

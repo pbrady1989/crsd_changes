@@ -4,35 +4,42 @@ coda_add_module(
     crsd
     DEPS mt-c++ six.sicd-c++
     SOURCES
+        source/Antenna.cpp
         source/BaseFileHeader.cpp
         source/ByteSwap.cpp
+        source/CRSDReader.cpp
+        source/CRSDWriter.cpp
+        source/CRSDXMLControl.cpp
+        source/CRSDXMLParser.cpp
+        source/Channel.cpp
+        source/Data.cpp
+        source/Dwell.cpp
+        source/ErrorParameters.cpp
         source/FileHeader.cpp
         source/Global.cpp
-        source/SceneCoordinates.cpp
-        source/ProductInfo.cpp
-        source/ReferenceGeometry.cpp
-        source/SARInfo.cpp
-        source/ReceiveInfo.cpp
-        source/TransmitInfo.cpp
-        source/SupportArray.cpp
+        source/Metadata.cpp
         source/PVP.cpp
         source/PVPBlock.cpp
         source/PPP.cpp
         source/PPPBlock.cpp
-        source/Data.cpp
-        source/Channel.cpp
-        source/Antenna.cpp
+        source/ProductInfo.cpp
+        source/ReferenceGeometry.cpp
+        source/SceneCoordinates.cpp
+        source/SARInfo.cpp
+        source/ReceiveInfo.cpp
+        source/TransmitInfo.cpp
+        source/SupportArray.cpp
+        source/SupportBlock.cpp
         source/TxSequence.cpp
-        source/CRSDXMLParser.cpp
-        source/CRSDWriter.cpp
-        source/CRSDReader.cpp)
+        source/Utilities.cpp)
 
 coda_add_tests(
     MODULE_NAME ${MODULE_NAME}
     DIRECTORY "unittests"
     UNITTEST
     SOURCES
-        test_file_header.cpp)
+        test_file_header.cpp
+        test_crsd_xml_control.cpp)
 
 # coda_add_tests(
 #     MODULE_NAME ${MODULE_NAME}

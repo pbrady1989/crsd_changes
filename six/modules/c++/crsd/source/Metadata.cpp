@@ -22,13 +22,11 @@
 #include <crsd/Metadata.h>
 #include <crsd/Enums.h>
 
-namespace cphd
+namespace crsd
 {
 
 Metadata::Metadata()
 {
-  // Default version defined in cphd::FileHeader
-  mVersion = FileHeader::DEFAULT_VERSION;
 }
 
 size_t Metadata::getNumChannels() const
@@ -61,11 +59,6 @@ bool Metadata::isCompressed() const
     return data.isCompressed();
 }
 
-DomainType Metadata::getDomainType() const
-{
-    return global.getDomainType();
-}
-
 std::string Metadata::getVersion() const
 {
     return mVersion;
@@ -75,10 +68,11 @@ void Metadata::setVersion(const std::string& version)
     mVersion = version;
 }
 
-CRSDType Metadata::getType() const
+std::string Metadata::getType() const
 {
     return mType;
 }
+
 void Metadata::setType(const std::string& type)
 {
     mType = type;
@@ -86,61 +80,74 @@ void Metadata::setType(const std::string& type)
 
 bool Metadata::operator==(const Metadata& other) const
 {
-    return collectionID == other.collectionID &&
-           global == other.global &&
+    return global == other.global &&
            sceneCoordinates == other.sceneCoordinates &&
            data == other.data &&
            channel == other.channel &&
+           ppp == other.ppp &&
            pvp == other.pvp &&
            dwell == other.dwell &&
            referenceGeometry == other.referenceGeometry &&
            supportArray == other.supportArray &&
            antenna == other.antenna &&
-           txRcv == other.txRcv &&
+           txSequence == other.txSequence &&
            errorParameters == other.errorParameters &&
            productInfo == other.productInfo &&
-           geoInfo == other.geoInfo &&
-           matchInfo == other.matchInfo;
+           sarInfo == other.sarInfo &&
+           receiveInfo == other.receiveInfo &&
+           transmitInfo == other.transmitInfo &&
+           geoInfo == other.geoInfo;
 }
 
 std::ostream& operator<< (std::ostream& os, const Metadata& d)
 {
     os << "Metadata:: \n"
-        << d.collectionID << "\n"
+        << d.productInfo << "\n"
         << d.global << "\n"
         << d.sceneCoordinates << "\n"
         << d.data << "\n"
-        << d.channel << "\n"
-        << d.pvp << "\n"
-        << d.dwell << "\n"
-        << d.referenceGeometry << "\n";
-    if (d.supportArray.get())
+        << d.supportArray << "\n"
+        << d.antenna << "\n";
+
+    if (d.dwell.get())
     {
-        os << *(d.supportArray) << "\n";
+        os << *(d.dwell) << "\n";
     }
-    if (d.antenna.get())
+    if (d.receiveInfo.get())
     {
-        os << *(d.antenna) << "\n";
+        os << *(d.receiveInfo) << "\n";
     }
-    if (d.txRcv.get())
+    if (d.channel.get())
     {
-        os << *(d.txRcv) << "\n";
+        os << *(d.channel) << "\n";
+    }
+    if (d.pvp.get())
+    {
+        os << *(d.pvp) << "\n";
+    }
+    if (d.ppp.get())
+    {
+        os << *(d.ppp) << "\n";
+    }
+    if (d.transmitInfo.get())
+    {
+        os << *(d.transmitInfo) << "\n";
+    }
+    if (d.txSequence.get())
+    {
+        os << *(d.txSequence) << "\n";
+    }
+    if (d.sarInfo.get())
+    {
+        os << *(d.sarInfo) << "\n";
     }
     if (d.errorParameters.get())
     {
         os << *(d.errorParameters) << "\n";
     }
-    if (d.productInfo.get())
-    {
-        os << *(d.productInfo) << "\n";
-    }
     for (size_t ii = 0; ii < d.geoInfo.size(); ++ii)
     {
         os << d.geoInfo[ii] << "\n";
-    }
-    if (d.matchInfo.get())
-    {
-        os << *(d.matchInfo) << "\n";
     }
     return os;
 }

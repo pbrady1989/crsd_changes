@@ -1,10 +1,10 @@
 /* =========================================================================
- * This file is part of cphd-c++
+ * This file is part of crsd-c++
  * =========================================================================
  *
  * (C) Copyright 2004 - 2019, MDA Information Systems LLC
  *
- * cphd-c++ is free software; you can redistribute it and/or modify
+ * crsd-c++ is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
@@ -19,7 +19,7 @@
  * see <http://www.gnu.org/licenses/>.
  *
  */
-#include <cphd/CPHDXMLControl.h>
+#include <crsd/CRSDXMLControl.h>
 
 #include <set>
 #include <unordered_map>
@@ -34,25 +34,25 @@
 
 #include <six/XMLControl.h>
 #include <six/XmlLite.h>
-#include <cphd/CPHDXMLParser.h>
-#include <cphd/Enums.h>
-#include <cphd/Metadata.h>
-#include <cphd/Types.h>
+#include <crsd/CRSDXMLParser.h>
+#include <crsd/Enums.h>
+#include <crsd/Metadata.h>
+#include <crsd/Types.h>
 
 
 #define ENFORCESPEC 0
 
-namespace cphd
+namespace crsd
 {
 
-CPHDXMLControl::CPHDXMLControl(logging::Logger* log, bool ownLog) :
+CRSDXMLControl::CRSDXMLControl(logging::Logger* log, bool ownLog) :
     mLogger(mLog, mOwnLog, nullptr)
 {
     setLogger(log, ownLog);
 }
 
 /* TO XML */
-std::u8string CPHDXMLControl::toXMLString(
+std::u8string CRSDXMLControl::toXMLString(
     const Metadata& metadata,
     const std::vector<std::filesystem::path>* pSchemaPaths,
     bool prettyPrint)
@@ -71,7 +71,7 @@ std::u8string CPHDXMLControl::toXMLString(
         doc->getRootElement()->print(ss);
     return ss.stream().str();
 }
-std::string CPHDXMLControl::toXMLString(
+std::string CRSDXMLControl::toXMLString(
         const Metadata& metadata,
         const std::vector<std::string>& schemaPaths_,
         bool prettyPrint)
@@ -84,7 +84,7 @@ std::string CPHDXMLControl::toXMLString(
     return str::EncodedStringView(result).native();
 }
 
-mem::auto_ptr<xml::lite::Document> CPHDXMLControl::toXML(
+mem::auto_ptr<xml::lite::Document> CRSDXMLControl::toXML(
         const Metadata& metadata,
         const std::vector<std::string>& schemaPaths)
 {
@@ -96,16 +96,14 @@ mem::auto_ptr<xml::lite::Document> CPHDXMLControl::toXML(
     return doc;
 }
 
-std::unordered_map<std::string, xml::lite::Uri> CPHDXMLControl::getVersionUriMap()
+std::unordered_map<std::string, xml::lite::Uri> CRSDXMLControl::getVersionUriMap()
 {
     return {
-        {"1.0.0", xml::lite::Uri("urn:CPHD:1.0.0")},
-        {"1.0.1", xml::lite::Uri("http://api.nsgreg.nga.mil/schema/cphd/1.0.1")},
-        {"1.1.0", xml::lite::Uri("http://api.nsgreg.nga.mil/schema/cphd/1.1.0")}
+        {"1.0.0", xml::lite::Uri("urn:CRSD:1.0.0")}
     };
 }
 
-std::unique_ptr<xml::lite::Document> CPHDXMLControl::toXMLImpl(const Metadata& metadata)
+std::unique_ptr<xml::lite::Document> CRSDXMLControl::toXMLImpl(const Metadata& metadata)
 {
     const auto versionUriMap = getVersionUriMap();
     if (versionUriMap.find(metadata.getVersion()) != versionUriMap.end())
@@ -120,7 +118,7 @@ std::unique_ptr<xml::lite::Document> CPHDXMLControl::toXMLImpl(const Metadata& m
 }
 
 /* FROM XML */
-std::unique_ptr<Metadata> CPHDXMLControl::fromXML(const std::string& xmlString,
+std::unique_ptr<Metadata> CRSDXMLControl::fromXML(const std::string& xmlString,
                                      const std::vector<std::string>& schemaPaths_)
 {
     std::vector<std::filesystem::path> schemaPaths;
@@ -129,7 +127,7 @@ std::unique_ptr<Metadata> CPHDXMLControl::fromXML(const std::string& xmlString,
 
     return fromXML(str::EncodedStringView(xmlString).u8string(), schemaPaths);
 }
-std::unique_ptr<Metadata> CPHDXMLControl::fromXML(const std::u8string& xmlString,
+std::unique_ptr<Metadata> CRSDXMLControl::fromXML(const std::u8string& xmlString,
     const std::vector<std::filesystem::path>& schemaPaths)
 {
     io::U8StringStream stringStream;
@@ -140,7 +138,7 @@ std::unique_ptr<Metadata> CPHDXMLControl::fromXML(const std::u8string& xmlString
     return std::make_unique<Metadata>(std::move(result));
 }
 
-std::unique_ptr<Metadata> CPHDXMLControl::fromXML(const xml::lite::Document* doc,
+std::unique_ptr<Metadata> CRSDXMLControl::fromXML(const xml::lite::Document* doc,
                                      const std::vector<std::string>& schemaPaths)
 {
     if(!schemaPaths.empty())
@@ -152,7 +150,7 @@ std::unique_ptr<Metadata> CPHDXMLControl::fromXML(const xml::lite::Document* doc
     metadata->setVersion(uriToVersion(uri));
     return metadata;
 }
-Metadata CPHDXMLControl::fromXML(const xml::lite::Document& doc, const std::vector<std::filesystem::path>& schemaPaths)
+Metadata CRSDXMLControl::fromXML(const xml::lite::Document& doc, const std::vector<std::filesystem::path>& schemaPaths)
 {
     std::vector<std::string> schemaPaths_;
     std::transform(schemaPaths.begin(), schemaPaths.end(), std::back_inserter(schemaPaths_),
@@ -161,19 +159,19 @@ Metadata CPHDXMLControl::fromXML(const xml::lite::Document& doc, const std::vect
     return *(result.release());
 }
 
-std::unique_ptr<Metadata> CPHDXMLControl::fromXMLImpl(const xml::lite::Document* doc)
+std::unique_ptr<Metadata> CRSDXMLControl::fromXMLImpl(const xml::lite::Document* doc)
 {
     const xml::lite::Uri uri(doc->getRootElement()->getUri());
     return getParser(uri)->fromXML(doc);
 }
 
-std::unique_ptr<CPHDXMLParser>
-CPHDXMLControl::getParser(const xml::lite::Uri& uri) const
+std::unique_ptr<CRSDXMLParser>
+CRSDXMLControl::getParser(const xml::lite::Uri& uri) const
 {
-    return std::make_unique<CPHDXMLParser>(uri.value, false, mLog);
+    return std::make_unique<CRSDXMLParser>(uri.value, false, mLog);
 }
 
-std::string CPHDXMLControl::uriToVersion(const xml::lite::Uri& uri) const
+std::string CRSDXMLControl::uriToVersion(const xml::lite::Uri& uri) const
 {
     const auto versionUriMap = getVersionUriMap();
     for (const auto& p : versionUriMap)

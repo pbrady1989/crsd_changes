@@ -80,7 +80,7 @@ struct Metadata final : MetadataBase
     void setVersion(const std::string& version);
 
     //! Get CRSD type
-    CRSDType getType() const;
+    std::string getType() const;
 
     //! Set CRSD version
     void setType(const std::string& type);

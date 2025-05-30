@@ -306,6 +306,43 @@ RadarModeType six::toType<RadarModeType>(const std::string& s)
 }
 
 template <>
+std::string six::toString(const TxWFType& type)
+{
+    auto result = toString_(type, except::Exception(Ctxt("Tx WF Mode not set!")));
+    static const auto strLFM = TxWFType(TxWFType::LFM).toString();
+    static const auto strXM = TxWFType(TxWFType::XM).toString();
+    static const auto strLFMwXM = TxWFType(TxWFType::LFMwXM).toString();
+    if (result == strLFM)
+    {
+        return "LFM"; // no "_"
+    }
+    else if (result == strXM)
+    {
+        return "XM"; // no "_"
+    }
+    else if (result == strLFMwXM)
+    {
+        return "LFMwXM"; // no "_"
+    }
+    return result;
+}
+template <>
+TxWFType six::toType<TxWFType>(const std::string& s)
+{
+    std::string type(s);
+    str::trim(type);
+    if (type == "LFM") 
+        return TxWFType::LFM;
+    else if (type == "XM")
+        return TxWFType::XM;
+    else if (type == "LFMwXM")
+        return TxWFType::LFMwXM;
+    else
+        return TxWFType::UNSPECIFIED; // "DYNAMIC_STRIPMAP" (with '_') doesn't convert
+
+}
+
+template <>
 std::string six::toString(const DataType& type)
 {
     switch (type)

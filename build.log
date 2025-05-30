@@ -1,0 +1,831 @@
+-- Could NOT find CURL (missing: CURL_LIBRARY CURL_INCLUDE_DIR) 
+COMPILE OPTIONS=-Wno-deprecated;-Wno-unused-value;-Wno-unused-but-set-variable
+CMAKE_C_FLAGS=
+CMAKE_CXX_FLAGS=
+CMAKE_C_FLAGS_DEBUG=-g
+CMAKE_CXX_FLAGS_DEBUG=-g
+CMAKE_C_FLAGS_RELWITHDEBINFO=-O2 -g -DNDEBUG
+CMAKE_CXX_FLAGS_RELWITHDEBINFO=-O2 -g -DNDEBUG
+CMAKE_C_FLAGS_RELEASE=-O3 -DNDEBUG
+CMAKE_CXX_FLAGS_RELEASE=-O3 -DNDEBUG
+CMAKE_SWIG_FLAGS=
+XML_HOME not specified, so XercesC will be built
+CMake Warning (dev) at /usr/share/cmake/Modules/FetchContent.cmake:1282 (message):
+  The DOWNLOAD_EXTRACT_TIMESTAMP option was not given and policy CMP0135 is
+  not set.  The policy's OLD behavior will be used.  When using a URL
+  download, the timestamps of extracted files should preferably be that of
+  the time of extraction, otherwise code that depends on the extracted
+  contents might not be rebuilt if the URL changes.  The OLD behavior
+  preserves the timestamps from the archive instead, but this is usually not
+  what you want.  Update your project to the NEW behavior or specify the
+  DOWNLOAD_EXTRACT_TIMESTAMP option with a value of true to avoid this
+  robustness issue.
+Call Stack (most recent call first):
+  externals/coda-oss/cmake/CodaBuild.cmake:267 (FetchContent_Declare)
+  externals/coda-oss/modules/drivers/xml/xerces/CMakeLists.txt:60 (coda_fetch_driver)
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+Populating content for external dependency 
+CMake Warning (dev) at /usr/share/cmake/Modules/FetchContent.cmake:1282 (message):
+  The DOWNLOAD_EXTRACT_TIMESTAMP option was not given and policy CMP0135 is
+  not set.  The policy's OLD behavior will be used.  When using a URL
+  download, the timestamps of extracted files should preferably be that of
+  the time of extraction, otherwise code that depends on the extracted
+  contents might not be rebuilt if the URL changes.  The OLD behavior
+  preserves the timestamps from the archive instead, but this is usually not
+  what you want.  Update your project to the NEW behavior or specify the
+  DOWNLOAD_EXTRACT_TIMESTAMP option with a value of true to avoid this
+  robustness issue.
+Call Stack (most recent call first):
+  externals/coda-oss/cmake/CodaBuild.cmake:267 (FetchContent_Declare)
+  externals/coda-oss/modules/drivers/j2k/openjpeg/CMakeLists.txt:54 (coda_fetch_driver)
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+Populating content for external dependency 
+-- Processing config header: /home/patrick.brady/repos/crsd_changes/externals/coda-oss/modules/c++/sys/include/sys/sys_config.h.cmake.in -> include/sys/sys_config.h
+zip will not be build since zlib + minizip were not enabled
+-- Processing config header: /home/patrick.brady/repos/crsd_changes/externals/coda-oss/modules/c++/math/include/math/math_config.h.cmake.in -> include/math/math_config.h
+-- Processing config header: /home/patrick.brady/repos/crsd_changes/externals/coda-oss/modules/c++/mt/include/mt/mt_config.h.cmake.in -> include/mt/mt_config.h
+-- Processing config header: /home/patrick.brady/repos/crsd_changes/externals/coda-oss/modules/c++/xml.lite/include/xml/lite/xml.lite_config.h.cmake.in -> include/xml/lite/xml_lite_config.h
+-- Processing config header: /home/patrick.brady/repos/crsd_changes/externals/nitro/modules/c/nrt/include/nrt/nrt_config.h.cmake.in -> include/nrt/nrt_config.h
+-- Processing config header: /home/patrick.brady/repos/crsd_changes/externals/nitro/modules/c/nitf/include/nitf/nitf_config.h.cmake.in -> include/nitf/nitf_config.h
+-- Processing config header: /home/patrick.brady/repos/crsd_changes/externals/nitro/modules/c/j2k/include/j2k/j2k_config.h.cmake.in -> include/j2k/j2k_config.h
+-- Configuring done (0.3s)
+-- Generating done (0.9s)
+-- Build files have been written to: /home/patrick.brady/repos/crsd_changes/build
+[  0%] Built target types-c++
+[  0%] Built target except-c++
+[  2%] Built target openjpeg
+[  3%] Built target nrt-c
+[  3%] Built target str-c++
+[  6%] Built target nitf-c
+[  9%] Built target sys-c++
+[  9%] Built target ACCHZB
+[  9%] Built target ACCHZB-static-c
+[  9%] Built target ACCPOB
+[  9%] Built target ACCPOB-static-c
+[  9%] Built target ACCVTB
+[  9%] Built target ACCVTB-static-c
+[  9%] Built target ACFTA
+[  9%] Built target ACFTA-static-c
+[  9%] Built target ACFTB
+[ 10%] Built target ACFTB-static-c
+[ 10%] Built target AIMIDA
+[ 10%] Built target AIMIDA-static-c
+[ 10%] Built target AIMIDB
+[ 10%] Built target AIMIDB-static-c
+[ 10%] Built target ASTORA-static-c
+[ 10%] Built target AIPBCA
+[ 10%] Built target AIPBCA-static-c
+[ 10%] Built target ASTORA
+[ 11%] Built target BANDSA
+[ 11%] Built target BANDSA-static-c
+[ 11%] Built target BANDSB-static-c
+[ 11%] Built target BANDSB
+[ 11%] Built target BCKGDA-static-c
+[ 11%] Built target BLOCKA
+[ 11%] Built target BLOCKA-static-c
+[ 11%] Built target BNDPLB
+[ 11%] Built target BCKGDA
+[ 12%] Built target BNDPLB-static-c
+[ 12%] Built target CCINFA
+[ 12%] Built target CCINFA-static-c
+[ 12%] Built target CLCTNA
+[ 12%] Built target CLCTNA-static-c
+[ 12%] Built target CLCTNB-static-c
+[ 12%] Built target CMETAA
+[ 12%] Built target CMETAA-static-c
+[ 13%] Built target CSCCGA
+[ 13%] Built target CLCTNB
+[ 13%] Built target CSCCGA-static-c
+[ 13%] Built target CSCRNA-static-c
+[ 13%] Built target CSDIDA
+[ 13%] Built target CSCRNA
+[ 13%] Built target CSDIDA-static-c
+[ 13%] Built target CSEPHA
+[ 13%] Built target CSEPHA-static-c
+[ 13%] Built target CSEXRA
+[ 14%] Built target CSEXRA-static-c
+[ 14%] Built target CSEXRB
+[ 14%] Built target CSEXRB-static-c
+[ 14%] Built target CSPROA-static-c
+[ 14%] Built target CSSFAA
+[ 14%] Built target CSPROA
+[ 14%] Built target CSSFAA-static-c
+[ 14%] Built target CSSHPA
+[ 15%] Built target ENGRDA
+[ 15%] Built target CSSHPA-static-c
+[ 15%] Built target EXOPTA-static-c
+[ 15%] Built target EXPLTA-static-c
+[ 15%] Built target EXPLTB
+[ 15%] Built target ENGRDA-static-c
+[ 15%] Built target EXPLTB-static-c
+[ 15%] Built target GEOLOB
+[ 16%] Built target GEOPSB
+[ 16%] Built target GEOLOB-static-c
+[ 16%] Built target GEOPSB-static-c
+[ 16%] Built target GRDPSB
+[ 16%] Built target GRDPSB-static-c
+[ 16%] Built target HISTOA
+[ 16%] Built target EXOPTA
+[ 16%] Built target EXPLTA
+[ 16%] Built target HISTOA-static-c
+[ 16%] Built target ICHIPB
+[ 16%] Built target ICHIPB-static-c
+[ 16%] Built target IMASDA-static-c
+[ 16%] Built target IMGDTA
+[ 16%] Built target IMGDTA-static-c
+[ 16%] Built target IMRFCA
+[ 16%] Built target IMRFCA-static-c
+[ 16%] Built target IOMAPA
+[ 16%] Built target IOMAPA-static-c
+[ 17%] Built target IMASDA
+[ 17%] Built target J2KLRA
+[ 17%] Built target J2KLRA-static-c
+[ 17%] Built target JITCID
+[ 17%] Built target MATESA
+[ 17%] Built target JITCID-static-c
+[ 17%] Built target MAPLOB-static-c
+[ 17%] Built target MATESA-static-c
+[ 17%] Built target MAPLOB
+[ 18%] Built target MENSRA
+[ 18%] Built target MENSRA-static-c
+[ 18%] Built target MENSRB
+[ 18%] Built target MPDSRA
+[ 18%] Built target MPDSRA-static-c
+[ 18%] Built target MENSRB-static-c
+[ 18%] Built target MSDIRA
+[ 18%] Built target MSDIRA-static-c
+[ 18%] Built target MSTGTA
+[ 19%] Built target MSTGTA-static-c
+[ 19%] Built target MTIRPA
+[ 19%] Built target MTIRPB
+[ 19%] Built target MTIRPA-static-c
+[ 19%] Built target NBLOCA
+[ 19%] Built target MTIRPB-static-c
+[ 19%] Built target NBLOCA-static-c
+[ 19%] Built target OBJCTA
+[ 19%] Built target OBJCTA-static-c
+[ 19%] Built target OFFSET
+[ 20%] Built target OFFSET-static-c
+[ 20%] Built target PATCHA
+[ 20%] Built target PATCHA-static-c
+[ 20%] Built target PATCHB
+[ 20%] Built target PATCHB-static-c
+[ 20%] Built target PIAEQA
+[ 20%] Built target PIAEQA-static-c
+[ 20%] Built target PIAEVA
+[ 20%] Built target PIAEVA-static-c
+[ 21%] Built target PIAIMB
+[ 21%] Built target PIAIMB-static-c
+[ 21%] Built target PIAIMC
+[ 21%] Built target PIAIMC-static-c
+[ 21%] Built target PIAPEA
+[ 21%] Built target PIAPEA-static-c
+[ 21%] Built target PIAPEB
+[ 21%] Built target PIAPEB-static-c
+[ 21%] Built target PIAPRC
+[ 22%] Built target PIAPRC-static-c
+[ 22%] Built target PIAPRD
+[ 22%] Built target PIAPRD-static-c
+[ 22%] Built target PIATGA
+[ 22%] Built target PIATGA-static-c
+[ 22%] Built target PIATGB
+[ 22%] Built target PIATGB-static-c
+[ 22%] Built target PIXMTA
+[ 22%] Built target PIXMTA-static-c
+[ 23%] Built target PIXQLA
+[ 23%] Built target PIXQLA-static-c
+[ 23%] Built target PLTFMA
+[ 23%] Built target PLTFMA-static-c
+[ 23%] Built target PRADAA
+[ 23%] Built target PRADAA-static-c
+[ 32%] Built target PRJPSB
+[ 33%] Built target PTPRAA
+[ 39%] Built target xerces-c
+[ 39%] Built target REGPTB
+[ 40%] Built target PTPRAA-static-c
+[ 40%] Built target PRJPSB-static-c
+[ 40%] Built target REGPTB-static-c
+[ 40%] Built target RPC00B
+[ 40%] Built target RPC00B-static-c
+[ 40%] Built target RPFDES
+[ 40%] Built target RPFDES-static-c
+[ 40%] Built target RPFHDR
+[ 40%] Built target RPFHDR-static-c
+[ 40%] Built target RPFIMG-static-c
+[ 41%] Built target RSMAPA
+[ 41%] Built target RPFIMG
+[ 41%] Built target RSMAPA-static-c
+[ 41%] Built target RSMDCA
+[ 41%] Built target RSMDCA-static-c
+[ 41%] Built target RSMECA
+[ 41%] Built target RSMECA-static-c
+[ 41%] Built target RSMGGA
+[ 42%] Built target RSMGGA-static-c
+[ 42%] Built target RSMGIA-static-c
+[ 42%] Built target RSMGIA
+[ 42%] Built target RSMIDA
+[ 42%] Built target RSMIDA-static-c
+[ 42%] Built target RSMPCA
+[ 42%] Built target RSMPCA-static-c
+[ 42%] Built target RSMPIA
+[ 42%] Built target RSMPIA-static-c
+[ 43%] Built target SECTGA
+[ 43%] Built target SECTGA-static-c
+[ 43%] Built target SENSRA
+[ 43%] Built target SENSRB
+[ 43%] Built target SENSRB-static-c
+[ 43%] Built target SENSRA-static-c
+[ 43%] Built target SNSPSB
+[ 43%] Built target SNSPSB-static-c
+[ 43%] Built target SNSRA
+[ 44%] Built target SNSRA-static-c
+[ 44%] Built target SOURCB
+[ 44%] Built target STDIDC
+[ 44%] Built target SOURCB-static-c
+[ 44%] Built target STEROB-static-c
+[ 44%] Built target STREOB
+[ 44%] Built target STDIDC-static-c
+[ 44%] Built target STEROB
+[ 44%] Built target STREOB-static-c
+[ 44%] Built target TEST_DES-static-c
+[ 44%] Built target TRGTA
+[ 45%] Built target TEST_DES
+[ 45%] Built target TRGTA-static-c
+[ 45%] Built target USE00A
+[ 45%] Built target USE00A-static-c
+[ 45%] Built target XML_DATA_CONTENT
+[ 45%] Built target XML_DATA_CONTENT-static-c
+[ 45%] Built target coda_oss_test_bytes
+[ 45%] Built target coda_oss_test_optional
+[ 46%] Built target except_Gen2Test
+[ 46%] Built target avx_test_m256
+[ 47%] Built target j2k-c
+[ 47%] Built target sys_DLLTest
+[ 47%] Built target sys_CPUTest
+[ 47%] Built target sys_DateTimeTest
+[ 47%] Built target sys_ErrTest
+[ 47%] Built target sys_DirectoryTest
+[ 49%] Built target cgm-c
+[ 49%] Built target sys_ExecTest
+[ 49%] Built target sys_MemoryTest1
+[ 49%] Built target sys_MutexTest
+[ 49%] Built target sys_RaiseTest
+[ 49%] Built target sys_PathTest
+[ 49%] Built target sys_ReentrantTest
+[ 49%] Built target sys_TestBacktrace
+[ 49%] Built target sys_ThreadTest4
+[ 49%] Built target sys_ThreadTest5
+[ 49%] Built target sys_test_symlink
+[ 50%] Built target sys_OSTest
+[ 50%] Built target math-c++
+[ 50%] Built target mem-c++
+[ 51%] Built target str_ConvertTest
+[ 51%] Built target str_VersionTest
+[ 51%] Built target sys_ThreadFreeTest
+[ 51%] Built target sys_ReadWriteMutexTest
+[ 51%] Built target str_test_base_convert
+[ 51%] Built target str_test_str
+[ 51%] Built target types_test_range
+[ 51%] Built target types_test_page_row_col
+[ 51%] Built target nrt_test_buffer_adapter
+[ 51%] Built target nrt_test_list
+[ 51%] Built target nrt_test_core_values
+[ 51%] Built target nrt_test_nrt_byte_swap
+[ 51%] Built target nrt_test_nrt_datetime
+[ 51%] Built target types_test_range_list
+[ 51%] Built target nrt_test_tree
+[ 51%] Built target nrt_test_utils
+[ 51%] Built target nitf_test_create
+[ 51%] Built target nitf_test_create_nitf
+[ 51%] Built target nitf_test_field
+[ 51%] Built target nitf_test_geo_utils
+[ 51%] Built target nitf_test_image_io
+[ 51%] Built target nitf_test_mem_source
+[ 51%] Built target nitf_test_moveTREs
+[ 51%] Built target nitf_test_tre_mods
+[ 52%] Built target nitf_test_zero_field
+[ 52%] Built target j2k_test_j2k_create
+[ 52%] Built target cgm_test_add_cgm
+[ 52%] Built target cgm_test_extract_cgm
+[ 52%] Built target cgm_test_read_cgm
+[ 52%] Built target cgm_test_rt_cgm
+[ 52%] Built target j2k_test_j2k_header
+[ 52%] Built target j2k_test_j2k_nitf
+[ 52%] Built target j2k_test_j2k_read_region
+[ 53%] Built target j2k_test_j2k_read_tile
+[ 53%] Built target J2KCompress
+[ 54%] Built target J2KDecompress
+[ 54%] Built target mem_test_scoped_cloneable_ptr
+[ 54%] Built target mem_test_Span
+[ 54%] Built target mem_test_scoped_copyable_ptr
+[ 55%] Built target cli-c++
+[ 55%] Built target mem_test_shared_ptr
+[ 55%] Built target mt-c++
+[ 55%] Built target mem_test_scratch_memory
+[ 55%] Built target math_complexBenchmark
+[ 55%] Built target math_complexMultiplyBenchmark
+[ 56%] Built target mem_test_vector_pointers
+[ 56%] Built target units_test_units
+[ 56%] Built target mem_test_unique_ptr
+[ 56%] Built target math_test_bessel_functions
+[ 56%] Built target math_test_is_nan
+[ 56%] Built target math_test_n_choose_k
+[ 56%] Built target math_test_round
+[ 57%] Built target math_test_sign
+[ 57%] Built target math_test_convex_hull
+[ 57%] Built target polygon-c++
+[ 57%] Built target math.linear-c++
+[ 57%] Built target mem_ScratchVisualization
+[ 58%] Built target io-c++
+[ 59%] Built target sys_test_NaN_testing
+[ 59%] Built target cli_test_cli
+[ 59%] Built target sys_test_aligned_alloc
+[ 59%] Built target sys_test_atomic_counter
+[ 59%] Built target sys_test_byte_swap
+[ 59%] Built target sys_test_datetime
+[ 59%] Built target sys_test_path
+[ 59%] Built target mt_BasicThreadPoolTest
+[ 59%] Built target sys_test_os
+[ 59%] Built target sys_test_conditionvar
+[ 59%] Built target mt_GenerationThreadPoolTest
+[ 60%] Built target mt_SingletonTest
+[ 60%] Built target mt_ThreadExceptionTest
+[ 60%] Built target mt_ThreadGroupAffinityTest
+[ 60%] Built target mt_MTSingletonTest
+[ 60%] Built target mt_Runnable1DTest
+[ 60%] Built target mt_ThreadGroupTest
+[ 60%] Built target mt_TwoSingletonsTest
+[ 60%] Built target mt_ThreadPlannerTest
+[ 60%] Built target mt_balanced_runnable_1d_test
+[ 60%] Built target mt_work_sharing_balanced_runnable_1d_test
+[ 60%] Built target polygon_test_polygon_mask
+[ 60%] Built target math.linear_test_cx
+[ 61%] Built target math.linear_test_angle
+[ 61%] Built target math.linear_test_diag
+[ 62%] Built target math.linear_test_norm_vN
+[ 62%] Built target math.linear_test_norm_v
+[ 62%] Built target math.linear_test_Vector
+[ 62%] Built target math.linear_test_VectorN
+[ 62%] Built target math.linear_test_eigenvalue
+[ 62%] Built target math.linear_test_line_2d
+[ 62%] Built target math.linear_test_inf_equality
+[ 62%] Built target math.linear_test_inverse
+[ 63%] Built target tiff-c++
+[ 63%] Built target math.linear_test_lin
+[ 63%] Built target logging-c++
+[ 63%] Built target math.linear_test_mx
+[ 63%] Built target math.poly_test_OneD_templates
+[ 63%] Built target math.poly_test_fixed
+[ 63%] Built target math.poly_test_inner_poly
+[ 63%] Built target math.poly_test_1d_poly
+[ 63%] Built target math.poly_test_poly
+[ 63%] Built target math.poly_test_2d_poly
+[ 63%] Built target math.poly_test_fixed_1d_poly
+[ 63%] Built target math.poly_test_fixed_2d_poly
+[ 64%] Built target math.poly_test_llsq
+[ 64%] Built target io_PipeStreamTest
+[ 64%] Built target io_byteStreamTest1
+[ 64%] Built target io_ioTest1
+[ 64%] Built target io_ioTest2
+[ 64%] Built target io_byteStreamTest2
+[ 64%] Built target io_ioTest3
+[ 65%] Built target io_ioTest5
+[ 65%] Built target io_ioTest4
+[ 65%] Built target io_serializeTest1
+[ 65%] Built target io_stringStreamTest1
+[ 65%] Built target io_seekTest1
+[ 65%] Built target io_stringStreamTest2
+[ 65%] Built target io_test_read_file_contents
+[ 66%] Built target scene-c++
+[ 66%] Built target io_test_stream_splitter
+[ 66%] Built target io_test_streams
+[ 66%] Built target io_test_tempfile
+[ 66%] Built target dbi-c++
+[ 66%] Built target logging_BasicLoggerTest
+[ 67%] Built target sio.lite-c++
+[ 68%] Built target logging_FactoryTest
+[ 68%] Built target logging_RotatingLoggerTest
+[ 68%] Built target logging_test_exception_logger
+[ 68%] Built target logging_test_rotating_log
+[ 68%] Built target tiff_DumpHeader
+[ 68%] Built target tiff_HeaderTest
+[ 68%] Built target plugin-c++
+[ 68%] Built target dbi_SQLTest1
+[ 68%] Built target dbi_SQLTest2
+[ 68%] Built target polygon_test_draw_polygon
+[ 68%] Built target sio.lite_FabricateTest
+[ 68%] Built target sio.lite_RoundTripTest
+[ 68%] Built target sio.lite_imdmphdr
+[ 69%] Built target xml.lite-c++
+[ 69%] Built target xml.lite_AttributeValueTest
+[ 70%] Built target xml.lite_MinidomParserTest1
+[ 70%] Built target xml.lite_RewritePrefix
+[ 70%] Built target xml.lite_RewriteUri
+[ 70%] Built target xml.lite_XMLReaderTest
+[ 70%] Built target xml.lite_test_soapelements
+[ 70%] Built target xml.lite_test_xmlattribute
+[ 70%] Built target xml.lite_test_xmlelement
+[ 70%] Built target xml.lite_ClearTest
+[ 70%] Built target xml.lite_NamespaceStackTest
+[ 71%] Built target xml.lite_test_xmlparser
+[ 71%] Built target xml.lite_ValidationTest
+[ 75%] Built target nitf-c++
+[ 75%] Built target nitf_strip_invisible_segments
+[ 75%] Built target nitf_test_create++
+[ 76%] Built target nitf_test_date_set
+[ 76%] Built target nitf_test_direct_block_round_trip
+[ 76%] Built target nitf_test_date
+[ 76%] Built target nitf_test_extract
+[ 76%] Built target nitf_test_des_create++
+[ 75%] Built target nitf_test_buffered_read
+[ 76%] Built target nitf_test_fh
+[ 76%] Built target nitf_test_fhdr_clone++
+[ 77%] Built target nitf_test_file_source++
+[ 77%] Built target nitf_test_io
+[ 77%] Built target nitf_test_list_1
+[ 77%] Built target nitf_test_list_2
+[ 77%] Built target nitf_test_read_acftb
+[ 78%] Built target nitf_test_ref_counts
+[ 78%] Built target nitf_test_round_trip
+[ 78%] Built target nitf_test_tre_create
+[ 78%] Built target nitf_test_writer_4
+[ 78%] Built target nitf_test_writer_5
+[ 78%] Built target nitf_test_image_blocker
+[ 78%] Built target nitf_test_field++
+[ 78%] Built target nitf_test_nitf_buffer_list
+[ 78%] Built target nitf_test_j2k_read_tile
+[ 78%] Built target nitf_test_j2k_compress_tile
+[ 78%] Built target nitf_test_create_nitf++
+[ 78%] Built target nitf_test_tre_read
+[ 78%] Built target nitf_test_j2k_loading++
+[ 78%] Built target nitf_test_image_segment_blank_nm_compression
+[ 78%] Built target nitf_test_tre_mods++
+[ 79%] Built target nitf_test_j2k_compressed_byte_provider
+[ 79%] Built target nitf_test_image_segment_computer
+[ 79%] Built target show_nitf++
+[ 79%] Built target test_extract_xml
+[ 79%] Built target nitf_test_image_writer
+[ 79%] Built target nitf_test_tre_create++
+[ 81%] Built target six-c++
+[ 81%] Built target six_test_serialize
+[ 81%] Built target six_test_parameter_collection
+[ 81%] Built target six_test_polarization_type_conversions
+[ 81%] Built target six_test_determine_data_type
+[ 82%] Built target six_test_xml_control
+[ 82%] Built target six_test_fft_sign_conversions
+[ 83%] Built target six.sidd-c++
+[ 83%] Built target six.sidd_test_geometric_chip
+[ 83%] Built target six.sidd_test_byte_swap
+[ 83%] Built target six.sidd_test_annotations_equality
+[ 83%] Built target six.sidd_test_sidd_byte_provider
+[ 83%] Built target six.sidd_test_read_and_write_lut
+[ 84%] Built target six.sidd_test_check_blocking
+[ 84%] Built target six.sidd_test_sidd_blocking
+[ 84%] Built target six.sidd_test_read_sidd_legend
+[ 84%] Built target six.sidd_test_geotiff
+[ 84%] Built target test_create_sidd_legend
+[ 84%] Built target six.sidd_test_valid_sixsidd
+[ 84%] Built target crop_sidd
+[ 84%] Built target test_create_sidd_with_compressed_byte_provider
+[ 84%] Built target six.sidd_unittest_sidd_byte_provider
+[ 85%] Built target update_sidd_version
+[ 87%] Built target six.sicd-c++
+[ 87%] Built target six.sicd_test_mesh_roundtrip
+[ 87%] Built target six.sicd_test_compare_sicd_meshes
+[ 88%] Built target six.sicd_test_get_complex_data
+[ 88%] Built target six.sicd_test_add_additional_des
+[ 88%] Built target six.sicd_test_load_from_input_stream
+[ 88%] Built target six.sicd_test_mesh_polyfit
+[ 88%] Built target six.sicd_test_read_sicd_mesh
+[ 87%] Built target six.sicd_derive_output_plane
+[ 88%] Built target six.sicd_test_read_sicd_with_extra_des
+[ 88%] Built target six.sicd_test_clone_container
+[ 89%] Built target six.sicd_test_sicd_byte_provider
+[ 89%] Built target six.sicd_test_read_sicd
+[ 89%] Built target six.sicd_test_sicd_schemata
+[ 89%] Built target six.sicd_test_streaming_write
+[ 89%] Built target six.sicd_test_vdp_polyfit
+[ 89%] Built target six.sicd_test_area_plane
+[ 89%] Built target six.sicd_test_filling_geo_data
+[ 89%] Built target six.sicd_test_filling_grid
+[ 89%] Built target six.sicd_test_filling_pfa
+[ 89%] Built target six.sicd_test_filling_position
+[ 90%] Built target six.sicd_test_radar_collection
+[ 90%] Built target six.sicd_test_filling_rgazcomp
+[ 90%] Built target six.sicd_test_get_segment
+[ 90%] Built target six.sicd_test_filling_rma
+[ 90%] Built target six.sicd_test_filling_scpcoa
+[ 90%] Built target six.sicd_test_projection_polynomial_fitter
+[ 90%] Built target six.sicd_test_update_sicd_version
+[ 90%] Built target six.sicd_test_valid_six
+[ 90%] Built target six.sicd_test_AMP8I_PHS8I
+[ 90%] Built target crop_sicd
+[ 90%] Built target project_slant_to_output
+[ 91%] Built target test_compare_sidd
+[ 90%] Built target six.sicd_test_utilities
+[ 92%] Built target image_to_scene
+[ 92%] Built target check_valid_six
+[ 92%] Built target six.sicd_test_valid_sixsicd
+[ 90%] Built target six.convert-c++
+[ 92%] Built target sicd_output_plane_pixel_to_lat_lon
+[ 92%] Built target test_create_sicd_from_mem
+[ 92%] Built target test_create_sicd
+[ 92%] Built target test_create_sidd
+[ 92%] Built target test_create_sidd_from_mem
+[ 92%] Built target test_dump_images
+[ 93%] Built target test_image_to_scene
+[ 93%] Built target test_large_offset
+[ 93%] Built target update_sicd_version
+[ 93%] Built target test_parse_xml
+[ 93%] Built target test_six_xml_parsing
+[ 93%] Built target round_trip_six
+[ 93%] Building CXX object six/modules/c++/crsd/CMakeFiles/crsd-c++.dir/source/Metadata.cpp.o
+[ 94%] Built target cphd-c++
+[ 94%] Built target cphd_test_file_header
+[ 94%] Built target cphd_test_pvp
+[ 94%] Built target cphd_test_channel
+[ 95%] Built target cphd_test_round_trip
+[ 95%] Built target cphd_test_compare_cphd
+[ 95%] Built target cphd_test_metadata_round
+[ 95%] Built target cphd_test_cphd_xml_control
+[ 95%] Built target cphd_test_compressed_signal_block_round
+[ 96%] Built target cphd_test_cphd_xml_optional
+[ 96%] Built target cphd_test_dwell
+[ 96%] Built target cphd_test_pvp_block
+[ 96%] Built target cphd_test_pvp_block_round
+[ 96%] Built target cphd_test_read_wideband
+[ 96%] Built target cphd_test_reference_geometry
+[ 96%] Built target cphd_test_signal_block_round
+[ 96%] Built target cphd_test_support_block_round
+[ 96%] Built target extract_cphd_xml
+[ 97%] Built target cphd03-c++
+[ 97%] Built target cphd03_cphd_extract_xml
+[ 97%] Built target cphd03_print_cphd_header
+[ 97%] Built target cphd03_test_cphd_compare
+[ 97%] Built target cphd03_test_cphd_round_trip
+[ 97%] Built target cphd03_test_vbm
+[ 97%] Built target cphd03_test_cphd_write_simple
+[ 98%] Built target cphd03_test_cphd_write
+[ 98%] Built target cphd03_test_cphd_read_unscaled_int
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:28:1: error: ‘Metadata’ does not name a type; did you mean ‘getdate’?
+ Metadata::Metadata()
+ ^~~~~~~~
+ getdate
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:34:8: error: ‘Metadata’ has not been declared
+ size_t Metadata::getNumChannels() const
+        ^~~~~~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:34:35: error: non-member function ‘size_t cphd::getNumChannels()’ cannot have cv-qualifier
+ size_t Metadata::getNumChannels() const
+                                   ^~~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp: In function ‘size_t cphd::getNumChannels()’:
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:36:12: error: ‘data’ was not declared in this scope
+     return data.getNumChannels();
+            ^~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:36:12: note: suggested alternative:
+In file included from /home/patrick.brady/repos/crsd_changes/externals/coda-oss/modules/c++/str/include/import/str.h:47,
+                 from /home/patrick.brady/repos/crsd_changes/six/modules/c++/six/include/six/Enum.h:34,
+                 from /home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/include/crsd/Enums.h:30,
+                 from /home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/include/crsd/SARInfo.h:30,
+                 from /home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/include/crsd/Metadata.h:27,
+                 from /home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:22:
+/home/patrick.brady/repos/crsd_changes/externals/coda-oss/modules/c++/str/include/str/Manip.h:62:21: note:   ‘str::data’
+ inline const CharT* data(const std::basic_string<CharT>& s) noexcept // to make generic programming easier
+                     ^~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp: At global scope:
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:39:8: error: ‘Metadata’ has not been declared
+ size_t Metadata::getNumVectors(size_t channel_) const
+        ^~~~~~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:39:49: error: non-member function ‘size_t cphd::getNumVectors(size_t)’ cannot have cv-qualifier
+ size_t Metadata::getNumVectors(size_t channel_) const
+                                                 ^~~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp: In function ‘size_t cphd::getNumVectors(size_t)’:
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:41:12: error: ‘data’ was not declared in this scope
+     return data.getNumVectors(channel_);
+            ^~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:41:12: note: suggested alternative:
+In file included from /home/patrick.brady/repos/crsd_changes/externals/coda-oss/modules/c++/str/include/import/str.h:47,
+                 from /home/patrick.brady/repos/crsd_changes/six/modules/c++/six/include/six/Enum.h:34,
+                 from /home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/include/crsd/Enums.h:30,
+                 from /home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/include/crsd/SARInfo.h:30,
+                 from /home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/include/crsd/Metadata.h:27,
+                 from /home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:22:
+/home/patrick.brady/repos/crsd_changes/externals/coda-oss/modules/c++/str/include/str/Manip.h:62:21: note:   ‘str::data’
+ inline const CharT* data(const std::basic_string<CharT>& s) noexcept // to make generic programming easier
+                     ^~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp: At global scope:
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:44:8: error: ‘Metadata’ has not been declared
+ size_t Metadata::getNumSamples(size_t channel_) const
+        ^~~~~~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:44:49: error: non-member function ‘size_t cphd::getNumSamples(size_t)’ cannot have cv-qualifier
+ size_t Metadata::getNumSamples(size_t channel_) const
+                                                 ^~~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp: In function ‘size_t cphd::getNumSamples(size_t)’:
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:46:12: error: ‘data’ was not declared in this scope
+     return data.getNumSamples(channel_);
+            ^~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:46:12: note: suggested alternative:
+In file included from /home/patrick.brady/repos/crsd_changes/externals/coda-oss/modules/c++/str/include/import/str.h:47,
+                 from /home/patrick.brady/repos/crsd_changes/six/modules/c++/six/include/six/Enum.h:34,
+                 from /home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/include/crsd/Enums.h:30,
+                 from /home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/include/crsd/SARInfo.h:30,
+                 from /home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/include/crsd/Metadata.h:27,
+                 from /home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:22:
+/home/patrick.brady/repos/crsd_changes/externals/coda-oss/modules/c++/str/include/str/Manip.h:62:21: note:   ‘str::data’
+ inline const CharT* data(const std::basic_string<CharT>& s) noexcept // to make generic programming easier
+                     ^~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp: At global scope:
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:49:8: error: ‘Metadata’ has not been declared
+ size_t Metadata::getNumBytesPerSample() const
+        ^~~~~~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:49:41: error: non-member function ‘size_t cphd::getNumBytesPerSample()’ cannot have cv-qualifier
+ size_t Metadata::getNumBytesPerSample() const
+                                         ^~~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp: In function ‘size_t cphd::getNumBytesPerSample()’:
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:51:12: error: ‘data’ was not declared in this scope
+     return data.getNumBytesPerSample();
+            ^~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:51:12: note: suggested alternative:
+In file included from /home/patrick.brady/repos/crsd_changes/externals/coda-oss/modules/c++/str/include/import/str.h:47,
+                 from /home/patrick.brady/repos/crsd_changes/six/modules/c++/six/include/six/Enum.h:34,
+                 from /home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/include/crsd/Enums.h:30,
+                 from /home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/include/crsd/SARInfo.h:30,
+                 from /home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/include/crsd/Metadata.h:27,
+                 from /home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:22:
+/home/patrick.brady/repos/crsd_changes/externals/coda-oss/modules/c++/str/include/str/Manip.h:62:21: note:   ‘str::data’
+ inline const CharT* data(const std::basic_string<CharT>& s) noexcept // to make generic programming easier
+                     ^~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp: At global scope:
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:54:8: error: ‘Metadata’ has not been declared
+ size_t Metadata::getCompressedSignalSize(size_t channel_) const
+        ^~~~~~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:54:59: error: non-member function ‘size_t cphd::getCompressedSignalSize(size_t)’ cannot have cv-qualifier
+ size_t Metadata::getCompressedSignalSize(size_t channel_) const
+                                                           ^~~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp: In function ‘size_t cphd::getCompressedSignalSize(size_t)’:
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:56:12: error: ‘data’ was not declared in this scope
+     return data.getCompressedSignalSize(channel_);
+            ^~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:56:12: note: suggested alternative:
+In file included from /home/patrick.brady/repos/crsd_changes/externals/coda-oss/modules/c++/str/include/import/str.h:47,
+                 from /home/patrick.brady/repos/crsd_changes/six/modules/c++/six/include/six/Enum.h:34,
+                 from /home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/include/crsd/Enums.h:30,
+                 from /home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/include/crsd/SARInfo.h:30,
+                 from /home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/include/crsd/Metadata.h:27,
+                 from /home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:22:
+/home/patrick.brady/repos/crsd_changes/externals/coda-oss/modules/c++/str/include/str/Manip.h:62:21: note:   ‘str::data’
+ inline const CharT* data(const std::basic_string<CharT>& s) noexcept // to make generic programming easier
+                     ^~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp: At global scope:
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:59:6: error: ‘Metadata’ has not been declared
+ bool Metadata::isCompressed() const
+      ^~~~~~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:59:31: error: non-member function ‘bool cphd::isCompressed()’ cannot have cv-qualifier
+ bool Metadata::isCompressed() const
+                               ^~~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp: In function ‘bool cphd::isCompressed()’:
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:61:12: error: ‘data’ was not declared in this scope
+     return data.isCompressed();
+            ^~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:61:12: note: suggested alternative:
+In file included from /home/patrick.brady/repos/crsd_changes/externals/coda-oss/modules/c++/str/include/import/str.h:47,
+                 from /home/patrick.brady/repos/crsd_changes/six/modules/c++/six/include/six/Enum.h:34,
+                 from /home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/include/crsd/Enums.h:30,
+                 from /home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/include/crsd/SARInfo.h:30,
+                 from /home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/include/crsd/Metadata.h:27,
+                 from /home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:22:
+/home/patrick.brady/repos/crsd_changes/externals/coda-oss/modules/c++/str/include/str/Manip.h:62:21: note:   ‘str::data’
+ inline const CharT* data(const std::basic_string<CharT>& s) noexcept // to make generic programming easier
+                     ^~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp: At global scope:
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:64:1: error: ‘DomainType’ does not name a type
+ DomainType Metadata::getDomainType() const
+ ^~~~~~~~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:69:13: error: ‘Metadata’ has not been declared
+ std::string Metadata::getVersion() const
+             ^~~~~~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:69:36: error: non-member function ‘std::__cxx11::string cphd::getVersion()’ cannot have cv-qualifier
+ std::string Metadata::getVersion() const
+                                    ^~~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp: In function ‘std::__cxx11::string cphd::getVersion()’:
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:71:12: error: ‘mVersion’ was not declared in this scope
+     return mVersion;
+            ^~~~~~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:71:12: note: suggested alternative: ‘getVersion’
+     return mVersion;
+            ^~~~~~~~
+            getVersion
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp: At global scope:
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:73:6: error: ‘Metadata’ has not been declared
+ void Metadata::setVersion(const std::string& version)
+      ^~~~~~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp: In function ‘void cphd::setVersion(const string&)’:
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:75:5: error: ‘mVersion’ was not declared in this scope
+     mVersion = version;
+     ^~~~~~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:75:5: note: suggested alternative: ‘version’
+     mVersion = version;
+     ^~~~~~~~
+     version
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp: At global scope:
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:78:1: error: ‘CRSDType’ does not name a type
+ CRSDType Metadata::getType() const
+ ^~~~~~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:82:6: error: ‘Metadata’ has not been declared
+ void Metadata::setType(const std::string& type)
+      ^~~~~~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp: In function ‘void cphd::setType(const string&)’:
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:84:5: error: ‘mType’ was not declared in this scope
+     mType = type;
+     ^~~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:84:5: note: suggested alternative: ‘type’
+     mType = type;
+     ^~~~~
+     type
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp: At global scope:
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:87:6: error: ‘Metadata’ has not been declared
+ bool Metadata::operator==(const Metadata& other) const
+      ^~~~~~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:87:33: error: ‘Metadata’ does not name a type; did you mean ‘getdate’?
+ bool Metadata::operator==(const Metadata& other) const
+                                 ^~~~~~~~
+                                 getdate
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:87:50: error: non-member function ‘bool cphd::operator==(const int&)’ cannot have cv-qualifier
+ bool Metadata::operator==(const Metadata& other) const
+                                                  ^~~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:87:50: error: ‘bool cphd::operator==(const int&)’ must have an argument of class or enumerated type
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:106:51: error: ‘Metadata’ does not name a type; did you mean ‘getdate’?
+ std::ostream& operator<< (std::ostream& os, const Metadata& d)
+                                                   ^~~~~~~~
+                                                   getdate
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp: In function ‘std::ostream& cphd::operator<<(std::ostream&, const int&)’:
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:109:14: error: request for member ‘collectionID’ in ‘d’, which is of non-class type ‘const int’
+         << d.collectionID << "\n"
+              ^~~~~~~~~~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:110:14: error: request for member ‘global’ in ‘d’, which is of non-class type ‘const int’
+         << d.global << "\n"
+              ^~~~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:111:14: error: request for member ‘sceneCoordinates’ in ‘d’, which is of non-class type ‘const int’
+         << d.sceneCoordinates << "\n"
+              ^~~~~~~~~~~~~~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:112:14: error: request for member ‘data’ in ‘d’, which is of non-class type ‘const int’
+         << d.data << "\n"
+              ^~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:113:14: error: request for member ‘channel’ in ‘d’, which is of non-class type ‘const int’
+         << d.channel << "\n"
+              ^~~~~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:114:14: error: request for member ‘pvp’ in ‘d’, which is of non-class type ‘const int’
+         << d.pvp << "\n"
+              ^~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:115:14: error: request for member ‘dwell’ in ‘d’, which is of non-class type ‘const int’
+         << d.dwell << "\n"
+              ^~~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:116:14: error: request for member ‘referenceGeometry’ in ‘d’, which is of non-class type ‘const int’
+         << d.referenceGeometry << "\n";
+              ^~~~~~~~~~~~~~~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:117:11: error: request for member ‘supportArray’ in ‘d’, which is of non-class type ‘const int’
+     if (d.supportArray.get())
+           ^~~~~~~~~~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:119:19: error: request for member ‘supportArray’ in ‘d’, which is of non-class type ‘const int’
+         os << *(d.supportArray) << "\n";
+                   ^~~~~~~~~~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:121:11: error: request for member ‘antenna’ in ‘d’, which is of non-class type ‘const int’
+     if (d.antenna.get())
+           ^~~~~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:123:19: error: request for member ‘antenna’ in ‘d’, which is of non-class type ‘const int’
+         os << *(d.antenna) << "\n";
+                   ^~~~~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:125:11: error: request for member ‘txRcv’ in ‘d’, which is of non-class type ‘const int’
+     if (d.txRcv.get())
+           ^~~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:127:19: error: request for member ‘txRcv’ in ‘d’, which is of non-class type ‘const int’
+         os << *(d.txRcv) << "\n";
+                   ^~~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:129:11: error: request for member ‘errorParameters’ in ‘d’, which is of non-class type ‘const int’
+     if (d.errorParameters.get())
+           ^~~~~~~~~~~~~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:131:19: error: request for member ‘errorParameters’ in ‘d’, which is of non-class type ‘const int’
+         os << *(d.errorParameters) << "\n";
+                   ^~~~~~~~~~~~~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:133:11: error: request for member ‘productInfo’ in ‘d’, which is of non-class type ‘const int’
+     if (d.productInfo.get())
+           ^~~~~~~~~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:135:19: error: request for member ‘productInfo’ in ‘d’, which is of non-class type ‘const int’
+         os << *(d.productInfo) << "\n";
+                   ^~~~~~~~~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:137:32: error: request for member ‘geoInfo’ in ‘d’, which is of non-class type ‘const int’
+     for (size_t ii = 0; ii < d.geoInfo.size(); ++ii)
+                                ^~~~~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:139:17: error: request for member ‘geoInfo’ in ‘d’, which is of non-class type ‘const int’
+         os << d.geoInfo[ii] << "\n";
+                 ^~~~~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:141:11: error: request for member ‘matchInfo’ in ‘d’, which is of non-class type ‘const int’
+     if (d.matchInfo.get())
+           ^~~~~~~~~
+/home/patrick.brady/repos/crsd_changes/six/modules/c++/crsd/source/Metadata.cpp:143:19: error: request for member ‘matchInfo’ in ‘d’, which is of non-class type ‘const int’
+         os << *(d.matchInfo) << "\n";
+                   ^~~~~~~~~
+gmake[2]: *** [six/modules/c++/crsd/CMakeFiles/crsd-c++.dir/build.make:412: six/modules/c++/crsd/CMakeFiles/crsd-c++.dir/source/Metadata.cpp.o] Error 1
+gmake[1]: *** [CMakeFiles/Makefile2:19187: six/modules/c++/crsd/CMakeFiles/crsd-c++.dir/all] Error 2
+gmake: *** [Makefile:146: all] Error 2

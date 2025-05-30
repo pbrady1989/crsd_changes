@@ -72,6 +72,8 @@ typedef six::FFTSign FFTSign;
 
 typedef six::RadarModeType RadarModeType;
 
+typedef six::TxWFType TxWFType;
+
 typedef six::CollectType CollectType;
 
 typedef six::DataType DataType;

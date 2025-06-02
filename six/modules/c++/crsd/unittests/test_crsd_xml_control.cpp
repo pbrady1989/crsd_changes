@@ -1034,6 +1034,37 @@ void runTest(const std::string& testName, const std::string& version)
     TEST_ASSERT_EQ(metadata->pvp->txPulseIndex.getOffset(), 208);
     TEST_ASSERT_EQ(metadata->pvp->txPulseIndex.getFormat(), "I8");
 
+    // Antenna
+    TEST_ASSERT_EQ(metadata->antenna.antCoordFrame.size(), 1);
+    TEST_ASSERT_EQ(metadata->antenna.antCoordFrame[0].identifier, "ACF1");
+    TEST_ASSERT_EQ(metadata->antenna.antPhaseCenter.size(), 2);
+    TEST_ASSERT_EQ(metadata->antenna.antPhaseCenter[0].identifier, "APC1");
+    TEST_ASSERT_EQ(metadata->antenna.antPhaseCenter[0].acfId, "ACF1");
+    TEST_ASSERT_EQ(metadata->antenna.antPhaseCenter[0].apcXYZ[0], 0.0);
+    TEST_ASSERT_EQ(metadata->antenna.antPhaseCenter[0].apcXYZ[1], 0.0);
+    TEST_ASSERT_EQ(metadata->antenna.antPhaseCenter[0].apcXYZ[2], 0.0);
+    TEST_ASSERT_EQ(metadata->antenna.antPhaseCenter[1].identifier, "APC2");
+    TEST_ASSERT_EQ(metadata->antenna.antPhaseCenter[1].acfId, "ACF1");
+    TEST_ASSERT_EQ(metadata->antenna.antPhaseCenter[1].apcXYZ[0], 0.0);
+    TEST_ASSERT_EQ(metadata->antenna.antPhaseCenter[1].apcXYZ[1], 0.0);
+    TEST_ASSERT_EQ(metadata->antenna.antPhaseCenter[1].apcXYZ[2], 0.0);
+    TEST_ASSERT_EQ(metadata->antenna.antPattern.size(), 1);
+    TEST_ASSERT_EQ(metadata->antenna.antPattern[0].identifier, "ANTPAT1");
+    TEST_ASSERT_EQ(metadata->antenna.antPattern[0].freqZero, 1000000000.0);
+    TEST_ASSERT_EQ(metadata->antenna.antPattern[0].arrayGPId, "AGP1");
+    TEST_ASSERT_EQ(metadata->antenna.antPattern[0].elementGPId, "EGP1");
+    TEST_ASSERT_EQ(metadata->antenna.antPattern[0].ebFreqShift.first, 1.0);
+    TEST_ASSERT_EQ(metadata->antenna.antPattern[0].ebFreqShift.second, 1.0);
+    TEST_ASSERT_EQ(metadata->antenna.antPattern[0].mlFreqDilation.first, 1.0);
+    TEST_ASSERT_EQ(metadata->antenna.antPattern[0].mlFreqDilation.second, 1.0);
+    TEST_ASSERT_EQ(metadata->antenna.antPattern[0].gainBSPoly.size(), 2);
+    TEST_ASSERT_EQ(metadata->antenna.antPattern[0].gainBSPoly[0], 1.0);
+    TEST_ASSERT_EQ(metadata->antenna.antPattern[0].gainBSPoly[1], 0.0);
+    TEST_ASSERT_EQ(metadata->antenna.antPattern[0].antPolRef.ampX, 1.0);
+    TEST_ASSERT_EQ(metadata->antenna.antPattern[0].antPolRef.ampY, 0.0);
+    TEST_ASSERT_EQ(metadata->antenna.antPattern[0].antPolRef.phaseX, 0.0);
+    TEST_ASSERT_EQ(metadata->antenna.antPattern[0].antPolRef.phaseY, 0.0);
+
 
 
 

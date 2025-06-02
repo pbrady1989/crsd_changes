@@ -375,8 +375,8 @@ XMLElem CRSDXMLParser::toXML(const Channel& channel, XMLElem parent)
     for (size_t ii = 0; ii < channel.parameters.size(); ++ii)
     {
         XMLElem parametersXML = newElement("Parameters", channelXML);
-        createString("Identifier", channel.parameters[ii].identifier, parametersXML);
-        createInt("RefVectorIndex", channel.parameters[ii].refVectorIndex, parametersXML);
+        createString("Identifier", channel.parameters[ii].identifier, parametersXML);std::cout << __LINE__ << std::endl;
+        createInt("RefVectorIndex", channel.parameters[ii].refVectorIndex, parametersXML);std::cout << __LINE__ << std::endl;
         createBooleanType("RefFreqFixed", channel.parameters[ii].refFreqFixed, parametersXML);
         createBooleanType("FrcvFixed", channel.parameters[ii].fRcvFixed, parametersXML);
         createBooleanType("SignalNormal", channel.parameters[ii].signalNormal, parametersXML);
@@ -1525,12 +1525,12 @@ void CRSDXMLParser::fromXML(const xml::lite::Element* refGeoXML, ReferenceGeomet
         refGeo.txParameters.reset(new crsd::OneWayParams());
         parseDouble(getFirstAndOnly(txXML, "Time"), refGeo.txParameters->time);
         mCommon.parseVector3D(getFirstAndOnly(txXML, "APCPos"), refGeo.txParameters->apcPos);
-        mCommon.parseVector3D(getFirstAndOnly(txXML, "APCVel"), refGeo.txParameters->apcPos);
+        mCommon.parseVector3D(getFirstAndOnly(txXML, "APCVel"), refGeo.txParameters->apcVel);
         std::string side = "";
         parseString(getFirstAndOnly(txXML, "SideOfTrack"), side);
         refGeo.txParameters->sideOfTrack = (side == "L" ? six::SideOfTrackType::LEFT : six::SideOfTrackType::RIGHT);
         parseDouble(getFirstAndOnly(txXML, "SlantRange"), refGeo.txParameters->slantRange);
-        parseDouble(getFirstAndOnly(txXML, "GroundRange"), refGeo.sarParameters->groundRange);
+        parseDouble(getFirstAndOnly(txXML, "GroundRange"), refGeo.txParameters->groundRange);
         parseDouble(getFirstAndOnly(txXML, "DopplerConeAngle"), refGeo.txParameters->dopplerConeAngle);
         parseDouble(getFirstAndOnly(txXML, "SquintAngle"), refGeo.txParameters->squintAngle);
         parseDouble(getFirstAndOnly(txXML, "AzimuthAngle"), refGeo.txParameters->azimuthAngle);
@@ -1543,7 +1543,7 @@ void CRSDXMLParser::fromXML(const xml::lite::Element* refGeoXML, ReferenceGeomet
         refGeo.rcvParameters.reset(new crsd::OneWayParams());
         parseDouble(getFirstAndOnly(rcvXML, "Time"), refGeo.rcvParameters->time);
         mCommon.parseVector3D(getFirstAndOnly(rcvXML, "APCPos"), refGeo.rcvParameters->apcPos);
-        mCommon.parseVector3D(getFirstAndOnly(rcvXML, "APCVel"), refGeo.rcvParameters->apcPos);
+        mCommon.parseVector3D(getFirstAndOnly(rcvXML, "APCVel"), refGeo.rcvParameters->apcVel);
         std::string side = "";
         parseString(getFirstAndOnly(rcvXML, "SideOfTrack"), side);
         refGeo.rcvParameters->sideOfTrack = (side == "L" ? six::SideOfTrackType::LEFT : six::SideOfTrackType::RIGHT);
@@ -1988,6 +1988,33 @@ void CRSDXMLParser::parseChannelParameters(
     parseDouble(getFirstAndOnly(paramXML, "PNCRSD"), param.pncrsd);
     parseDouble(getFirstAndOnly(paramXML, "BNCRSD"), param.bncrsd);
     mCommon.parseParameters(paramXML, "Parameter", param.addedParameters);
+    XMLElem sarImageXML = getOptional(paramXML, "SARImage");
+    if(sarImageXML)
+    {
+        param.sarImage.reset(new crsd::ChannelSARImage());
+        parseString(getFirstAndOnly(sarImageXML, "TxId"), param.sarImage->txID);
+        parseUInt(getFirstAndOnly(sarImageXML, "RefVectorPulseIndex"), param.sarImage->refVectorPulseIndex);  
+        XMLElem txPolXML = getFirstAndOnly(sarImageXML, "TxPolarization");
+        param.sarImage->txPolarization.polarizationID = PolarizationType::toType(getFirstAndOnly(txPolXML, "PolarizationID")->getCharacterData());
+        parseDouble(getFirstAndOnly(txPolXML, "AmpH"), param.sarImage->txPolarization.ampH);
+        parseDouble(getFirstAndOnly(txPolXML, "AmpV"), param.sarImage->txPolarization.ampV);
+        parseDouble(getFirstAndOnly(txPolXML, "PhaseH"), param.sarImage->txPolarization.phaseH);
+        parseDouble(getFirstAndOnly(txPolXML, "PhaseV"), param.sarImage->txPolarization.phaseV);
+        XMLElem dwellXML = getFirstAndOnly(sarImageXML, "DwellTimes");
+        XMLElem polyXML = getOptional(dwellXML, "Polynomials");
+        if (polyXML)
+        {
+            parseString(getFirstAndOnly(polyXML, "CODId"), param.sarImage->dwellTime.codId);
+            parseString(getFirstAndOnly(polyXML, "DwellId"), param.sarImage->dwellTime.dwellId);
+        }
+        XMLElem arrayXML = getOptional(dwellXML, "Array");
+        if (arrayXML)
+        {
+            parseString(getFirstAndOnly(arrayXML, "DTAId"), param.sarImage->dwellTime.dtaId);
+        }
+        const xml::lite::Element* imageAreaXML = getFirstAndOnly(sarImageXML, "ImageArea");
+        parseAreaType(imageAreaXML, param.sarImage->imageArea);
+    }
 }
 
 void CRSDXMLParser::parsePVPType(Pvp& pvp, const xml::lite::Element* paramXML, PVPType& param) const

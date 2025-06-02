@@ -885,7 +885,7 @@ void runTest(const std::string& testName, const std::string& version)
     TEST_ASSERT_EQ(metadata->referenceGeometry.sarParameters->arpVel[2], 0.0);
     TEST_ASSERT_EQ(metadata->referenceGeometry.sarParameters->bistaticAngle, 30.0);
     TEST_ASSERT_EQ(metadata->referenceGeometry.sarParameters->bistaticAngleRate, 0.0);
-    TEST_ASSERT_EQ(metadata->referenceGeometry.sarParameters->sideOfTrack.toString(), "R");
+    TEST_ASSERT_EQ(metadata->referenceGeometry.sarParameters->sideOfTrack.toString(), "RIGHT");
     TEST_ASSERT_EQ(metadata->referenceGeometry.sarParameters->slantRange, 10000.0);
     TEST_ASSERT_EQ(metadata->referenceGeometry.sarParameters->groundRange, 9000.0);
     TEST_ASSERT_EQ(metadata->referenceGeometry.sarParameters->dopplerConeAngle, 45.0);
@@ -903,7 +903,7 @@ void runTest(const std::string& testName, const std::string& version)
     TEST_ASSERT_EQ(metadata->referenceGeometry.txParameters->apcVel[0], 100.0);
     TEST_ASSERT_EQ(metadata->referenceGeometry.txParameters->apcVel[1], 0.0);
     TEST_ASSERT_EQ(metadata->referenceGeometry.txParameters->apcVel[2], 0.0);
-    TEST_ASSERT_EQ(metadata->referenceGeometry.txParameters->sideOfTrack.toString(), "R");
+    TEST_ASSERT_EQ(metadata->referenceGeometry.txParameters->sideOfTrack.toString(), "RIGHT");
     TEST_ASSERT_EQ(metadata->referenceGeometry.txParameters->slantRange, 10000.0);
     TEST_ASSERT_EQ(metadata->referenceGeometry.txParameters->groundRange, 9000.0);
     TEST_ASSERT_EQ(metadata->referenceGeometry.txParameters->dopplerConeAngle, 45.0);
@@ -918,7 +918,7 @@ void runTest(const std::string& testName, const std::string& version)
     TEST_ASSERT_EQ(metadata->referenceGeometry.rcvParameters->apcVel[0], 100.0);
     TEST_ASSERT_EQ(metadata->referenceGeometry.rcvParameters->apcVel[1], 0.0);
     TEST_ASSERT_EQ(metadata->referenceGeometry.rcvParameters->apcVel[2], 0.0);
-    TEST_ASSERT_EQ(metadata->referenceGeometry.rcvParameters->sideOfTrack.toString(), "R");
+    TEST_ASSERT_EQ(metadata->referenceGeometry.rcvParameters->sideOfTrack.toString(), "RIGHT");
     TEST_ASSERT_EQ(metadata->referenceGeometry.rcvParameters->slantRange, 10000.0);
     TEST_ASSERT_EQ(metadata->referenceGeometry.rcvParameters->groundRange, 9000.0);
     TEST_ASSERT_EQ(metadata->referenceGeometry.rcvParameters->dopplerConeAngle, 45.0);
@@ -926,7 +926,6 @@ void runTest(const std::string& testName, const std::string& version)
     TEST_ASSERT_EQ(metadata->referenceGeometry.rcvParameters->azimuthAngle, 90.0);
     TEST_ASSERT_EQ(metadata->referenceGeometry.rcvParameters->grazeAngle, 10.0);
     TEST_ASSERT_EQ(metadata->referenceGeometry.rcvParameters->incidenceAngle, 30.0);
-
 
 }
 }

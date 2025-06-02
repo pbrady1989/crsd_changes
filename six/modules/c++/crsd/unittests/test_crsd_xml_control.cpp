@@ -940,6 +940,105 @@ void runTest(const std::string& testName, const std::string& version)
     TEST_ASSERT_EQ(metadata->supportArray.fxResponseArray[0].fx0FXR, 1000000000.0);
     TEST_ASSERT_EQ(metadata->supportArray.fxResponseArray[0].fxSSFXR, 1000000.0);
 
+    // PPP
+    TEST_ASSERT_EQ(metadata->ppp->txTime.getSize(), 2);
+    TEST_ASSERT_EQ(metadata->ppp->txTime.getOffset(), 0);
+    TEST_ASSERT_EQ(metadata->ppp->txTime.getFormat(), "Int=I8;Frac=F8;");
+    TEST_ASSERT_EQ(metadata->ppp->txPos.getSize(), 3);
+    TEST_ASSERT_EQ(metadata->ppp->txPos.getOffset(), 16);
+    TEST_ASSERT_EQ(metadata->ppp->txPos.getFormat(), "X=F8;Y=F8;Z=F8;");
+    TEST_ASSERT_EQ(metadata->ppp->txVel.getSize(), 3);
+    TEST_ASSERT_EQ(metadata->ppp->txVel.getOffset(), 40);
+    TEST_ASSERT_EQ(metadata->ppp->txVel.getFormat(), "X=F8;Y=F8;Z=F8;");
+    TEST_ASSERT_EQ(metadata->ppp->fx1.getSize(), 1);
+    TEST_ASSERT_EQ(metadata->ppp->fx1.getOffset(), 64);
+    TEST_ASSERT_EQ(metadata->ppp->fx1.getFormat(), "F8");
+    TEST_ASSERT_EQ(metadata->ppp->fx2.getSize(), 1);
+    TEST_ASSERT_EQ(metadata->ppp->fx2.getOffset(), 72);
+    TEST_ASSERT_EQ(metadata->ppp->fx2.getFormat(), "F8");
+    TEST_ASSERT_EQ(metadata->ppp->txmt.getSize(), 1);
+    TEST_ASSERT_EQ(metadata->ppp->txmt.getOffset(), 80);
+    TEST_ASSERT_EQ(metadata->ppp->txmt.getFormat(), "F8");
+    TEST_ASSERT_EQ(metadata->ppp->phiX0.getSize(), 2);
+    TEST_ASSERT_EQ(metadata->ppp->phiX0.getOffset(), 88);
+    TEST_ASSERT_EQ(metadata->ppp->phiX0.getFormat(), "Int=I8;Frac=F8;");
+    TEST_ASSERT_EQ(metadata->ppp->fxFreq0.getSize(), 1);
+    TEST_ASSERT_EQ(metadata->ppp->fxFreq0.getOffset(), 104);
+    TEST_ASSERT_EQ(metadata->ppp->fxFreq0.getFormat(), "F8");
+    TEST_ASSERT_EQ(metadata->ppp->fxRate.getSize(), 1);
+    TEST_ASSERT_EQ(metadata->ppp->fxRate.getOffset(), 112);
+    TEST_ASSERT_EQ(metadata->ppp->fxRate.getFormat(), "F8");
+    TEST_ASSERT_EQ(metadata->ppp->txRadInt.getSize(), 1);
+    TEST_ASSERT_EQ(metadata->ppp->txRadInt.getOffset(), 120);
+    TEST_ASSERT_EQ(metadata->ppp->txRadInt.getFormat(), "F8");
+    TEST_ASSERT_EQ(metadata->ppp->txACX.getSize(), 3);
+    TEST_ASSERT_EQ(metadata->ppp->txACX.getOffset(), 128);
+    TEST_ASSERT_EQ(metadata->ppp->txACX.getFormat(), "X=F8;Y=F8;Z=F8;");
+    TEST_ASSERT_EQ(metadata->ppp->txACY.getSize(), 3);
+    TEST_ASSERT_EQ(metadata->ppp->txACY.getOffset(), 152);
+    TEST_ASSERT_EQ(metadata->ppp->txACY.getFormat(), "X=F8;Y=F8;Z=F8;");
+    TEST_ASSERT_EQ(metadata->ppp->txEB.getSize(), 2);
+    TEST_ASSERT_EQ(metadata->ppp->txEB.getOffset(), 176);
+    TEST_ASSERT_EQ(metadata->ppp->txEB.getFormat(), "DCX=F8;DCY=F8;");
+    TEST_ASSERT_EQ(metadata->ppp->fxResponseIndex.getSize(), 1);
+    TEST_ASSERT_EQ(metadata->ppp->fxResponseIndex.getOffset(), 192);
+    TEST_ASSERT_EQ(metadata->ppp->fxResponseIndex.getFormat(), "I8");
+
+    // PVP
+    TEST_ASSERT_EQ(metadata->pvp->rcvStart.getSize(), 2);
+    TEST_ASSERT_EQ(metadata->pvp->rcvStart.getOffset(), 0);
+    TEST_ASSERT_EQ(metadata->pvp->rcvStart.getFormat(), "Int=I8;Frac=F8;");
+    TEST_ASSERT_EQ(metadata->pvp->rcvPos.getSize(), 3);
+    TEST_ASSERT_EQ(metadata->pvp->rcvPos.getOffset(), 16);
+    TEST_ASSERT_EQ(metadata->pvp->rcvPos.getFormat(), "X=F8;Y=F8;Z=F8;");
+    TEST_ASSERT_EQ(metadata->pvp->rcvVel.getSize(), 3);
+    TEST_ASSERT_EQ(metadata->pvp->rcvVel.getOffset(), 40);
+    TEST_ASSERT_EQ(metadata->pvp->rcvVel.getFormat(), "X=F8;Y=F8;Z=F8;");
+    TEST_ASSERT_EQ(metadata->pvp->frcv1.getSize(), 1);
+    TEST_ASSERT_EQ(metadata->pvp->frcv1.getOffset(), 64);
+    TEST_ASSERT_EQ(metadata->pvp->frcv1.getFormat(), "F8");
+    TEST_ASSERT_EQ(metadata->pvp->frcv2.getSize(), 1);
+    TEST_ASSERT_EQ(metadata->pvp->frcv2.getOffset(), 72);
+    TEST_ASSERT_EQ(metadata->pvp->frcv2.getFormat(), "F8");
+    TEST_ASSERT_EQ(metadata->pvp->refPhi0.getSize(), 2);
+    TEST_ASSERT_EQ(metadata->pvp->refPhi0.getOffset(), 80);
+    TEST_ASSERT_EQ(metadata->pvp->refPhi0.getFormat(), "Int=I8;Frac=F8;");
+    TEST_ASSERT_EQ(metadata->pvp->refFreq.getSize(), 1);
+    TEST_ASSERT_EQ(metadata->pvp->refFreq.getOffset(), 96);
+    TEST_ASSERT_EQ(metadata->pvp->refFreq.getFormat(), "F8");
+    TEST_ASSERT_EQ(metadata->pvp->dfiC0.getSize(), 1);
+    TEST_ASSERT_EQ(metadata->pvp->dfiC0.getOffset(), 104);
+    TEST_ASSERT_EQ(metadata->pvp->dfiC0.getFormat(), "F8");
+    TEST_ASSERT_EQ(metadata->pvp->ficRate.getSize(), 1);
+    TEST_ASSERT_EQ(metadata->pvp->ficRate.getOffset(), 112);
+    TEST_ASSERT_EQ(metadata->pvp->ficRate.getFormat(), "F8");
+    TEST_ASSERT_EQ(metadata->pvp->rcvACX.getSize(), 3);
+    TEST_ASSERT_EQ(metadata->pvp->rcvACX.getOffset(), 120);
+    TEST_ASSERT_EQ(metadata->pvp->rcvACX.getFormat(), "X=F8;Y=F8;Z=F8;");
+    TEST_ASSERT_EQ(metadata->pvp->rcvACY.getSize(), 3);
+    TEST_ASSERT_EQ(metadata->pvp->rcvACY.getOffset(), 144);
+    TEST_ASSERT_EQ(metadata->pvp->rcvACY.getFormat(), "X=F8;Y=F8;Z=F8;");
+    TEST_ASSERT_EQ(metadata->pvp->rcvEB.getSize(), 2);
+    TEST_ASSERT_EQ(metadata->pvp->rcvEB.getOffset(), 168);
+    TEST_ASSERT_EQ(metadata->pvp->rcvEB.getFormat(), "DCX=F8;DCY=F8;");
+    TEST_ASSERT_EQ(metadata->pvp->signal.getSize(), 1);
+    TEST_ASSERT_EQ(metadata->pvp->signal.getOffset(), 184);
+    TEST_ASSERT_EQ(metadata->pvp->signal.getFormat(), "I8");
+    TEST_ASSERT_EQ(metadata->pvp->ampSF.getSize(), 1);
+    TEST_ASSERT_EQ(metadata->pvp->ampSF.getOffset(), 192);
+    TEST_ASSERT_EQ(metadata->pvp->ampSF.getFormat(), "F8");
+    TEST_ASSERT_EQ(metadata->pvp->dgrgc.getSize(), 1);
+    TEST_ASSERT_EQ(metadata->pvp->dgrgc.getOffset(), 200);
+    TEST_ASSERT_EQ(metadata->pvp->dgrgc.getFormat(), "F8");
+    TEST_ASSERT_EQ(metadata->pvp->txPulseIndex.getSize(), 1);
+    TEST_ASSERT_EQ(metadata->pvp->txPulseIndex.getOffset(), 208);
+    TEST_ASSERT_EQ(metadata->pvp->txPulseIndex.getFormat(), "I8");
+
+
+
+
+
+
 }
 }
 

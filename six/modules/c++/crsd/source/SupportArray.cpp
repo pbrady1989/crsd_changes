@@ -32,14 +32,13 @@ SupportArrayParameter::SupportArrayParameter() :
     x0(six::Init::undefined<double>()),
     y0(six::Init::undefined<double>()),
     xSS(six::Init::undefined<double>()),
-    ySS(six::Init::undefined<double>()),
-    identifier(six::Init::undefined<size_t>())
+    ySS(six::Init::undefined<double>())
 {
 }
 
 SupportArrayParameter::SupportArrayParameter(
         const std::string& format,
-        size_t id,
+        std::string id,
         double x0_in,
         double y0_in,
         double xSS_in,
@@ -61,14 +60,13 @@ void SupportArrayParameter::initializeParams()
 
 FxResponseArray::FxResponseArray() :
     fx0FXR(six::Init::undefined<double>()),
-    fxSSFXR(six::Init::undefined<double>()),
-    identifier(six::Init::undefined<size_t>())
+    fxSSFXR(six::Init::undefined<double>())
 {
 }
 
 FxResponseArray::FxResponseArray(
         const std::string& format,
-        size_t id,
+        std::string id,
         double fx0_in,
         double fxSS_in) :
     elementFormat(format),
@@ -86,14 +84,13 @@ void FxResponseArray::initializeParams()
 
 XMArray::XMArray() :
     tsXMA(six::Init::undefined<double>()),
-    maxXMBW(six::Init::undefined<double>()),
-    identifier(six::Init::undefined<size_t>())
+    maxXMBW(six::Init::undefined<double>())
 {
 }
 
 XMArray::XMArray(
         const std::string& format,
-        size_t id,
+        std::string id,
         double tsXMA_in,
         double maxXMBW_in) :
     elementFormat(format),

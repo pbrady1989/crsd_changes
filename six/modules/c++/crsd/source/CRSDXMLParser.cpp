@@ -505,7 +505,7 @@ XMLElem CRSDXMLParser::toXML(const SupportArray& supports, XMLElem parent)
         for (size_t ii = 0; ii < supports.iazArray.size(); ++ii)
         {
             XMLElem iazArrayXML = newElement("IAZArray", supportsXML);
-            createInt("Identifier", supports.iazArray[ii].getIdentifier(), iazArrayXML);
+            createString("Identifier", supports.iazArray[ii].getIdentifier(), iazArrayXML);
             createString("ElementFormat", supports.iazArray[ii].elementFormat, iazArrayXML);
             createDouble("X0", supports.iazArray[ii].x0, iazArrayXML);
             createDouble("Y0", supports.iazArray[ii].y0, iazArrayXML);
@@ -518,7 +518,7 @@ XMLElem CRSDXMLParser::toXML(const SupportArray& supports, XMLElem parent)
         for (size_t ii = 0; ii < supports.antGainPhase.size(); ++ii)
         {
             XMLElem antGainPhaseXML = newElement("AntGainPhase", supportsXML);
-            createInt("Identifier", supports.antGainPhase[ii].getIdentifier(), antGainPhaseXML);
+            createString("Identifier", supports.antGainPhase[ii].getIdentifier(), antGainPhaseXML);
             createString("ElementFormat", supports.antGainPhase[ii].elementFormat, antGainPhaseXML);
             createDouble("X0", supports.antGainPhase[ii].x0, antGainPhaseXML);
             createDouble("Y0", supports.antGainPhase[ii].y0, antGainPhaseXML);
@@ -531,7 +531,7 @@ XMLElem CRSDXMLParser::toXML(const SupportArray& supports, XMLElem parent)
         for (size_t ii = 0; ii < supports.dwellTimeArray.size(); ++ii)
         {
             XMLElem dwellTimeXML = newElement("DwellTimeArray", supportsXML);
-            createInt("Identifier", supports.dwellTimeArray[ii].getIdentifier(), dwellTimeXML);
+            createString("Identifier", supports.dwellTimeArray[ii].getIdentifier(), dwellTimeXML);
             createString("ElementFormat", supports.dwellTimeArray[ii].elementFormat, dwellTimeXML);
             createDouble("X0", supports.dwellTimeArray[ii].x0, dwellTimeXML);
             createDouble("Y0", supports.dwellTimeArray[ii].y0, dwellTimeXML);
@@ -544,7 +544,7 @@ XMLElem CRSDXMLParser::toXML(const SupportArray& supports, XMLElem parent)
         for (size_t ii = 0; ii < supports.fxResponseArray.size(); ++ii)
         {
             XMLElem fxResponseXML = newElement("FxResponseArray", supportsXML);
-            createInt("Identifier", supports.fxResponseArray[ii].getIdentifier(), fxResponseXML);
+            createString("Identifier", supports.fxResponseArray[ii].getIdentifier(), fxResponseXML);
             createString("ElementFormat", supports.fxResponseArray[ii].elementFormat, fxResponseXML);
             createDouble("Fx0FXR", supports.fxResponseArray[ii].fx0FXR, fxResponseXML);
             createDouble("FxSSFXR", supports.fxResponseArray[ii].fxSSFXR, fxResponseXML);
@@ -555,7 +555,7 @@ XMLElem CRSDXMLParser::toXML(const SupportArray& supports, XMLElem parent)
         for (size_t ii = 0; ii < supports.xmArray.size(); ++ii)
         {
             XMLElem xmXML = newElement("XMArray", supportsXML);
-            createInt("Identifier", supports.xmArray[ii].getIdentifier(), xmXML);
+            createString("Identifier", supports.xmArray[ii].getIdentifier(), xmXML);
             createString("ElementFormat", supports.xmArray[ii].elementFormat, xmXML);
             createDouble("TsXMA", supports.xmArray[ii].tsXMA, xmXML);
             createDouble("MaxXMBW", supports.xmArray[ii].maxXMBW, xmXML);
@@ -1567,12 +1567,46 @@ void CRSDXMLParser::fromXML(const xml::lite::Element* supportArrayXML, SupportAr
         parseSupportArrayParameter(iazArrayXMLVec[ii], supportArray.iazArray[ii], false);
     }
 
+    std::vector<XMLElem> fxResponseArrayXMLVec;
+    supportArrayXML->getElementsByTagName("FxResponseArray", fxResponseArrayXMLVec);
+    supportArray.fxResponseArray.resize(fxResponseArrayXMLVec.size());
+    for (size_t ii = 0; ii < fxResponseArrayXMLVec.size(); ++ii)
+    {
+        std::string identifierVal;
+        parseString(getFirstAndOnly(fxResponseArrayXMLVec[ii], "Identifier"), identifierVal);
+        supportArray.fxResponseArray[ii].setIdentifier(identifierVal);
+        parseString(getFirstAndOnly(fxResponseArrayXMLVec[ii], "ElementFormat"), supportArray.fxResponseArray[ii].elementFormat);
+        parseDouble(getFirstAndOnly(fxResponseArrayXMLVec[ii], "Fx0FXR"), supportArray.fxResponseArray[ii].fx0FXR);
+        parseDouble(getFirstAndOnly(fxResponseArrayXMLVec[ii], "FxSSFXR"), supportArray.fxResponseArray[ii].fxSSFXR);
+    }
+
     std::vector<XMLElem> antGainPhaseXMLVec;
     supportArrayXML->getElementsByTagName("AntGainPhase", antGainPhaseXMLVec);
     supportArray.antGainPhase.resize(antGainPhaseXMLVec.size());
     for (size_t ii = 0; ii < antGainPhaseXMLVec.size(); ++ii)
     {
         parseSupportArrayParameter(antGainPhaseXMLVec[ii], supportArray.antGainPhase[ii], false);
+    }
+
+    std::vector<XMLElem> xmXMLVec;
+    supportArrayXML->getElementsByTagName("XMArray", xmXMLVec);
+    supportArray.xmArray.resize(xmXMLVec.size());
+    for (size_t ii = 0; ii < xmXMLVec.size(); ++ii)
+    {
+        std::string identifierVal;
+        parseString(getFirstAndOnly(xmXMLVec[ii], "Identifier"), identifierVal);
+        supportArray.xmArray[ii].setIdentifier(identifierVal);
+        parseString(getFirstAndOnly(xmXMLVec[ii], "ElementFormat"), supportArray.xmArray[ii].elementFormat);
+        parseDouble(getFirstAndOnly(xmXMLVec[ii], "TsXMA"), supportArray.xmArray[ii].tsXMA);
+        parseDouble(getFirstAndOnly(xmXMLVec[ii], "MaxXMBW"), supportArray.xmArray[ii].maxXMBW);
+    }
+
+    std::vector<XMLElem> dwellXMLVec;
+    supportArrayXML->getElementsByTagName("DwellTimeArray", dwellXMLVec);
+    supportArray.dwellTimeArray.resize(dwellXMLVec.size());
+    for (size_t ii = 0; ii < dwellXMLVec.size(); ++ii)
+    {
+        parseSupportArrayParameter(dwellXMLVec[ii], supportArray.dwellTimeArray[ii], false);
     }
 
     std::vector<XMLElem> addedSupportArrayXMLVec;
@@ -2167,8 +2201,8 @@ void CRSDXMLParser::parseSupportArrayParameter(const xml::lite::Element* paramXM
 {
     if(!additionalFlag)
     {
-        size_t identifierVal;
-        parseUInt(getFirstAndOnly(paramXML, "Identifier"), identifierVal);
+        std::string identifierVal;
+        parseString(getFirstAndOnly(paramXML, "Identifier"), identifierVal);
         param.setIdentifier(identifierVal);
     }
     parseString(getFirstAndOnly(paramXML, "ElementFormat"), param.elementFormat);

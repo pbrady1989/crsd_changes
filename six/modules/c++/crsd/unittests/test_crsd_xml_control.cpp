@@ -868,7 +868,6 @@ void runTest(const std::string& testName, const std::string& version)
     TEST_ASSERT_EQ(metadata->channel->parameters[0].sarImage->imageArea.polygon[3][1], 1000.0);
 
     // ReferenceGeometry
-    
     TEST_ASSERT_EQ(metadata->referenceGeometry.refPoint.ecf[0], 1234567.0);
     TEST_ASSERT_EQ(metadata->referenceGeometry.refPoint.ecf[1], 2345678.0);
     TEST_ASSERT_EQ(metadata->referenceGeometry.refPoint.ecf[2], 3456789.0);
@@ -926,6 +925,20 @@ void runTest(const std::string& testName, const std::string& version)
     TEST_ASSERT_EQ(metadata->referenceGeometry.rcvParameters->azimuthAngle, 90.0);
     TEST_ASSERT_EQ(metadata->referenceGeometry.rcvParameters->grazeAngle, 10.0);
     TEST_ASSERT_EQ(metadata->referenceGeometry.rcvParameters->incidenceAngle, 30.0);
+
+    // SupportArray
+    TEST_ASSERT_EQ(metadata->supportArray.antGainPhase.size(), 1);
+    TEST_ASSERT_EQ(metadata->supportArray.antGainPhase[0].getIdentifier(), "AGP1");
+    TEST_ASSERT_EQ(metadata->supportArray.antGainPhase[0].elementFormat, "Gain=F4;Phase=F4;");
+    TEST_ASSERT_EQ(metadata->supportArray.antGainPhase[0].x0, 0.0);
+    TEST_ASSERT_EQ(metadata->supportArray.antGainPhase[0].y0, 0.0);
+    TEST_ASSERT_EQ(metadata->supportArray.antGainPhase[0].xSS, 1.0);
+    TEST_ASSERT_EQ(metadata->supportArray.antGainPhase[0].ySS, 1.0);
+    TEST_ASSERT_EQ(metadata->supportArray.fxResponseArray.size(), 1);
+    TEST_ASSERT_EQ(metadata->supportArray.fxResponseArray[0].getIdentifier(), "FXRESP1");
+    TEST_ASSERT_EQ(metadata->supportArray.fxResponseArray[0].elementFormat, "Amp=F4;Phase=F4;");
+    TEST_ASSERT_EQ(metadata->supportArray.fxResponseArray[0].fx0FXR, 1000000000.0);
+    TEST_ASSERT_EQ(metadata->supportArray.fxResponseArray[0].fxSSFXR, 1000000.0);
 
 }
 }

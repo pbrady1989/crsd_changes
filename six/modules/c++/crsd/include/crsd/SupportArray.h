@@ -61,7 +61,7 @@ struct SupportArrayParameter
      *  \param ySS_in Col coordinate (Y) sample spacing
      */
     SupportArrayParameter(
-        const std::string& format, size_t id,
+        const std::string& format, std::string id,
         double x0_in, double y0_in,
         double xSS_in, double ySS_in);
 
@@ -79,13 +79,13 @@ struct SupportArrayParameter
     }
 
     //! Set unique identifier
-    void setIdentifier(size_t identifierIn)
+    void setIdentifier(std::string identifierIn)
     {
         identifier = identifierIn;
     }
 
     //! Get unique identifier
-    inline size_t getIdentifier() const
+    inline std::string getIdentifier() const
     {
         return identifier;
     }
@@ -108,7 +108,7 @@ struct SupportArrayParameter
 protected:
     void initializeParams();
 private:
-    size_t identifier;
+    std::string identifier;
 };
 
 struct FxResponseArray
@@ -123,7 +123,7 @@ struct FxResponseArray
      *
      */
     FxResponseArray(
-        const std::string& format, size_t id,
+        const std::string& format, std::string id,
         double fx0_in, double fxSS_in);
 
     //! Equality operator
@@ -140,13 +140,13 @@ struct FxResponseArray
     }
 
     //! Set unique identifier
-    void setIdentifier(size_t identifierIn)
+    void setIdentifier(std::string identifierIn)
     {
         identifier = identifierIn;
     }
 
     //! Get unique identifier
-    inline size_t getIdentifier() const
+    inline std::string getIdentifier() const
     {
         return identifier;
     }
@@ -163,7 +163,7 @@ struct FxResponseArray
 protected:
     void initializeParams();
 private:
-    size_t identifier;
+    std::string identifier;
 };
 
 struct XMArray
@@ -178,7 +178,7 @@ struct XMArray
      *
      */
     XMArray(
-        const std::string& format, size_t id,
+        const std::string& format, std::string id,
         double tsXMA_in, double maxXMBW_in);
 
     //! Equality operator
@@ -195,13 +195,13 @@ struct XMArray
     }
 
     //! Set unique identifier
-    void setIdentifier(size_t identifierIn)
+    void setIdentifier(std::string identifierIn)
     {
         identifier = identifierIn;
     }
 
     //! Get unique identifier
-    inline size_t getIdentifier() const
+    inline std::string getIdentifier() const
     {
         return identifier;
     }
@@ -219,7 +219,7 @@ struct XMArray
 protected:
     void initializeParams();
 private:
-    size_t identifier;
+    std::string identifier;
 };
 
 /*!

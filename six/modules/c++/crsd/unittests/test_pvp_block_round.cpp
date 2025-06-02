@@ -1,10 +1,10 @@
 /* =========================================================================
- * This file is part of cphd-c++
+ * This file is part of crsd-c++
  * =========================================================================
  *
  * (C) Copyright 2004 - 2019, MDA Information Systems LLC
  *
- * cphd-c++ is free software; you can redistribute it and/or modify
+ * crsd-c++ is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
@@ -23,14 +23,14 @@
 #include <thread>
 
 #include <TestCase.h>
-#include <cphd/CPHDReader.h>
-#include <cphd/CPHDWriter.h>
-#include <cphd/Metadata.h>
-#include <cphd/PVP.h>
-#include <cphd/PVPBlock.h>
-#include <cphd/ReferenceGeometry.h>
-#include <cphd/TestDataGenerator.h>
-#include <cphd/Wideband.h>
+#include <crsd/CRSDReader.h>
+#include <crsd/CRSDWriter.h>
+#include <crsd/Metadata.h>
+#include <crsd/PVP.h>
+#include <crsd/PVPBlock.h>
+#include <crsd/ReferenceGeometry.h>
+#include <crsd/TestDataGenerator.h>
+#include <crsd/Wideband.h>
 #include <io/FileInputStream.h>
 #include <io/FileOutputStream.h>
 #include <io/TempFile.h>
@@ -57,13 +57,7 @@ std::vector<std::complex<T>> generateComplexData(size_t length)
 }
 
 void setPVPBlock(const types::RowCol<size_t> dims,
-                 cphd::PVPBlock& pvpBlock,
-                 bool isAmpSF,
-                 bool isFxN1,
-                 bool isFxN2,
-                 bool isTOAE1,
-                 bool isTOAE2,
-                 bool isSignal,
+                 crsd::PVPBlock& pvpBlock,
                  const std::vector<std::string>& addedParams)
 {
     const size_t numChannels = 1;
@@ -74,75 +68,67 @@ void setPVPBlock(const types::RowCol<size_t> dims,
         for (size_t jj = 0; jj < numVectors[ii]; ++jj)
         {
             setVectorParameters(ii, jj, pvpBlock);
-
-            if (isAmpSF)
-            {
-                const double ampSF = cphd::getRandom();
-                pvpBlock.setAmpSF(ampSF, ii, jj);
-            }
-            if (isFxN1)
-            {
-                const double fxN1 = cphd::getRandom();
-                pvpBlock.setFxN1(fxN1, ii, jj);
-            }
-            if (isFxN2)
-            {
-                const double fxN2 = cphd::getRandom();
-                pvpBlock.setFxN2(fxN2, ii, jj);
-            }
-            if (isTOAE1)
-            {
-                const double toaE1 = cphd::getRandom();
-                pvpBlock.setTOAE1(toaE1, ii, jj);
-            }
-            if (isTOAE2)
-            {
-                const double toaE2 = cphd::getRandom();
-                pvpBlock.setTOAE2(toaE2, ii, jj);
-            }
-            if (isSignal)
-            {
-                const double signal = cphd::getRandom();
-                pvpBlock.setTOAE2(signal, ii, jj);
-            }
-
             for (size_t idx = 0; idx < addedParams.size(); ++idx)
             {
-                const double val = cphd::getRandom();
+                const double val = crsd::getRandom();
                 pvpBlock.setAddedPVP(val, ii, jj, addedParams[idx]);
             }
         }
     }
 }
 
+void setPPPBlock(const types::RowCol<size_t> dims,
+                 crsd::PPPBlock& pppBlock,
+                 const std::vector<std::string>& addedParams)
+{
+    const size_t numSequences = 1;
+    const std::vector<size_t> numPulses(numSequences, dims.row);
+
+    for (size_t ii = 0; ii < numSequences; ++ii)
+    {
+        for (size_t jj = 0; jj < numPulses[ii]; ++jj)
+        {
+            setPulseParameters(ii, jj, pppBlock);
+            for (size_t idx = 0; idx < addedParams.size(); ++idx)
+            {
+                const double val = crsd::getRandom();
+                pppBlock.setAddedPPP(val, ii, jj, addedParams[idx]);
+            }
+        }
+    }
+}
+
 template <typename T>
-void writeCPHD(const std::string& outPathname,
+void writeCRSD(const std::string& outPathname,
                size_t numThreads,
                const types::RowCol<size_t> dims,
                const std::vector<std::complex<T>>& writeData,
-               cphd::Metadata& metadata,
-               cphd::PVPBlock& pvpBlock)
+               crsd::Metadata& metadata,
+               crsd::PVPBlock& pvpBlock,
+               crsd::PPPBlock& pppBlock)
 {
     const size_t numChannels = 1;
+    const size_t numTxSequences = 1;
 
-    cphd::CPHDWriter writer(metadata,
+    crsd::CRSDWriter writer(metadata,
                             outPathname,
                             std::vector<std::string>(),
                             numThreads);
-    writer.writeMetadata(pvpBlock);
+    writer.writeMetadata(pvpBlock, pppBlock);
+    writer.writePPPData(pppBlock);
     writer.writePVPData(pvpBlock);
     for (size_t ii = 0; ii < numChannels; ++ii)
     {
-        writer.writeCPHDData(writeData.data(), dims.area());
+        writer.writeCRSDData(writeData.data(), dims.area());
     }
 }
 
 bool checkData(const std::string& pathname,
                size_t numThreads,
-               cphd::Metadata& metadata,
-               cphd::PVPBlock& pvpBlock)
+               crsd::Metadata& metadata,
+               crsd::PVPBlock& pvpBlock)
 {
-    cphd::CPHDReader reader(pathname, numThreads);
+    crsd::CRSDReader reader(pathname, numThreads);
 
     if (metadata.pvp != reader.getMetadata().pvp)
     {
@@ -158,13 +144,14 @@ bool checkData(const std::string& pathname,
 template <typename T>
 bool runTest(bool /*scale*/,
              const std::vector<std::complex<T>>& writeData,
-             cphd::Metadata& meta,
-             cphd::PVPBlock& pvpBlock,
+             crsd::Metadata& meta,
+             crsd::PVPBlock& pvpBlock, 
+             crsd::PPPBlock& pppBlock,
              const types::RowCol<size_t> dims)
 {
     io::TempFile tempfile;
     const size_t numThreads = std::thread::hardware_concurrency();
-    writeCPHD(tempfile.pathname(), numThreads, dims, writeData, meta, pvpBlock);
+    writeCRSD(tempfile.pathname(), numThreads, dims, writeData, meta, pvpBlock, pppBlock);
     return checkData(tempfile.pathname(), numThreads, meta, pvpBlock);
 }
 
@@ -174,22 +161,22 @@ TEST_CASE(testPVPBlockSimple)
     const std::vector<std::complex<int16_t>> writeData =
             generateComplexData<int16_t>(dims.area());
     const bool scale = false;
-    cphd::Metadata meta = cphd::Metadata();
-    cphd::setUpData(meta, dims, writeData);
-    cphd::setPVPXML(meta.pvp);
-    cphd::PVPBlock pvpBlock(meta.pvp, meta.data);
+    crsd::Metadata meta = crsd::Metadata();
+    crsd::setUpData(meta, dims, writeData);
+    crsd::setPVPXML(*(meta.pvp));
+    crsd::setPPPXML(*(meta.ppp));
+    crsd::PVPBlock pvpBlock(*(meta.pvp), meta.data);
     std::vector<std::string> addedParams;
     setPVPBlock(dims,
                 pvpBlock,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
                 addedParams);
+    crsd::PPPBlock pppBlock(*(meta.ppp), meta.data);
+    std::vector<std::string> addedParams2;
+    setPPPBlock(dims,
+                pppBlock,
+                addedParams2);
 
-    TEST_ASSERT_TRUE(runTest(scale, writeData, meta, pvpBlock, dims));
+    TEST_ASSERT_TRUE(runTest(scale, writeData, meta, pvpBlock, pppBlock, dims));
 }
 
 TEST_CASE(testPVPBlockOptional)
@@ -198,25 +185,28 @@ TEST_CASE(testPVPBlockOptional)
     const std::vector<std::complex<int16_t>> writeData =
             generateComplexData<int16_t>(dims.area());
     const bool scale = false;
-    cphd::Metadata meta = cphd::Metadata();
-    cphd::setUpData(meta, dims, writeData);
-    cphd::setPVPXML(meta.pvp);
-    meta.pvp.setOffset(27, meta.pvp.fxN1);
-    meta.pvp.setOffset(28, meta.pvp.fxN2);
-    meta.data.numBytesPVP += 2 * 8;
-    cphd::PVPBlock pvpBlock(meta.pvp, meta.data);
+    crsd::Metadata meta = crsd::Metadata();
+    crsd::setUpData(meta, dims, writeData);
+    crsd::setPVPXML(*(meta.pvp));
+    meta.pvp->setOffset(27, meta.pvp->frcv1);
+    meta.pvp->setOffset(28, meta.pvp->frcv2);
+    meta.data.receiveParameters->numBytesPVP += 2 * 8;
+    crsd::PVPBlock pvpBlock(*(meta.pvp), meta.data);
     std::vector<std::string> addedParams;
     setPVPBlock(dims,
                 pvpBlock,
-                false,
-                true,
-                true,
-                false,
-                false,
-                false,
                 addedParams);
+    crsd::setPVPXML(*(meta.pvp));
+    meta.ppp->setOffset(27, meta.ppp->fx1);
+    meta.ppp->setOffset(28, meta.ppp->fx2);
+    meta.data.transmitParameters->numBytesPPP += 2 * 8;
+    crsd::PPPBlock pppBlock(*(meta.ppp), meta.data);
+    std::vector<std::string> addedParams2;
+    setPPPBlock(dims,
+                pppBlock,
+                addedParams2);
 
-    TEST_ASSERT_TRUE(runTest(scale, writeData, meta, pvpBlock, dims));
+    TEST_ASSERT_TRUE(runTest(scale, writeData, meta, pvpBlock, pppBlock, dims));
 }
 
 TEST_CASE(testPVPBlockAdditional)
@@ -225,27 +215,33 @@ TEST_CASE(testPVPBlockAdditional)
     const std::vector<std::complex<int16_t>> writeData =
             generateComplexData<int16_t>(dims.area());
     const bool scale = false;
-    cphd::Metadata meta = cphd::Metadata();
-    cphd::setUpData(meta, dims, writeData);
-    cphd::setPVPXML(meta.pvp);
-    meta.pvp.setCustomParameter(1, 27, "F8", "param1");
-    meta.pvp.setCustomParameter(1, 28, "F8", "param2");
-    meta.data.numBytesPVP += 2 * 8;
-    cphd::PVPBlock pvpBlock(meta.pvp, meta.data);
+    crsd::Metadata meta = crsd::Metadata();
+    crsd::setUpData(meta, dims, writeData);
+    crsd::setPVPXML(*(meta.pvp));
+    meta.pvp->setCustomParameter(1, 27, "F8", "param1");
+    meta.pvp->setCustomParameter(1, 28, "F8", "param2");
+    meta.data.receiveParameters->numBytesPVP += 2 * 8;
+    crsd::PVPBlock pvpBlock(*(meta.pvp), meta.data);
     std::vector<std::string> addedParams;
     addedParams.push_back("param1");
     addedParams.push_back("param2");
     setPVPBlock(dims,
                 pvpBlock,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
+                addedParams);
+    crsd::setPPPXML(*(meta.ppp));
+    meta.ppp->setCustomParameter(1, 27, "F8", "param1");
+    meta.ppp->setCustomParameter(1, 28, "F8", "param2");
+    meta.data.transmitParameters->numBytesPPP += 2 * 8;
+    crsd::PPPBlock pppBlock(*(meta.ppp), meta.data);
+    std::vector<std::string> addedParams2;
+    addedParams2.push_back("param1");
+    addedParams2.push_back("param2");
+    setPPPBlock(dims,
+                pppBlock,
                 addedParams);
 
-    TEST_ASSERT_TRUE(runTest(scale, writeData, meta, pvpBlock, dims));
+
+    TEST_ASSERT_TRUE(runTest(scale, writeData, meta, pvpBlock, pppBlock, dims));
 }
 
 TEST_MAIN(

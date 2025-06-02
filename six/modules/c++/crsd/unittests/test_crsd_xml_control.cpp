@@ -1064,12 +1064,6 @@ void runTest(const std::string& testName, const std::string& version)
     TEST_ASSERT_EQ(metadata->antenna.antPattern[0].antPolRef.ampY, 0.0);
     TEST_ASSERT_EQ(metadata->antenna.antPattern[0].antPolRef.phaseX, 0.0);
     TEST_ASSERT_EQ(metadata->antenna.antPattern[0].antPolRef.phaseY, 0.0);
-
-
-
-
-
-
 }
 }
 

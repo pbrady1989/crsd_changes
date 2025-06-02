@@ -269,7 +269,7 @@ struct CRSDWriter
      *  \func writeMetadata
      *  \brief Writes the header, and metadata into the file.
      *
-     *  This should be used in situations where you need to write out the CRSD
+     *  This should be used in situations where you need to write out the CPHD
      *  data in chunks.
      *
      *  \param pvpBlock The vector based metadata to write.

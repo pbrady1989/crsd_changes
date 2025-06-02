@@ -1,10 +1,10 @@
 /* =========================================================================
- * This file is part of cphd-c++
+ * This file is part of crsd-c++
  * =========================================================================
  *
  * (C) Copyright 2004 - 2020, MDA Information Systems LLC
  *
- * cphd-c++ is free software; you can redistribute it and/or modify
+ * crsd-c++ is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
@@ -33,9 +33,9 @@
 #include <mt/ThreadPlanner.h>
 
 #include <six/Init.h>
-#include <cphd/ByteSwap.h>
-#include <cphd/Wideband.h>
-#include <cphd/FileHeader.h>
+#include <crsd/ByteSwap.h>
+#include <crsd/Wideband.h>
+#include <crsd/FileHeader.h>
 
 #undef min
 #undef max
@@ -239,12 +239,12 @@ void scale(const void* input,
 }
 }
 
-namespace cphd
+namespace crsd
 {
 const size_t Wideband::ALL = std::numeric_limits<size_t>::max();
 
 Wideband::Wideband(const std::string& pathname,
-                   const cphd::MetadataBase& metadata,
+                   const crsd::MetadataBase& metadata,
                    int64_t startWB,
                    int64_t sizeWB) :
     mInStream(std::make_shared<io::FileInputStream>(pathname)),
@@ -258,7 +258,7 @@ Wideband::Wideband(const std::string& pathname,
 }
 
 Wideband::Wideband(std::shared_ptr<io::SeekableInputStream> inStream,
-                   const cphd::MetadataBase& metadata,
+                   const crsd::MetadataBase& metadata,
                    int64_t startWB,
                    int64_t sizeWB) :
     mInStream(inStream),
@@ -410,7 +410,7 @@ void Wideband::readImpl(size_t channel,
     checkReadInputs(
             channel, firstVector, lastVector, firstSample, lastSample, dims);
 
-    // Compute the byte offset into this channel's wideband in the CPHD file
+    // Compute the byte offset into this channel's wideband in the CRSD file
     // First to the start of the first pulse we're going to read
     int64_t inOffset = getFileOffset(channel, firstVector, firstSample);
 
@@ -441,7 +441,7 @@ void Wideband::readImpl(size_t channel,
 
 void Wideband::readImpl(size_t channel, void* data) const
 {
-    // Compute the byte offset into this channel's wideband in the CPHD file
+    // Compute the byte offset into this channel's wideband in the CRSD file
     // First to the start of the first pulse we're going to read
     int64_t inOffset = getFileOffset(channel);
 
@@ -485,7 +485,7 @@ void Wideband::read(size_t channel,
     // Element size is half mElementSize because it's complex
     if (shouldByteSwap())
     {
-        cphd::byteSwap(data.data, mElementSize / 2, numPixels * 2, numThreads);
+        crsd::byteSwap(data.data, mElementSize / 2, numPixels * 2, numThreads);
     }
 }
 
@@ -537,7 +537,7 @@ void Wideband::read(size_t channel,
         // TODO: Would be nice to have a way to test this without
         // logging onto Solaris...
         const size_t numPixels = getBufferDims(0, 0, ALL, 0, ALL).area();
-        cphd::byteSwap(data.data,
+        crsd::byteSwap(data.data,
                        mElementSize / 2,
                        numPixels * 2,
                        std::thread::hardware_concurrency());
@@ -659,7 +659,7 @@ void Wideband::read(size_t channel,
         if ((std::endian::native == std::endian::little) && mElementSize > 2)
         {
             // Need to endian swap and then scale
-            cphd::byteSwapAndScale(scratch.data,
+            crsd::byteSwapAndScale(scratch.data,
                                    mElementSize,
                                    dims,
                                    vectorScaleFactors.data(),
@@ -690,7 +690,7 @@ void Wideband::read(size_t channel,
 
         if ((std::endian::native == std::endian::little) && mElementSize > 2)
         {
-            cphd::byteSwapAndPromote(
+            crsd::byteSwapAndPromote(
                     scratch.data, mElementSize, dims, numThreads, data.data);
         }
         else
@@ -712,7 +712,7 @@ void Wideband::read(size_t channel,
         // Element size is half mElementSize because it's complex
         if (shouldByteSwap())
         {
-            cphd::byteSwap(data.data,
+            crsd::byteSwap(data.data,
                            mElementSize / 2,
                            numPixels * 2,
                            numThreads);

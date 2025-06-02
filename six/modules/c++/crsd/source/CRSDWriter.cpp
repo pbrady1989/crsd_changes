@@ -309,66 +309,6 @@ template void CRSDWriter::write<std::complex<float>>(
         const std::complex<float>* widebandData,
         const std::byte* supportData);
 
-void CRSDWriter::writeMetadata(const PVPBlock& pvpBlock,
-                               const PPPBlock& pppBlock)
-{
-
-    // Update the number of bytes per PVP
-    if (mMetadata.data.getNumBytesPPPSet() != pppBlock.getNumBytesPPPSet())
-    {
-        std::ostringstream ostr;
-        ostr << "Number of ppp block bytes in metadata: "
-             << mMetadata.data.getNumBytesPPPSet() 
-             << " does not match calculated size of ppp block: "
-             << pppBlock.getNumBytesPPPSet();
-        throw except::Exception(ostr.str());
-    }
-
-    // Update the number of bytes per PVP
-    if (mMetadata.data.getNumBytesPVPSet() != pvpBlock.getNumBytesPVPSet())
-    {
-        std::ostringstream ostr;
-        ostr << "Number of pvp block bytes in metadata: "
-             << mMetadata.data.getNumBytesPVPSet() 
-             << " does not match calculated size of pvp block: "
-             << pvpBlock.getNumBytesPVPSet();
-        throw except::Exception(ostr.str());
-    }
-
-    const size_t numChannels = mMetadata.data.getNumChannels();
-    const size_t numTxSequences = mMetadata.data.getNumTxSequences();
-    size_t totalSupportSize = 0;
-    size_t totalPVPSize = 0;
-    size_t totalPPPSize = 0;
-    size_t totalCRSDSize = 0;
-
-    // Support
-    for (auto it = mMetadata.data.supportArrayMap.begin();
-         it != mMetadata.data.supportArrayMap.end();
-         ++it)
-    {
-        totalSupportSize += it->second.getSize();
-    }
-
-    // PPP
-    for (size_t ii = 0; ii < numTxSequences; ++ii)
-    {
-        totalPPPSize += pppBlock.getPPPsize(ii);
-        totalCRSDSize += mMetadata.data.getNumPulses(ii) *
-                mMetadata.data.getNumSamples(ii) * mElementSize;
-    }
-
-    // PVP
-    for (size_t ii = 0; ii < numChannels; ++ii)
-    {
-        totalPVPSize += pvpBlock.getPVPsize(ii);
-        totalCRSDSize += mMetadata.data.getNumVectors(ii) *
-                mMetadata.data.getNumSamples(ii) * mElementSize;
-    }
-
-    writeMetadata(totalSupportSize, totalPVPSize, totalPPPSize, totalCRSDSize);
-}
-
 void CRSDWriter::writePVPData(const PVPBlock& pvpBlock)
 {
     // Add padding
@@ -417,6 +357,51 @@ void CRSDWriter::writePPPData(const PPPBlock& pppBlock)
         }
         writePPPData(pppData.data(), ii);
     }
+}
+
+void CRSDWriter::writeMetadata(const PVPBlock& pvpBlock,
+                               const PPPBlock& pppBlock)    
+{
+    // Update the number of bytes per PVP
+    if (mMetadata.data.receiveParameters->getNumBytesPVP() != pvpBlock.getNumBytesPVPSet())
+    {
+        std::ostringstream ostr;
+        ostr << "Number of pvp block bytes in metadata: "
+             << mMetadata.data.receiveParameters->getNumBytesPVP() 
+             << " does not match calculated size of pvp block: "
+             << pvpBlock.getNumBytesPVPSet();
+        throw except::Exception(ostr.str());
+    }
+
+    const size_t numChannels = mMetadata.data.getNumChannels();
+    const size_t numTxSequences = mMetadata.data.getNumTxSequences();
+    size_t totalSupportSize = 0;
+    size_t totalPVPSize = 0;
+    size_t totalPPPSize = 0;
+    size_t totalCRSDSize = 0;
+
+    for (auto it = mMetadata.data.supportArrayMap.begin();
+         it != mMetadata.data.supportArrayMap.end();
+         ++it)
+    {
+        totalSupportSize += it->second.getSize();
+    }
+
+    for (size_t ii = 0; ii < numChannels; ++ii)
+    {
+        totalPVPSize += pvpBlock.getPVPsize(ii);
+        totalCRSDSize += mMetadata.data.getNumVectors(ii) *
+                mMetadata.data.getNumSamples(ii) * mElementSize;
+    }
+
+    for (size_t ii = 0; ii < numTxSequences; ++ii)
+    {
+        totalPPPSize += pppBlock.getPPPsize(ii);
+        totalCRSDSize += mMetadata.data.getNumPulses(ii) *
+                mMetadata.data.getNumSamples(ii) * mElementSize;
+    }
+
+    writeMetadata(totalSupportSize, totalPVPSize, totalPPPSize, totalCRSDSize);
 }
 
 template <typename T>

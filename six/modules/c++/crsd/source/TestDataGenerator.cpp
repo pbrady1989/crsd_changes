@@ -1,10 +1,10 @@
 /* =========================================================================
- * This file is part of cphd-c++
+ * This file is part of crsd-c++
  * =========================================================================
  *
  * (C) Copyright 2004 - 2019, MDA Information Systems LLC
  *
- * cphd-c++ is free software; you can redistribute it and/or modify
+ * crsd-c++ is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
@@ -28,13 +28,15 @@
 
 #include <nitf/coda-oss.hpp>
 
-#include <cphd/Enums.h>
-#include <cphd/Types.h>
-#include <cphd/PVP.h>
-#include <cphd/PVPBlock.h>
-#include <cphd/Metadata.h>
+#include <crsd/Enums.h>
+#include <crsd/Types.h>
+#include <crsd/PVP.h>
+#include <crsd/PVPBlock.h>
+#include <crsd/PPP.h>
+#include <crsd/PPPBlock.h>
+#include <crsd/Metadata.h>
 
-namespace cphd
+namespace crsd
 {
 
 double getRandom()
@@ -52,114 +54,128 @@ Vector3 getRandomVector3()
     return ret;
 }
 
+Vector2 getRandomVector2()
+{
+    Vector2 ret;
+    ret[0] = getRandom();
+    ret[1] = getRandom();
+    return ret;
+}
+
 void setPVPXML(Pvp& pvp)
 {
     // Size, Offset, Format
-    pvp.append(pvp.txTime);
-    pvp.append(pvp.txPos);
-    pvp.append(pvp.txVel);
-    pvp.append(pvp.rcvTime);
+    pvp.append(pvp.rcvStart);
     pvp.append(pvp.rcvPos);
     pvp.append(pvp.rcvVel);
-    pvp.append(pvp.srpPos);
-    pvp.append(pvp.aFDOP);
-    pvp.append(pvp.aFRR1);
-    pvp.append(pvp.aFRR2);
-    pvp.append(pvp.fx1);
-    pvp.append(pvp.fx2);
-    pvp.append(pvp.toa1);
-    pvp.append(pvp.toa2);
-    pvp.append(pvp.tdTropoSRP);
-    pvp.append(pvp.sc0);
-    pvp.append(pvp.scss);
+    pvp.append(pvp.frcv1);
+    pvp.append(pvp.frcv2);
+    pvp.append(pvp.refPhi0);
+    pvp.append(pvp.refFreq);
+    pvp.append(pvp.dfiC0);
+    pvp.append(pvp.ficRate);
+    pvp.append(pvp.rcvACX);
+    pvp.append(pvp.rcvACY);
+    pvp.append(pvp.rcvEB);
+    pvp.append(pvp.signal);
+    pvp.append(pvp.ampSF);
+    pvp.append(pvp.txPulseIndex);
 }
 
 void setVectorParameters(size_t channel,
                           size_t vector,
                           PVPBlock& pvpBlock)
 {
-    const double txTime = getRandom();
-    pvpBlock.setTxTime(txTime, channel, vector);
+    double time1 = getRandom();
+    double time2 = getRandom();
+    pvpBlock.setRcvStart(std::pair<int64_t,double>(getRandom(),getRandom()), channel, vector);
+    pvpBlock.setRcvPos(getRandomVector3(), channel, vector);
+    pvpBlock.setRcvVel(getRandomVector3(), channel, vector);
 
-    const Vector3 txPos = getRandomVector3();
-    pvpBlock.setTxPos(txPos, channel, vector);
+    pvpBlock.setFRCV1(getRandom(), channel, vector);
+    pvpBlock.setFRCV2(getRandom(), channel, vector);
+    pvpBlock.setRefFreq(getRandom(), channel, vector);
+    pvpBlock.setDFIC0(getRandom(), channel, vector);
+    pvpBlock.setFICRate(getRandom(), channel, vector);
+    pvpBlock.setRcvACX(getRandomVector3(), channel, vector);
+    pvpBlock.setRcvACY(getRandomVector3(), channel, vector);
+    pvpBlock.setRcvEB(getRandomVector2(), channel, vector);
+    pvpBlock.setSignal(static_cast<int64_t>(getRandom()), channel, vector);
+    pvpBlock.setAmpSF(getRandom(), channel, vector);
+    pvpBlock.setDGRGC(getRandom(), channel, vector);
+    pvpBlock.setTxPulseIndex(static_cast<int64_t>(getRandom()), channel, vector);
+    pvpBlock.setRefPhi0(std::pair<int64_t,double>(getRandom(),getRandom()), channel, vector);
+}
 
-    const Vector3 txVel = getRandomVector3();
-    pvpBlock.setTxVel(txVel, channel, vector);
+void setPPPXML(Ppp& ppp)
+{
+    // Size, Offset, Format
+    ppp.append(ppp.txTime);
+    ppp.append(ppp.txPos);
+    ppp.append(ppp.txVel);
+    ppp.append(ppp.fx1);
+    ppp.append(ppp.fx2);
+    ppp.append(ppp.txmt);
+    ppp.append(ppp.phiX0);
+    ppp.append(ppp.fxFreq0);
+    ppp.append(ppp.fxRate);
+    ppp.append(ppp.txRadInt);
+    ppp.append(ppp.txACX);
+    ppp.append(ppp.txACY);
+    ppp.append(ppp.txEB);
+    ppp.append(ppp.fxResponseIndex);
+}
 
-    const double rcvTime = getRandom();
-    pvpBlock.setRcvTime(rcvTime, channel, vector);
-
-    const Vector3 rcvPos = getRandomVector3();
-    pvpBlock.setRcvPos(rcvPos, channel, vector);
-
-    const Vector3 rcvVel = getRandomVector3();
-    pvpBlock.setRcvVel(rcvVel, channel, vector);
-
-    const Vector3 srpPos = getRandomVector3();
-    pvpBlock.setSRPPos(srpPos, channel, vector);
-
-    const double aFDOP = getRandom();
-    pvpBlock.setaFDOP(aFDOP, channel, vector);
-
-    const double aFRR1 = getRandom();
-    pvpBlock.setaFRR1(aFRR1, channel, vector);
-
-    const double aFRR2 = getRandom();
-    pvpBlock.setaFRR2(aFRR2, channel, vector);
-
-    const double fx1 = getRandom();
-    pvpBlock.setFx1(fx1, channel, vector);
-
-    const double fx2 = getRandom();
-    pvpBlock.setFx2(fx2, channel, vector);
-
-    const double toa1 = getRandom();
-    pvpBlock.setTOA1(toa1, channel, vector);
-
-    const double toa2 = getRandom();
-    pvpBlock.setTOA2(toa2, channel, vector);
-
-    const double tdTropoSRP = getRandom();
-    pvpBlock.setTdTropoSRP(tdTropoSRP, channel, vector);
-
-    const double sc0 = getRandom();
-    pvpBlock.setSC0(sc0, channel, vector);
-
-    const double scss = getRandom();
-    pvpBlock.setSCSS(scss, channel, vector);
+void setPulseParameters(size_t txSequence,
+                        size_t pulse,
+                        PPPBlock& pppBlock)
+{
+    pppBlock.setTxStart(std::pair<int64_t,double>(getRandom(),getRandom()), txSequence, pulse);
+    pppBlock.setTxPos(getRandomVector3(), txSequence, pulse);
+    pppBlock.setTxVel(getRandomVector3(), txSequence, pulse);
+    pppBlock.setFX1(getRandom(), txSequence, pulse);
+    pppBlock.setFX2(getRandom(), txSequence, pulse);
+    pppBlock.setTXMT(getRandom(), txSequence, pulse);
+    pppBlock.setPhiX0(std::pair<int64_t,double>(getRandom(),getRandom()), txSequence, pulse);
+    pppBlock.setFxFreq0(getRandom(), txSequence, pulse);
+    pppBlock.setFxRate(getRandom(), txSequence, pulse);
+    pppBlock.setTxRadInt(getRandom(), txSequence, pulse);
+    pppBlock.setTxACX(getRandomVector3(), txSequence, pulse);
+    pppBlock.setTxACY(getRandomVector3(), txSequence, pulse);
+    pppBlock.setTxEB(getRandomVector2(), txSequence, pulse);
+    pppBlock.setFxResponseIndex(static_cast<int64_t>(getRandom()), txSequence, pulse);
 }
 
 void setUpMetadata(Metadata& metadata)
 {
     // We must have a collectType set
-    metadata.collectionID.collectType = CollectType::MONOSTATIC;
-    metadata.collectionID.setClassificationLevel("Unclassified");
-    metadata.collectionID.releaseInfo = "Release";
-    // We must have a radar mode set
-    metadata.collectionID.radarMode = RadarModeType::SPOTLIGHT;
+    // metadata.collectionID.collectType = CollectType::MONOSTATIC;
+    // metadata.collectionID.setClassificationLevel("Unclassified");
+    // metadata.collectionID.releaseInfo = "Release";
+    // // We must have a radar mode set
+    // metadata.collectionID.radarMode = RadarModeType::SPOTLIGHT;
 
-    // We must set pvpNumBytes
-    // Set default pvp size based on setPVP function
-    metadata.data.numBytesPVP = (1*12 + 3*5) * 8;
+    // // We must set pvpNumBytes
+    // // Set default pvp size based on setPVP function
+    // metadata.data.numBytesPVP = (1*12 + 3*5) * 8;
 
-    metadata.sceneCoordinates.iarp.ecf = getRandomVector3();
-    metadata.sceneCoordinates.iarp.llh = LatLonAlt(0,0,0);
-    metadata.sceneCoordinates.referenceSurface.planar.reset(new Planar());
-    metadata.sceneCoordinates.referenceSurface.planar->uIax = getRandomVector3();
-    metadata.sceneCoordinates.referenceSurface.planar->uIay = getRandomVector3();
-    // We must have corners set
-    for (size_t ii = 0; ii < six::Corners<double>::NUM_CORNERS; ++ii)
-    {
-        metadata.sceneCoordinates.imageAreaCorners.getCorner(ii).clearLatLon();
-    }
-    metadata.channel.fxFixedCphd = true;
-    metadata.channel.toaFixedCphd = false;
-    metadata.channel.srpFixedCphd = false;
-    metadata.referenceGeometry.srp.ecf = getRandomVector3();
-    metadata.referenceGeometry.srp.iac = getRandomVector3();
-    metadata.referenceGeometry.monostatic.reset(new Monostatic());
-    metadata.referenceGeometry.monostatic->arpPos = getRandomVector3();
-    metadata.referenceGeometry.monostatic->arpVel = getRandomVector3();
+    // metadata.sceneCoordinates.iarp.ecf = getRandomVector3();
+    // metadata.sceneCoordinates.iarp.llh = LatLonAlt(0,0,0);
+    // metadata.sceneCoordinates.referenceSurface.planar.reset(new Planar());
+    // metadata.sceneCoordinates.referenceSurface.planar->uIax = getRandomVector3();
+    // metadata.sceneCoordinates.referenceSurface.planar->uIay = getRandomVector3();
+    // // We must have corners set
+    // for (size_t ii = 0; ii < six::Corners<double>::NUM_CORNERS; ++ii)
+    // {
+    //     metadata.sceneCoordinates.imageAreaCorners.getCorner(ii).clearLatLon();
+    // }
+    // metadata.channel.fxFixedCphd = true;
+    // metadata.channel.toaFixedCphd = false;
+    // metadata.channel.srpFixedCphd = false;
+    // metadata.referenceGeometry.srp.ecf = getRandomVector3();
+    // metadata.referenceGeometry.srp.iac = getRandomVector3();
+    // metadata.referenceGeometry.monostatic.reset(new Monostatic());
+    // metadata.referenceGeometry.monostatic->arpPos = getRandomVector3();
+    // metadata.referenceGeometry.monostatic->arpVel = getRandomVector3();
 }
 }

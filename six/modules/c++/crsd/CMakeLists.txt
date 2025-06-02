@@ -31,7 +31,9 @@ coda_add_module(
         source/SupportArray.cpp
         source/SupportBlock.cpp
         source/TxSequence.cpp
-        source/Utilities.cpp)
+        source/Utilities.cpp
+        source/Wideband.cpp
+        source/TestDataGenerator.cpp)
 
 coda_add_tests(
     MODULE_NAME ${MODULE_NAME}
@@ -39,7 +41,8 @@ coda_add_tests(
     UNITTEST
     SOURCES
         test_file_header.cpp
-        test_crsd_xml_control.cpp)
+        test_crsd_xml_control.cpp
+        test_pvp_block_round.cpp)
 
 # coda_add_tests(
 #     MODULE_NAME ${MODULE_NAME}

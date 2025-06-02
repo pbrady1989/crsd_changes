@@ -31,6 +31,8 @@
 #include <crsd/Metadata.h>
 #include <crsd/PVP.h>
 #include <crsd/PVPBlock.h>
+#include <crsd/PPP.h>
+#include <crsd/PPPBlock.h>
 #include <crsd/Enums.h>
 #include <crsd/Types.h>
 
@@ -54,6 +56,14 @@ double getRandom();
 Vector3 getRandomVector3();
 
 /*
+ *  \func getRandomVector2
+ *  \brief generates vector2D type object with random values
+ *
+ *  \return Return vector2D object
+ */
+Vector2 getRandomVector2();
+
+/*
  *  \func setPVPXML
  *  \brief set PVP metadata
  *
@@ -63,6 +73,17 @@ Vector3 getRandomVector3();
  *
  */
 void setPVPXML(Pvp& pvp);
+
+/*
+ *  \func setPPPXML
+ *  \brief set PPP metadata
+ *
+ *  Function only sets required parameters metadata
+ *
+ *  \params[out] ppp A Ppp object for which values will be set
+ *
+ */
+void setPPPXML(Ppp& ppp);
 
 /*
  *  \func setVectorParameters
@@ -80,6 +101,23 @@ void setPVPXML(Pvp& pvp);
 void setVectorParameters(size_t channel,
                           size_t vector,
                           PVPBlock& pvpBlock);
+
+/*
+ *  \func setPulseParameters
+ *  \brief Sets the per pulse parameters of a specific pulse
+ *
+ *  Must be called after setPVPXML
+ *  Function only sets required parameters
+ *
+ *  \params txSequence The txSequence number of the pulse
+ *  \params pulse The pulse of parameters to be set
+ *  \param[in,out] pppBlock An initialized pppBlock object,
+ *   will be returned with data filled in for specific pulse
+ *
+ */
+void setPulseParameters(size_t txSequence,
+                        size_t pulse,
+                        PPPBlock& pppBlock);
 
 /*
  *  \func setUpMetadata
@@ -126,10 +164,17 @@ void setUpData(Metadata& metadata,
                const std::vector<T>& writeData)
 {
     const size_t numChannels = 1;
+    metadata.data.receiveParameters.reset(new crsd::Data::Receive());
     for (size_t ii = 0; ii < numChannels; ++ii)
     {
-        metadata.data.channels.push_back(
-                crsd::Data::Channel(dims.row, dims.col));
+        metadata.data.receiveParameters->channels.push_back(crsd::Data::Channel(dims.row, dims.col));
+    }
+
+    const size_t numTxSequences = 1;
+    metadata.data.transmitParameters.reset(new crsd::Data::Transmit());
+    for (size_t ii = 0; ii < numTxSequences; ++ii)
+    {
+        metadata.data.transmitParameters->txSequence.push_back(crsd::Data::TxSequence(dims.row, dims.col));
     }
 
     if (!writeData.empty())
@@ -138,22 +183,22 @@ void setUpData(Metadata& metadata,
         if (metadata.data.isCompressed())
         {
             // SignalArrayFormat doesn't matter for storing
-            metadata.data.signalArrayFormat = crsd::SignalArrayFormat::CF8;
+            metadata.data.receiveParameters->signalArrayFormat = crsd::SignalArrayFormat::CF8;
             for (size_t ii = 0; ii < numChannels; ++ii)
             {
-                metadata.data.channels[ii].compressedSignalSize = dims.area();
+                metadata.data.receiveParameters->channels[ii].compressedSignalSize = dims.area();
             }
         }
         // Must set the sample type
         else
         {
-            metadata.data.signalArrayFormat = getSignalArrayFormat(sizeof(writeData[0]));
+            metadata.data.receiveParameters->signalArrayFormat = getSignalArrayFormat(sizeof(writeData[0]));
         }
     }
     else
     {
         // Select an arbitrary size so we can test other stuff
-        metadata.data.signalArrayFormat = crsd::SignalArrayFormat::CF8;
+        metadata.data.receiveParameters->signalArrayFormat = crsd::SignalArrayFormat::CF8;
     }
 
     setUpMetadata(metadata);

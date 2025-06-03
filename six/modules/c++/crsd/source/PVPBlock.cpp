@@ -412,11 +412,13 @@ PVPBlock::PVPBlock(const Pvp& p, const Data& d)
 {
     mPvp = p;
     mNumBytesPerVector = d.getNumBytesPVPSet();
+
     mData.resize(d.getNumChannels());
     for (size_t ii = 0; ii < d.getNumChannels(); ++ii)
     {
         mData[ii].resize(d.getNumVectors(ii));
     }
+ 
     size_t calculateBytesPerVector = mPvp.getReqSetSize()*sizeof(double);
     if (six::Init::isUndefined<size_t>(mNumBytesPerVector) ||
         calculateBytesPerVector > mNumBytesPerVector)

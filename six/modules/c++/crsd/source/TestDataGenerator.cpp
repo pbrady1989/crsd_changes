@@ -157,25 +157,21 @@ void setUpMetadata(Metadata& metadata)
 
     // // We must set pvpNumBytes
     // // Set default pvp size based on setPVP function
-    // metadata.data.numBytesPVP = (1*12 + 3*5) * 8;
-
-    // metadata.sceneCoordinates.iarp.ecf = getRandomVector3();
-    // metadata.sceneCoordinates.iarp.llh = LatLonAlt(0,0,0);
-    // metadata.sceneCoordinates.referenceSurface.planar.reset(new Planar());
-    // metadata.sceneCoordinates.referenceSurface.planar->uIax = getRandomVector3();
-    // metadata.sceneCoordinates.referenceSurface.planar->uIay = getRandomVector3();
-    // // We must have corners set
-    // for (size_t ii = 0; ii < six::Corners<double>::NUM_CORNERS; ++ii)
-    // {
-    //     metadata.sceneCoordinates.imageAreaCorners.getCorner(ii).clearLatLon();
-    // }
-    // metadata.channel.fxFixedCphd = true;
-    // metadata.channel.toaFixedCphd = false;
-    // metadata.channel.srpFixedCphd = false;
-    // metadata.referenceGeometry.srp.ecf = getRandomVector3();
-    // metadata.referenceGeometry.srp.iac = getRandomVector3();
-    // metadata.referenceGeometry.monostatic.reset(new Monostatic());
-    // metadata.referenceGeometry.monostatic->arpPos = getRandomVector3();
-    // metadata.referenceGeometry.monostatic->arpVel = getRandomVector3();
+     metadata.data.receiveParameters->numBytesPVP = (1*7 + 2*3 + 3*4) * 8;
+     metadata.data.transmitParameters->numBytesPPP = (1*8 + 2*3 + 3*4) * 8;
+    metadata.sceneCoordinates.iarp.ecf = getRandomVector3();
+    metadata.sceneCoordinates.iarp.llh = LatLonAlt(0,0,0);
+    metadata.sceneCoordinates.referenceSurface.planar.reset(new Planar());
+    metadata.sceneCoordinates.referenceSurface.planar->uIax = getRandomVector3();
+    metadata.sceneCoordinates.referenceSurface.planar->uIay = getRandomVector3();
+    // We must have corners set
+    for (size_t ii = 0; ii < six::Corners<double>::NUM_CORNERS; ++ii)
+    {
+        metadata.sceneCoordinates.imageAreaCorners.getCorner(ii).clearLatLon();
+    }
+    metadata.referenceGeometry.refPoint.ecf = getRandomVector3();
+    metadata.referenceGeometry.refPoint.iac = getRandomVector2();
+    metadata.productInfo.classification = "unclass";
+    metadata.productInfo.releaseInfo = "to everyone";
 }
 }

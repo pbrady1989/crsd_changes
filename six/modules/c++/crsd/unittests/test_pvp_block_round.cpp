@@ -109,7 +109,6 @@ void writeCRSD(const std::string& outPathname,
 {
     const size_t numChannels = 1;
     const size_t numTxSequences = 1;
-
     crsd::CRSDWriter writer(metadata,
                             outPathname,
                             std::vector<std::string>(),
@@ -163,6 +162,10 @@ TEST_CASE(testPVPBlockSimple)
     const bool scale = false;
     crsd::Metadata meta = crsd::Metadata();
     crsd::setUpData(meta, dims, writeData);
+    meta.pvp.reset(new crsd::Pvp());
+    meta.ppp.reset(new crsd::Ppp());
+
+    meta.setVersion("1.0.0");
     crsd::setPVPXML(*(meta.pvp));
     crsd::setPPPXML(*(meta.ppp));
     crsd::PVPBlock pvpBlock(*(meta.pvp), meta.data);
@@ -175,7 +178,6 @@ TEST_CASE(testPVPBlockSimple)
     setPPPBlock(dims,
                 pppBlock,
                 addedParams2);
-
     TEST_ASSERT_TRUE(runTest(scale, writeData, meta, pvpBlock, pppBlock, dims));
 }
 
@@ -232,6 +234,7 @@ TEST_CASE(testPVPBlockAdditional)
     meta.ppp->setCustomParameter(1, 27, "F8", "param1");
     meta.ppp->setCustomParameter(1, 28, "F8", "param2");
     meta.data.transmitParameters->numBytesPPP += 2 * 8;
+    meta.setVersion("1.0.0");
     crsd::PPPBlock pppBlock(*(meta.ppp), meta.data);
     std::vector<std::string> addedParams2;
     addedParams2.push_back("param1");

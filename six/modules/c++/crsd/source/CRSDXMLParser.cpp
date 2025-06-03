@@ -58,18 +58,26 @@ CRSDXMLParser::CRSDXMLParser(
 std::unique_ptr<xml::lite::Document> CRSDXMLParser::toXML(
         const Metadata& metadata)
 {
+    
     std::unique_ptr<xml::lite::Document> doc(new xml::lite::Document());
 
     XMLElem root = newElement("CRSD");
     doc->setRootElement(root);
 
-    toXML(metadata.global, root);
-    toXML(metadata.sceneCoordinates, root);
-    toXML(metadata.data, root);
-    toXML(metadata.productInfo, root);
-    toXML(metadata.supportArray, root);
-    toXML(metadata.referenceGeometry, root);
-    toXML(metadata.antenna,root);
+    toXML(metadata.global, root);    
+
+    toXML(metadata.sceneCoordinates, root);    
+
+    toXML(metadata.data, root);    
+
+    toXML(metadata.productInfo, root);    
+
+    toXML(metadata.supportArray, root);    
+
+    toXML(metadata.referenceGeometry, root);    
+
+    toXML(metadata.antenna,root);    
+
     if (metadata.dwell.get())
     {
         toXML(*(metadata.dwell), root);
@@ -153,12 +161,11 @@ XMLElem CRSDXMLParser::toXML(const Global& global, XMLElem parent)
 XMLElem CRSDXMLParser::toXML(const SceneCoordinates& sceneCoords, XMLElem parent)
 {
     XMLElem sceneCoordsXML = newElement("SceneCoordinates", parent);
-    createString("EarthModel", sceneCoords.earthModel, sceneCoordsXML);
+    createString("EarthModel", sceneCoords.earthModel, sceneCoordsXML);    
 
     XMLElem iarpXML = newElement("IARP", sceneCoordsXML);
     mCommon.createVector3D("ECF", sceneCoords.iarp.ecf, iarpXML);
     mCommon.createLatLonAlt("LLH", sceneCoords.iarp.llh, iarpXML);
-
     XMLElem refSurfXML = newElement("ReferenceSurface", sceneCoordsXML);
     if (sceneCoords.referenceSurface.planar.get())
     {
@@ -192,6 +199,7 @@ XMLElem CRSDXMLParser::toXML(const SceneCoordinates& sceneCoords, XMLElem parent
             setAttribute(vertexXML, "index", ii+1);
         }
     }
+
     createLatLonFootprint("ImageAreaCornerPoints", "IACP", sceneCoords.imageAreaCorners, sceneCoordsXML);
 
     // Extended Area (Optional)
@@ -248,7 +256,6 @@ XMLElem CRSDXMLParser::toXML(const SceneCoordinates& sceneCoords, XMLElem parent
                 createInt("StartSample", sceneCoords.imageGrid->segments[ii].startSample, segmentXML);
                 createInt("EndLine", sceneCoords.imageGrid->segments[ii].endLine, segmentXML);
                 createInt("EndSample", sceneCoords.imageGrid->segments[ii].endSample, segmentXML);
-
                 if (!sceneCoords.imageGrid->segments[ii].polygon.empty())
                 {
                     XMLElem polygonXML = newElement("SegmentPolygon", segmentXML);
@@ -264,6 +271,7 @@ XMLElem CRSDXMLParser::toXML(const SceneCoordinates& sceneCoords, XMLElem parent
             }
         }
     }
+
     return sceneCoordsXML;
 }
 
@@ -375,8 +383,8 @@ XMLElem CRSDXMLParser::toXML(const Channel& channel, XMLElem parent)
     for (size_t ii = 0; ii < channel.parameters.size(); ++ii)
     {
         XMLElem parametersXML = newElement("Parameters", channelXML);
-        createString("Identifier", channel.parameters[ii].identifier, parametersXML);std::cout << __LINE__ << std::endl;
-        createInt("RefVectorIndex", channel.parameters[ii].refVectorIndex, parametersXML);std::cout << __LINE__ << std::endl;
+        createString("Identifier", channel.parameters[ii].identifier, parametersXML);
+        createInt("RefVectorIndex", channel.parameters[ii].refVectorIndex, parametersXML);
         createBooleanType("RefFreqFixed", channel.parameters[ii].refFreqFixed, parametersXML);
         createBooleanType("FrcvFixed", channel.parameters[ii].fRcvFixed, parametersXML);
         createBooleanType("SignalNormal", channel.parameters[ii].signalNormal, parametersXML);

@@ -411,19 +411,20 @@ PPPBlock::PPPBlock(const Ppp& p, const Data& d) :
     mXMIndexEnabled(!six::Init::isUndefined<size_t>(p.xmIndex.getOffset()))
 {
     mPpp = p;
-    mNumBytesPerVector = d.getNumBytesPPPSet();
-    mData.resize(d.getNumChannels());
-    for (size_t ii = 0; ii < d.getNumChannels(); ++ii)
+    mNumBytesPerPulse = d.getNumBytesPPPSet();
+    mData.resize(d.getNumTxSequences());
+    for (size_t ii = 0; ii < d.getNumTxSequences(); ++ii)
     {
-        mData[ii].resize(d.getNumVectors(ii));
+        mData[ii].resize(d.getNumPulses(ii));
     }
-    size_t calculateBytesPerVector = mPpp.getReqSetSize()*sizeof(double);
-    if (six::Init::isUndefined<size_t>(mNumBytesPerVector) ||
-        calculateBytesPerVector > mNumBytesPerVector)
+    size_t calculateBytesPerPulse = mPpp.getReqSetSize()*sizeof(double);
+
+    if (six::Init::isUndefined<size_t>(mNumBytesPerPulse) ||
+        calculateBytesPerPulse > mNumBytesPerPulse)
     {
         std::ostringstream oss;
-        oss << "PPP size specified in metadata: " << mNumBytesPerVector
-            << " does not match PPP size calculated: " << calculateBytesPerVector;
+        oss << "PPP size specified in metadata: " << mNumBytesPerPulse
+            << " does not match PPP size calculated: " << calculateBytesPerPulse;
         throw except::Exception(oss.str());
     }
 }
@@ -436,50 +437,50 @@ PPPBlock::PPPBlock(const Metadata& metadata)
 /*
  * Initialize PPP Array with custom parameters
  */
-PPPBlock::PPPBlock(size_t numChannels,
-                   const std::vector<size_t>& numVectors,
+PPPBlock::PPPBlock(size_t numTxSequences,
+                   const std::vector<size_t>& numPulses,
                    const Ppp& p) :
     mXMIndexEnabled(!six::Init::isUndefined<size_t>(p.xmIndex.getOffset())),
-    mNumBytesPerVector(0),
+    mNumBytesPerPulse(0),
     mPpp(p)
 {
-    mData.resize(numChannels);
-    if(numChannels != numVectors.size())
+    mData.resize(numTxSequences);
+    if(numTxSequences != numPulses.size())
     {
         throw except::Exception(Ctxt(
                 "number of vector dims provided does not match number of channels"));
     }
-    for (size_t ii = 0; ii < numChannels; ++ii)
+    for (size_t ii = 0; ii < numTxSequences; ++ii)
     {
-        mData[ii].resize(numVectors[ii]);
+        mData[ii].resize(numPulses[ii]);
     }
-    size_t calculateBytesPerVector = mPpp.getReqSetSize()*sizeof(double);
-    if (six::Init::isUndefined<size_t>(mNumBytesPerVector) ||
-        calculateBytesPerVector > mNumBytesPerVector)
+    size_t calculateBytesPerPulse = mPpp.getReqSetSize()*sizeof(double);
+    if (six::Init::isUndefined<size_t>(mNumBytesPerPulse) ||
+        calculateBytesPerPulse > mNumBytesPerPulse)
     {
-        mNumBytesPerVector = calculateBytesPerVector;
+        mNumBytesPerPulse = calculateBytesPerPulse;
     }
 }
 
-PPPBlock::PPPBlock(size_t numChannels,
-                   const std::vector<size_t>& numVectors,
+PPPBlock::PPPBlock(size_t numTxSequences,
+                   const std::vector<size_t>& numPulses,
                    const Ppp& ppp,
                    const std::vector<const void*>& data) :
-    PPPBlock(numChannels, numVectors, ppp)
+    PPPBlock(numTxSequences, numPulses, ppp)
 {
-    if (data.size() != numChannels)
+    if (data.size() != numTxSequences)
     {
         std::ostringstream msg;
-        msg << "<" << numChannels << "> channels specified, "
+        msg << "<" << numTxSequences << "> channels specified, "
             << "but `data` argument has <" << data.size() << "> channels";
         throw except::Exception(Ctxt(msg.str()));
     }
 
-    for (size_t channel = 0; channel < numChannels; ++channel)
+    for (size_t channel = 0; channel < numTxSequences; ++channel)
     {
         const std::byte* buf = static_cast<const std::byte*>(data[channel]);
 
-        for (size_t vector = 0; vector < numVectors[channel]; ++vector)
+        for (size_t vector = 0; vector < numPulses[channel]; ++vector)
         {
             mData[channel][vector].write(*this, mPpp, buf);
             buf += mPpp.sizeInBytes();
@@ -489,10 +490,10 @@ PPPBlock::PPPBlock(size_t numChannels,
 
 size_t PPPBlock::getNumBytesPPPSet() const
 {
-    return mNumBytesPerVector;
+    return mNumBytesPerPulse;
 }
 
-void PPPBlock::verifyChannelVector(size_t channel, size_t vector) const
+void PPPBlock::verifyTxSequencePulse(size_t channel, size_t vector) const
 {
     if (channel >= mData.size())
     {
@@ -508,14 +509,14 @@ void PPPBlock::verifyChannelVector(size_t channel, size_t vector) const
 
 size_t PPPBlock::getPPPsize(size_t channel) const
 {
-    verifyChannelVector(channel, 0);
+    verifyTxSequencePulse(channel, 0);
     return getNumBytesPPPSet() * mData[channel].size();
 }
 
 void PPPBlock::getPPPdata(size_t channel,
                           std::vector<std::byte>& data) const
 {
-    verifyChannelVector(channel, 0);
+    verifyTxSequencePulse(channel, 0);
     data.resize(getPPPsize(channel));
     std::fill(data.begin(), data.end(), static_cast<std::byte>(0));
 
@@ -525,7 +526,7 @@ void PPPBlock::getPPPdata(size_t channel,
 void PPPBlock::getPPPdata(size_t channel,
                           void* data) const
 {
-    verifyChannelVector(channel, 0);
+    verifyTxSequencePulse(channel, 0);
     const size_t numBytes = getNumBytesPPPSet();
     auto ptr = static_cast<std::byte*>(data);
 
@@ -566,7 +567,7 @@ int64_t PPPBlock::load(io::SeekableInputStream& inStream,
     size_t totalBytesRead(0);
     inStream.seek(startPPP, io::Seekable::START);
     std::vector<std::byte> readBuf;
-    const size_t numBytesPerVector = getNumBytesPPPSet();
+    const size_t numBytesPerPulse = getNumBytesPPPSet();
 
     // Read the data for each channel
     for (size_t ii = 0; ii < mData.size(); ++ii)
@@ -595,7 +596,7 @@ int64_t PPPBlock::load(io::SeekableInputStream& inStream,
             }
 
             std::byte* ptr = buf;
-            for (size_t jj = 0; jj < mData[ii].size(); ++jj, ptr += numBytesPerVector)
+            for (size_t jj = 0; jj < mData[ii].size(); ++jj, ptr += numBytesPerPulse)
             {
                 mData[ii][jj].write(*this, mPpp, ptr);
             }
@@ -611,91 +612,91 @@ int64_t PPPBlock::load(io::SeekableInputStream& inStream, const FileHeader& file
 
 std::pair<int64_t, double> PPPBlock::getTxStart(size_t channel, size_t set) const
 {
-    verifyChannelVector(channel, set);
+    verifyTxSequencePulse(channel, set);
     return mData[channel][set].txTime;
 }
 
 Vector3 PPPBlock::getTxPos(size_t channel, size_t set) const
 {
-    verifyChannelVector(channel, set);
+    verifyTxSequencePulse(channel, set);
     return mData[channel][set].txPos;
 }
 
 Vector3 PPPBlock::getTxVel(size_t channel, size_t set) const
 {
-    verifyChannelVector(channel, set);
+    verifyTxSequencePulse(channel, set);
     return mData[channel][set].txVel;
 }
 
 double PPPBlock::getFX1(size_t channel, size_t set) const
 {
-    verifyChannelVector(channel, set);
+    verifyTxSequencePulse(channel, set);
     return mData[channel][set].fx1;
 }
 
 double PPPBlock::getTXMT(size_t channel, size_t set) const
 {
-    verifyChannelVector(channel, set);
+    verifyTxSequencePulse(channel, set);
     return mData[channel][set].txmt;
 }
 
 double PPPBlock::getFX2(size_t channel, size_t set) const
 {
-    verifyChannelVector(channel, set);
+    verifyTxSequencePulse(channel, set);
     return mData[channel][set].fx2;
 }
 
 std::pair<int64_t, double> PPPBlock::getPhiX0(size_t channel, size_t set) const
 {
-    verifyChannelVector(channel, set);
+    verifyTxSequencePulse(channel, set);
     return mData[channel][set].phiX0;
 }
 
 double PPPBlock::getFxFreq0(size_t channel, size_t set) const
 {
-    verifyChannelVector(channel, set);
+    verifyTxSequencePulse(channel, set);
     return mData[channel][set].fxFreq0;
 }
 
 double PPPBlock::getFxRate(size_t channel, size_t set) const
 {
-    verifyChannelVector(channel, set);
+    verifyTxSequencePulse(channel, set);
     return mData[channel][set].fxRate;
 }
 
 double PPPBlock::getTxRadInt(size_t channel, size_t set) const
 {
-    verifyChannelVector(channel, set);
+    verifyTxSequencePulse(channel, set);
     return mData[channel][set].txRadInt;
 }
 
 Vector3 PPPBlock::getTxACX(size_t channel, size_t set) const
 {
-    verifyChannelVector(channel, set);
+    verifyTxSequencePulse(channel, set);
     return mData[channel][set].txACX;
 }
 
 Vector3 PPPBlock::getTxACY(size_t channel, size_t set) const
 {
-    verifyChannelVector(channel, set);
+    verifyTxSequencePulse(channel, set);
     return mData[channel][set].txACY;
 }
 
 Vector2 PPPBlock::getTxEB(size_t channel, size_t set) const
 {
-    verifyChannelVector(channel, set);
+    verifyTxSequencePulse(channel, set);
     return mData[channel][set].txEB;
 }
 
 std::int64_t PPPBlock::getFxResponseIndex(size_t channel, size_t set) const
 {
-    verifyChannelVector(channel, set);
+    verifyTxSequencePulse(channel, set);
     return mData[channel][set].fxResponseIndex;
 }
 
 std::int64_t  PPPBlock::getXMIndex(size_t channel, size_t set) const
 {
-    verifyChannelVector(channel, set);
+    verifyTxSequencePulse(channel, set);
     if (mData[channel][set].xmIndex.get())
     {
         return *mData[channel][set].xmIndex;
@@ -706,91 +707,91 @@ std::int64_t  PPPBlock::getXMIndex(size_t channel, size_t set) const
 
 void PPPBlock::setTxStart(std::pair<int64_t, double> value, size_t channel, size_t vector)
 {
-    verifyChannelVector(channel, vector);
+    verifyTxSequencePulse(channel, vector);
     mData[channel][vector].txTime = value;
 }
 
 void PPPBlock::setTxPos(const crsd::Vector3& value, size_t channel, size_t vector)
 {
-    verifyChannelVector(channel, vector);
+    verifyTxSequencePulse(channel, vector);
     mData[channel][vector].txPos = value;
 }
 
 void PPPBlock::setTxVel(const crsd::Vector3& value, size_t channel, size_t vector)
 {
-    verifyChannelVector(channel, vector);
+    verifyTxSequencePulse(channel, vector);
     mData[channel][vector].txVel = value;
 }
 
 void PPPBlock::setFX1(double value, size_t channel, size_t vector)
 {
-    verifyChannelVector(channel, vector);
+    verifyTxSequencePulse(channel, vector);
     mData[channel][vector].fx1 = value;
 }
 
 void PPPBlock::setFX2(double value, size_t channel, size_t vector)
 {
-    verifyChannelVector(channel, vector);
+    verifyTxSequencePulse(channel, vector);
     mData[channel][vector].fx2 = value;
 }
 
 void PPPBlock::setTXMT(double value, size_t channel, size_t vector)
 {
-    verifyChannelVector(channel, vector);
+    verifyTxSequencePulse(channel, vector);
     mData[channel][vector].txmt = value;
 }
 
 void PPPBlock::setPhiX0(std::pair<int64_t, double> value, size_t channel, size_t vector)
 {
-    verifyChannelVector(channel, vector);
+    verifyTxSequencePulse(channel, vector);
     mData[channel][vector].phiX0 = value;
 }
 
 void PPPBlock::setFxFreq0(double value, size_t channel, size_t vector)
 {
-    verifyChannelVector(channel, vector);
+    verifyTxSequencePulse(channel, vector);
     mData[channel][vector].fxFreq0 = value;
 }
 
 void PPPBlock::setFxRate(double value, size_t channel, size_t vector)
 {
-    verifyChannelVector(channel, vector);
+    verifyTxSequencePulse(channel, vector);
     mData[channel][vector].fxRate = value;
 }
 
 void PPPBlock::setTxRadInt(double value, size_t channel, size_t vector)
 {
-    verifyChannelVector(channel, vector);
+    verifyTxSequencePulse(channel, vector);
     mData[channel][vector].txRadInt = value;
 }
 
 void PPPBlock::setTxACX(const crsd::Vector3& value, size_t channel, size_t vector)
 {
-    verifyChannelVector(channel, vector);
+    verifyTxSequencePulse(channel, vector);
     mData[channel][vector].txACX = value;
 }
 
 void PPPBlock::setTxACY(const crsd::Vector3& value, size_t channel, size_t vector)
 {
-    verifyChannelVector(channel, vector);
+    verifyTxSequencePulse(channel, vector);
     mData[channel][vector].txACY = value;
 }
 
 void PPPBlock::setTxEB(const Vector2& value, size_t channel, size_t vector)
 {
-    verifyChannelVector(channel, vector);
+    verifyTxSequencePulse(channel, vector);
     mData[channel][vector].txEB = value;
 }
 
 void PPPBlock::setFxResponseIndex(std::int64_t  value, size_t channel, size_t vector)
 {
-    verifyChannelVector(channel, vector);
+    verifyTxSequencePulse(channel, vector);
     mData[channel][vector].fxResponseIndex = value;
 }
 
 void PPPBlock::setXMIndex(std::int64_t value, size_t channel, size_t vector)
 {
-    verifyChannelVector(channel, vector);
+    verifyTxSequencePulse(channel, vector);
     if (hasXMIndex())
     {
         mData[channel][vector].xmIndex.reset(new std::int64_t(value));

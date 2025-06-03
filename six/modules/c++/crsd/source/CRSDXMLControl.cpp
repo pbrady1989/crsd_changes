@@ -63,8 +63,8 @@ std::u8string CRSDXMLControl::toXMLString(
         std::transform(pSchemaPaths->begin(), pSchemaPaths->end(), std::back_inserter(schemaPaths),
             [](const std::filesystem::path& p) { return p.string(); });
     }
-
     std::unique_ptr<xml::lite::Document> doc(toXML(metadata, schemaPaths));
+
     io::U8StringStream ss;
     (prettyPrint) ?
         doc->getRootElement()->prettyPrint(ss) :
@@ -144,8 +144,6 @@ std::unique_ptr<Metadata> CRSDXMLControl::fromXML(const xml::lite::Document* doc
     
     if(!schemaPaths.empty())
     {
-        
-        std::cout << "schemaPaths.size():" << schemaPaths.size() << std::endl;
         six::XMLControl::validate(doc, schemaPaths, mLog);
     }
     

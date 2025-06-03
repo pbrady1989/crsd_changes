@@ -152,7 +152,7 @@ void CRSDWriter::writeMetadata(size_t supportSize,
                                size_t pppSize,
                                size_t crsdSize)
 {
-    const auto xmlMetadata(CRSDXMLControl().toXMLString(mMetadata, mSchemaPaths));
+    const auto xmlMetadata(CRSDXMLControl().toXMLString(mMetadata, nullptr));
 
     // update header version, or remains default if unset
     mHeader.setVersion(mMetadata.getVersion());
@@ -171,11 +171,16 @@ void CRSDWriter::writeMetadata(size_t supportSize,
         throw except::Exception(Ctxt("Classification level and Release "
                                      "informaion must be specified"));
     }
+
     // set header size, final step before write
     mHeader.set(xmlMetadata.size(), supportSize, pvpSize, pppSize, crsdSize);
+
     mStream->write(mHeader.toString());
+
     mStream->write("\f\n");
+
     mStream->write(xmlMetadata);
+
     mStream->write("\f\n");
 }
 
@@ -386,7 +391,6 @@ void CRSDWriter::writeMetadata(const PVPBlock& pvpBlock,
     {
         totalSupportSize += it->second.getSize();
     }
-
     for (size_t ii = 0; ii < numChannels; ++ii)
     {
         totalPVPSize += pvpBlock.getPVPsize(ii);

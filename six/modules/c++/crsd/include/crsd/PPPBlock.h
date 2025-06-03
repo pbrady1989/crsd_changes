@@ -95,7 +95,7 @@ struct PPPBlock
      *  information on where to allocate memory and set each
      *  parameter in a PPP set.
      *  \param[in, out] data A filled out data structure. This will be used to
-     *  extract the number of channels and vectors of the VBM.
+     *  extract the number of txSequences and vectors of the VBM.
      *  The data metadata will also be updated with the number of ppp bytes required
      *  if provided number of bytes is not sufficient
     */
@@ -109,14 +109,14 @@ struct PPPBlock
      *
      *  Does not update metadata data numBytesPPP with calculated ppp bytes per set
      *
-     *  \param numChannels Set the number of PPP Arrays to allocate in the block
-     *  \param numVectors Set the number of PPP Sets to allocate per array
+     *  \param numTxSequences Set the number of PPP Arrays to allocate in the block
+     *  \param numPulses Set the number of PPP Sets to allocate per array
      *  \param ppp A filled out ppp sturcture. This will be used for
      *  information on where to allocate memory and set each
      *  parameter in a PPP set.
      */
-    PPPBlock(size_t numChannels,
-             const std::vector<size_t>& numVectors,
+    PPPBlock(size_t numTxSequences,
+             const std::vector<size_t>& numPulses,
              const Ppp& ppp);
 
     /*!
@@ -124,89 +124,89 @@ struct PPPBlock
      * Same as above, and also sets the underlying PPPSets
      * from the provided data
      *
-     * \param numChannels Set the number of PPP Arrays to allocate in the block
-     * \param numVectors Set the number of PPP Sets to allocate per array
+     * \param numTxSequences Set the number of PPP Arrays to allocate in the block
+     * \param numPulses Set the number of PPP Sets to allocate per array
      * \param ppp A filled out ppp sturcture. This will be used for
      * information on where to allocate memory and set each
      * parameter in a PPP set.
      * \param data Actual PPP data, used to set the PPPSet members
      */
-    PPPBlock(size_t numChannels,
-            const std::vector<size_t>& numVectors,
+    PPPBlock(size_t numTxSequences,
+            const std::vector<size_t>& numPulses,
             const Ppp& ppp,
             const std::vector<const void*>& data);
 
     /*!
-     *  \func verifyChannelVector
+     *  \func verifyTxSequencePulse
      *
-     *  \brief Verify channel and vector indexes provided are valid
+     *  \brief Verify txSequence and vector indexes provided are valid
      *
-     *  \param channel A channel number
+     *  \param txSequence A txSequence number
      *  \param vector A vector number
      *
-     *  \throws except::Exception If channel or vector indexes are less than 0,
-     *  or greater than available number of channels or vectors
+     *  \throws except::Exception If txSequence or vector indexes are less than 0,
+     *  or greater than available number of txSequences or vectors
      */
-    void verifyChannelVector(size_t channel, size_t vector) const;
+    void verifyTxSequencePulse(size_t txSequence, size_t vector) const;
 
     //! Getter functions
-    std::pair<int64_t, double> getTxStart(size_t channel, size_t set) const;
-    Vector3 getTxPos(size_t channel, size_t set) const;
-    Vector3 getTxVel(size_t channel, size_t set) const;
-    double getFX1(size_t channel, size_t set) const;
-    double getFX2(size_t channel, size_t set) const;
-    double getTXMT(size_t channel, size_t set) const;
-    std::pair<int64_t, double> getPhiX0(size_t channel, size_t set) const;
-    double getFxFreq0(size_t channel, size_t set) const;
-    double getFxRate(size_t channel, size_t set) const;
-    double getTxRadInt(size_t channel, size_t set) const;
-    Vector3 getTxACX(size_t channel, size_t set) const;
-    Vector3 getTxACY(size_t channel, size_t set) const;
-    Vector2 getTxEB(size_t channel, size_t set) const;
-    int64_t getFxResponseIndex(size_t channel, size_t set) const;
-    int64_t getXMIndex(size_t channel, size_t set) const;
+    std::pair<int64_t, double> getTxStart(size_t txSequence, size_t set) const;
+    Vector3 getTxPos(size_t txSequence, size_t set) const;
+    Vector3 getTxVel(size_t txSequence, size_t set) const;
+    double getFX1(size_t txSequence, size_t set) const;
+    double getFX2(size_t txSequence, size_t set) const;
+    double getTXMT(size_t txSequence, size_t set) const;
+    std::pair<int64_t, double> getPhiX0(size_t txSequence, size_t set) const;
+    double getFxFreq0(size_t txSequence, size_t set) const;
+    double getFxRate(size_t txSequence, size_t set) const;
+    double getTxRadInt(size_t txSequence, size_t set) const;
+    Vector3 getTxACX(size_t txSequence, size_t set) const;
+    Vector3 getTxACY(size_t txSequence, size_t set) const;
+    Vector2 getTxEB(size_t txSequence, size_t set) const;
+    int64_t getFxResponseIndex(size_t txSequence, size_t set) const;
+    int64_t getXMIndex(size_t txSequence, size_t set) const;
 
     template<typename T>
-    T getAddedPPP(size_t channel, size_t set, const std::string& name) const
+    T getAddedPPP(size_t txSequence, size_t set, const std::string& name) const
     {
-        verifyChannelVector(channel, set);
-        if(mData[channel][set].addedPPP.count(name) == 1)
+        verifyTxSequencePulse(txSequence, set);
+        if(mData[txSequence][set].addedPPP.count(name) == 1)
         {
             AddedPPP<T> aP;
-            return aP.getAddedPPP(mData[channel][set].addedPPP.find(name)->second);
-            // return AddPPPNamespace::getAddedPPP<T>(mData[channel][set].addedPPP.find(name)->second);
+            return aP.getAddedPPP(mData[txSequence][set].addedPPP.find(name)->second);
+            // return AddPPPNamespace::getAddedPPP<T>(mData[txSequence][set].addedPPP.find(name)->second);
         }
         throw except::Exception(Ctxt(
                 "Parameter was not set"));
     }
 
     //! Setter functions
-    void setTxStart(std::pair<int64_t, double> value, size_t channel, size_t set);
-    void setTxPos(const Vector3& value, size_t channel, size_t set);
-    void setTxVel(const Vector3& value, size_t channel, size_t set);
-    void setFX1(double value, size_t channel, size_t set);
-    void setFX2(double value, size_t channel, size_t set);
-    void setTXMT(double value, size_t channel, size_t set);
-    void setPhiX0(std::pair<int64_t, double> value, size_t channel, size_t set);
-    void setFxFreq0(double value, size_t channel, size_t set);
-    void setFxRate(double value, size_t channel, size_t set);
-    void setTxRadInt(double value, size_t channel, size_t set);
-    void setTxACX(const Vector3& value, size_t channel, size_t set);
-    void setTxACY(const Vector3& value, size_t channel, size_t set);
-    void setTxEB(const Vector2& value, size_t channel, size_t set);
-    void setFxResponseIndex(int64_t value, size_t channel, size_t set);
-    void setXMIndex(int64_t value, size_t channel, size_t set);
+    void setTxStart(std::pair<int64_t, double> value, size_t txSequence, size_t set);
+    void setTxPos(const Vector3& value, size_t txSequence, size_t set);
+    void setTxVel(const Vector3& value, size_t txSequence, size_t set);
+    void setFX1(double value, size_t txSequence, size_t set);
+    void setFX2(double value, size_t txSequence, size_t set);
+    void setTXMT(double value, size_t txSequence, size_t set);
+    void setPhiX0(std::pair<int64_t, double> value, size_t txSequence, size_t set);
+    void setFxFreq0(double value, size_t txSequence, size_t set);
+    void setFxRate(double value, size_t txSequence, size_t set);
+    void setTxRadInt(double value, size_t txSequence, size_t set);
+    void setTxACX(const Vector3& value, size_t txSequence, size_t set);
+    void setTxACY(const Vector3& value, size_t txSequence, size_t set);
+    void setTxEB(const Vector2& value, size_t txSequence, size_t set);
+    void setFxResponseIndex(int64_t value, size_t txSequence, size_t set);
+    void setXMIndex(int64_t value, size_t txSequence, size_t set);
 
     template<typename T>
-    void setAddedPPP(T value, size_t channel, size_t set, const std::string& name)
+    void setAddedPPP(T value, size_t txSequence, size_t set, const std::string& name)
     {
-        verifyChannelVector(channel, set);
+        verifyTxSequencePulse(txSequence, set);
         if(mPpp.addedPPP.count(name) != 0)
         {
-            if(mData[channel][set].addedPPP.count(name) == 0)
+            if(mData[txSequence][set].addedPPP.count(name) == 0)
             {
-                mData[channel][set].addedPPP[name] = six::Parameter();
-                mData[channel][set].addedPPP.find(name)->second.setValue(value);
+                mData[txSequence][set].addedPPP[name] = six::Parameter();
+                mData[txSequence][set].addedPPP.find(name)->second.setValue(value);
                 return;
             }
             throw except::Exception(Ctxt(
@@ -220,23 +220,23 @@ struct PPPBlock
      *  \func getPPPdata
      *  \brief This will return a contiguous buffer all the PPP data.
      *
-     *  \param channel 0 based index
+     *  \param txSequence 0 based index
      *  \param[out] data Will be filled with PPP data. This will
      *  be resized and zeroed internally.
      */
-    void getPPPdata(size_t channel,
+    void getPPPdata(size_t txSequence,
                     std::vector<sys::ubyte>& data) const;
-    void getPPPdata(size_t channel,
+    void getPPPdata(size_t txSequence,
                     std::vector<std::byte>& data) const;
 
     /*
      *  \func getPPPdata
      *  \brief Same as above but uses a void pointer.
      *
-     *  \param channel 0 based index
+     *  \param txSequence 0 based index
      *  \param[out] data A preallocated buffer for the data.
      */
-    void getPPPdata(size_t channel,
+    void getPPPdata(size_t txSequence,
                     void*  data) const;
 
     /*
@@ -252,11 +252,11 @@ struct PPPBlock
 
     /*
      *  \func getPPPsize
-     *  \brief Returns the number of bytes in a PPP channel.
+     *  \brief Returns the number of bytes in a PPP txSequence.
      *
-     *  \param channel 0 based index
+     *  \param txSequence 0 based index
      */
-    size_t getPPPsize(size_t channel) const;
+    size_t getPPPsize(size_t txSequence) const;
 
     //! Get optional parameter flags
     bool hasXMIndex() const
@@ -290,7 +290,7 @@ struct PPPBlock
     bool operator==(const PPPBlock& other) const
     {
         return mData == other.mData &&
-               mNumBytesPerVector == other.mNumBytesPerVector;
+               mNumBytesPerPulse == other.mNumBytesPerPulse;
     }
 
     bool operator!=(const PPPBlock& other) const
@@ -305,7 +305,7 @@ protected:
      *  \brief Parameters for each vector
      *
      *  Stores a single set of parameters
-     *  Each channel consists of a PPP Array,
+     *  Each txSequence consists of a PPP Array,
      *  which consists of multiple sets
      */
     struct PPPSet
@@ -395,7 +395,7 @@ private:
     //! The PPP Block [Num Channles][Num Parameters]
     std::vector<std::vector<PPPSet> > mData;
     //! Number of bytes per PPP vector
-    size_t mNumBytesPerVector = 0;
+    size_t mNumBytesPerPulse = 0;
     //! PPP block metadata
     Ppp mPpp;
 

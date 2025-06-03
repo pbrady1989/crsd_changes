@@ -152,10 +152,11 @@ void CRSDWriter::writeMetadata(size_t supportSize,
                                size_t pppSize,
                                size_t crsdSize)
 {
-    const auto xmlMetadata(CRSDXMLControl().toXMLString(mMetadata, nullptr));
+    const auto xmlMetadata(CRSDXMLControl().toXMLString(mMetadata, nullptr, true));
 
     // update header version, or remains default if unset
     mHeader.setVersion(mMetadata.getVersion());
+    mHeader.setType(mMetadata.getType());
 
     // update classification and release info
     if (!six::Init::isUndefined(

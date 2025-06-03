@@ -63,6 +63,8 @@ struct Metadata final : MetadataBase
     //! Initializes CRSD version to default version specified in FileHeader
     Metadata();
 
+    Metadata(std::string type);
+
     /*
      * Getter functions
      */

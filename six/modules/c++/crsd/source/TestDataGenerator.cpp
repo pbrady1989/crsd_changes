@@ -148,17 +148,10 @@ void setPulseParameters(size_t txSequence,
 
 void setUpMetadata(Metadata& metadata)
 {
-    // We must have a collectType set
-    // metadata.collectionID.collectType = CollectType::MONOSTATIC;
-    // metadata.collectionID.setClassificationLevel("Unclassified");
-    // metadata.collectionID.releaseInfo = "Release";
-    // // We must have a radar mode set
-    // metadata.collectionID.radarMode = RadarModeType::SPOTLIGHT;
-
     // // We must set pvpNumBytes
     // // Set default pvp size based on setPVP function
-     metadata.data.receiveParameters->numBytesPVP = (1*7 + 2*3 + 3*4) * 8;
-     metadata.data.transmitParameters->numBytesPPP = (1*8 + 2*3 + 3*4) * 8;
+    metadata.data.receiveParameters->numBytesPVP = (1*7 + 2*3 + 3*4) * 8;
+    metadata.data.transmitParameters->numBytesPPP = (1*8 + 2*3 + 3*4) * 8;
     metadata.sceneCoordinates.iarp.ecf = getRandomVector3();
     metadata.sceneCoordinates.iarp.llh = LatLonAlt(0,0,0);
     metadata.sceneCoordinates.referenceSurface.planar.reset(new Planar());
@@ -171,6 +164,49 @@ void setUpMetadata(Metadata& metadata)
     }
     metadata.referenceGeometry.refPoint.ecf = getRandomVector3();
     metadata.referenceGeometry.refPoint.iac = getRandomVector2();
+    if (metadata.referenceGeometry.sarParameters.get())
+    {
+        metadata.referenceGeometry.sarParameters->arpPos = getRandomVector3();
+        metadata.referenceGeometry.sarParameters->arpVel = getRandomVector3();
+    }
+    if (metadata.txSequence.get())
+    {
+        metadata.txSequence->parameters[0].txRefPoint.ecf = getRandomVector3();
+        metadata.txSequence->parameters[0].txRefPoint.iac = getRandomVector2();
+        metadata.txSequence->parameters[0].txAPATId = "txAPAT";
+        metadata.txSequence->parameters[0].txAPCId = "txAPC";
+        metadata.txSequence->parameters[0].fxBW = 0;
+        metadata.txSequence->parameters[0].fxBWFixed = true;
+        metadata.txSequence->parameters[0].fxC = 0;
+        metadata.txSequence->parameters[0].fxResponseId = "id";
+        metadata.txSequence->parameters[0].identifier = "id";
+        metadata.txSequence->parameters[0].refPulseIndex = 0;
+        metadata.txSequence->parameters[0].txmtMax = 0;
+        metadata.txSequence->parameters[0].txmtMin = 0;
+        metadata.txSequence->parameters[0].txRefLAtm = 0;
+        metadata.txSequence->parameters[0].txRefRadIntensity = 0;
+        metadata.txSequence->parameters[0].txRefRadIntensityStdDev = 0;
+        metadata.txSequence->parameters[0].txPolarization.ampH = 0;
+        metadata.txSequence->parameters[0].txPolarization.ampV = 0;
+        metadata.txSequence->parameters[0].txPolarization.phaseH = 0;
+        metadata.txSequence->parameters[0].txPolarization.phaseV = 0;
+        metadata.txSequence->parameters[0].txPolarization.polarizationID = PolarizationType::UNSPECIFIED;
+        metadata.txSequence->parameters[0].xmid = "xmid";
+        metadata.txSequence->parameters[0].txTime1 = 0;
+        metadata.txSequence->parameters[0].txTime2 = 0;
+    }
+
+    metadata.supportArray.antGainPhase[0].setIdentifier("antGainPhase");
+    metadata.supportArray.antGainPhase[0].x0 = 0;
+    metadata.supportArray.antGainPhase[0].y0 = 0;
+    metadata.supportArray.antGainPhase[0].xSS = 0;
+    metadata.supportArray.antGainPhase[0].ySS = 0;
+    if (metadata.supportArray.fxResponseArray.size() > 0)
+    {
+        metadata.supportArray.fxResponseArray[0].setIdentifier("fxResponseArray");
+        metadata.supportArray.fxResponseArray[0].fx0FXR = 0;
+        metadata.supportArray.fxResponseArray[0].fxSSFXR = 0;
+    }
     metadata.productInfo.classification = "unclass";
     metadata.productInfo.releaseInfo = "to everyone";
 }

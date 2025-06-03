@@ -156,16 +156,18 @@ bool runTest(bool /*scale*/,
 
 TEST_CASE(testPVPBlockSimple)
 {
+    const std::string type = "CRSDsar";
     const types::RowCol<size_t> dims(128, 256);
     const std::vector<std::complex<int16_t>> writeData =
             generateComplexData<int16_t>(dims.area());
     const bool scale = false;
-    crsd::Metadata meta = crsd::Metadata();
+    crsd::Metadata meta = crsd::Metadata(type);
     crsd::setUpData(meta, dims, writeData);
     meta.pvp.reset(new crsd::Pvp());
     meta.ppp.reset(new crsd::Ppp());
 
     meta.setVersion("1.0.0");
+    meta.setType(type);
     crsd::setPVPXML(*(meta.pvp));
     crsd::setPPPXML(*(meta.ppp));
     crsd::PVPBlock pvpBlock(*(meta.pvp), meta.data);

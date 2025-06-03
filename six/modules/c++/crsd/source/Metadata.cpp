@@ -29,6 +29,60 @@ Metadata::Metadata()
 {
 }
 
+Metadata::Metadata(std::string type) :
+    mType(type)
+{
+    if (mType == "CRSDsar")
+    {
+        // Set up the correct sections
+        global.transmitParameters.reset(new crsd::TransmitParameters());
+        global.receiveParameters.reset(new crsd::ReceiveParameters());
+        receiveInfo.reset(new crsd::TransmitInfo());
+        transmitInfo.reset(new crsd::TransmitInfo());
+        sarInfo.reset(new crsd::SARInfo());
+        channel.reset(new crsd::Channel());
+        channel->parameters.resize(1);
+        channel->parameters[0].sarImage.reset(new crsd::ChannelSARImage());
+        ppp.reset(new crsd::Ppp());
+        pvp.reset(new crsd::Pvp());
+        data.setSupportArray("",0,0,0,0);
+        data.transmitParameters.reset(new crsd::Data::Transmit());
+        data.receiveParameters.reset(new crsd::Data::Receive());    
+        txSequence.reset(new crsd::TxSequence());   
+        txSequence->parameters.resize(1);
+        referenceGeometry.sarParameters.reset(new crsd::SARImage()); 
+        supportArray.antGainPhase.resize(1);
+        supportArray.fxResponseArray.resize(1);     
+    }
+    else if (mType == "CRSDtx")
+    {
+        // Set up the correct sections
+        global.transmitParameters.reset(new crsd::TransmitParameters());
+        transmitInfo.reset(new crsd::TransmitInfo());
+        ppp.reset(new crsd::Ppp());
+        data.setSupportArray("",0,0,0,0);
+        data.transmitParameters.reset(new crsd::Data::Transmit());
+        txSequence.reset(new crsd::TxSequence()); 
+        txSequence->parameters.resize(1);
+        referenceGeometry.txParameters.reset(new crsd::OneWayParams());    
+        supportArray.antGainPhase.resize(1);     
+        supportArray.fxResponseArray.resize(1);
+    }
+    else if (mType == "CRSDrcv")
+    {
+        // Set up the correct sections
+        global.receiveParameters.reset(new crsd::ReceiveParameters());
+        receiveInfo.reset(new crsd::TransmitInfo());
+        channel.reset(new crsd::Channel());
+        channel->parameters.resize(1);
+        pvp.reset(new crsd::Pvp());
+        data.setSupportArray("",0,0,0,0);
+        data.receiveParameters.reset(new crsd::Data::Receive()); 
+        referenceGeometry.rcvParameters.reset(new crsd::OneWayParams());   
+        supportArray.antGainPhase.resize(1);     
+    }
+}
+
 size_t Metadata::getNumChannels() const
 {
     return data.getNumChannels();

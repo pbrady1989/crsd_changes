@@ -74,6 +74,8 @@ typedef six::RadarModeType RadarModeType;
 
 typedef six::TxWFType TxWFType;
 
+typedef six::CRSDType CRSDType;
+
 typedef six::CollectType CollectType;
 
 typedef six::DataType DataType;

@@ -25,7 +25,6 @@
 #include <string>
 #include <vector>
 #include <crsd/Types.h>
-//#include <six/Enums.h>
 #include <crsd/SceneCoordinates.h>
 
 namespace crsd

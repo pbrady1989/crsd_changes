@@ -326,6 +326,7 @@ std::string six::toString(const TxWFType& type)
     }
     return result;
 }
+
 template <>
 TxWFType six::toType<TxWFType>(const std::string& s)
 {
@@ -340,6 +341,43 @@ TxWFType six::toType<TxWFType>(const std::string& s)
     else
         return TxWFType::UNSPECIFIED; // "DYNAMIC_STRIPMAP" (with '_') doesn't convert
 
+}
+
+template <>
+std::string six::toString(const six::CRSDType& type)
+{
+    auto result = toString_(type, except::Exception(Ctxt("CRSD Type not set!")));
+    static const auto strSAR= six::CRSDType(six::CRSDType::SAR).toString();
+    static const auto strTX = six::CRSDType(six::CRSDType::TX).toString();
+    static const auto strRCV = six::CRSDType(six::CRSDType::RCV).toString();
+    if (result == strSAR)
+    {
+        return "CRSDsar"; // no "_"
+    }
+    else if (result == strTX)
+    {
+        return "CRSDtx"; // no "_"
+    }
+    else if (result == strRCV)
+    {
+        return "CRSDrcv"; // no "_"
+    }
+    return result;
+}
+
+template <>
+CRSDType six::toType<CRSDType>(const std::string& s)
+{
+    std::string type(s);
+    str::trim(type);
+    if (type == "CRSDsar") 
+        return CRSDType::SAR;
+    else if (type == "CRSDtx")
+        return CRSDType::TX;
+    else if (type == "CRSDrcv")
+        return CRSDType::RCV;
+    else
+        return CRSDType::SAR;
 }
 
 template <>

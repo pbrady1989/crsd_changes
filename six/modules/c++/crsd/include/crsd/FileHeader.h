@@ -28,6 +28,7 @@
 
 #include <io/SeekableStreams.h>
 #include <crsd/BaseFileHeader.h>
+#include <six/Types.h>
 
 namespace crsd
 {
@@ -132,7 +133,7 @@ public:
             int64_t pvpBlockSize, int64_t pppBlockSize, int64_t signalBlockSize);
 
     //! Set required elements
-    void setType(std::string type)
+    void setType(CRSDType type)
     {
         mType = type;
     }
@@ -178,7 +179,7 @@ public:
     }
 
     //! Get required elements
-    std::string getType() const
+    CRSDType getType() const
     {
         return mType;
     }
@@ -259,7 +260,7 @@ private:
 private:
     // File type header
     std::string mVersion;
-    std::string mType;
+    CRSDType mType;
 
     // Required key-value pairs
     int64_t mXmlBlockSize;

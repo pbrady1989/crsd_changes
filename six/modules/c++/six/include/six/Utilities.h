@@ -113,6 +113,9 @@ template<> std::string toString(const six::RadarModeType& value);
 template<> six::TxWFType toType<six::TxWFType>(const std::string& s);
 template<> std::string toString(const six::TxWFType& value);
 
+template<> six::CRSDType toType<six::CRSDType>(const std::string& s);
+template<> std::string toString(const six::CRSDType& value);
+
 template<> six::DateTime toType<six::DateTime>(const std::string& s);
 template<> std::string toString(const six::DateTime& value);
 

@@ -27,6 +27,7 @@
 #include <except/Exception.h>
 #include <str/Manip.h>
 #include <crsd/FileHeader.h>
+#include <six/Utilities.h>
 
 namespace crsd
 {
@@ -53,7 +54,9 @@ void FileHeader::read(io::SeekableInputStream& inStream)
     mVersion = readVersion(inStream);
 
      // Read mType (CRSD type) first
-    mType = readType(inStream);
+    std::string crsdType = readType(inStream);
+
+    mType = six::toType<CRSDType>(crsdType);
 
     // Block read the header for more efficient IO
     KeyValuePair headerEntry;

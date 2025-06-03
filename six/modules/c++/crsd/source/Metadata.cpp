@@ -29,10 +29,10 @@ Metadata::Metadata()
 {
 }
 
-Metadata::Metadata(std::string type) :
+Metadata::Metadata(CRSDType type) :
     mType(type)
 {
-    if (mType == "CRSDsar")
+    if (mType == CRSDType::SAR)
     {
         // Set up the correct sections
         global.transmitParameters.reset(new crsd::TransmitParameters());
@@ -54,7 +54,7 @@ Metadata::Metadata(std::string type) :
         supportArray.antGainPhase.resize(1);
         supportArray.fxResponseArray.resize(1);     
     }
-    else if (mType == "CRSDtx")
+    else if (mType == CRSDType::TX)
     {
         // Set up the correct sections
         global.transmitParameters.reset(new crsd::TransmitParameters());
@@ -68,7 +68,7 @@ Metadata::Metadata(std::string type) :
         supportArray.antGainPhase.resize(1);     
         supportArray.fxResponseArray.resize(1);
     }
-    else if (mType == "CRSDrcv")
+    else if (mType == CRSDType::RCV)
     {
         // Set up the correct sections
         global.receiveParameters.reset(new crsd::ReceiveParameters());
@@ -122,12 +122,12 @@ void Metadata::setVersion(const std::string& version)
     mVersion = version;
 }
 
-std::string Metadata::getType() const
+CRSDType Metadata::getType() const
 {
     return mType;
 }
 
-void Metadata::setType(const std::string& type)
+void Metadata::setType(const CRSDType& type)
 {
     mType = type;
 }

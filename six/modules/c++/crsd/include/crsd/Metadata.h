@@ -63,7 +63,7 @@ struct Metadata final : MetadataBase
     //! Initializes CRSD version to default version specified in FileHeader
     Metadata();
 
-    Metadata(std::string type);
+    Metadata(CRSDType type);
 
     /*
      * Getter functions
@@ -82,10 +82,10 @@ struct Metadata final : MetadataBase
     void setVersion(const std::string& version);
 
     //! Get CRSD type
-    std::string getType() const;
+    CRSDType getType() const;
 
     //! Set CRSD version
-    void setType(const std::string& type);
+    void setType(const CRSDType& type);
 
     //!  SARInfo Block 
     ProductInfo productInfo;
@@ -161,7 +161,7 @@ private:
     std::string mVersion;
 
     //! Stores CRSD type (SAR, TX, RX)
-    std::string mType;
+    CRSDType mType;
 };
 
 //! Ostream operator

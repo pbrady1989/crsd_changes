@@ -27,6 +27,8 @@
 #include <io/SeekableStreams.h>
 #include <str/Manip.h>
 #include <nitf/coda-oss.hpp>
+#include <six/Enums.h>
+#include <six/Utilities.h>
 
 namespace crsd
 {
@@ -66,7 +68,7 @@ std::string BaseFileHeader::readVersion(io::SeekableInputStream& inStream)
     std::string ret = kvPair.second;
     str::trim(ret);
 
-    return ret;
+    return (ret);
 }
 
 std::string BaseFileHeader::readType(io::SeekableInputStream& inStream)
@@ -87,7 +89,7 @@ std::string BaseFileHeader::readType(io::SeekableInputStream& inStream)
     std::string ret = kvPair.first;
     str::trim(ret);
 
-    return ret;
+    return (ret);
 }
 
 void BaseFileHeader::tokenize(const std::string& in,

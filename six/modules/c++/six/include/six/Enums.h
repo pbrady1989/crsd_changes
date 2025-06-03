@@ -655,28 +655,6 @@ SIX_Enum_ENUM_3(XYZEnum,
 );
 
 /*!
- *  \struct PolarizationType
- *
- *  Enumeration used to represent PolarizationTypes
- */
-// SIX_Enum_BEGIN_DEFINE(TxWFType)
-//     //! The enumerations allowed
-//     SIX_Enum_BEGIN_enum
-//         LFM= 1,
-//         XM = 2,
-//         LFMwXM = 3,
-//         UNSPECIFIED = 4,
-//     SIX_Enum_END_enum
-
-//     SIX_Enum_BEGIN_string_to_value
-//         SIX_Enum_map_entry_(LFM),
-//         SIX_Enum_map_entry_(XM),
-//         SIX_Enum_map_entry_(LFMwXM),
-//         SIX_Enum_map_entry_(UNSPECIFIED),
-//     SIX_Enum_END_string_to_value
-// SIX_Enum_END_DEFINE(TxWFType);
-
-/*!
  *  \struct RadarModeType
  *
  *  Enumeration used to represent RadarModeTypes
@@ -686,6 +664,12 @@ SIX_Enum_ENUM_4(TxWFType,
         XM, 2,
         LFMwXM, 3,
         UNSPECIFIED, 4
+);
+
+SIX_Enum_ENUM_3(CRSDType,
+    SAR, 1,
+    TX, 2,
+    RCV, 3
 );
 
 }

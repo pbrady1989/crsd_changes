@@ -29,6 +29,8 @@
 
 #include <scene/sys_Conf.h>
 #include <io/SeekableStreams.h>
+#include <crsd/Types.h>
+#include <six/Utilities.h>
 
 namespace crsd
 {

@@ -45,17 +45,6 @@ SIX_Enum_ENUM_3(SampleType,
 );
 
 /*!
- *  \struct CRSDType
- *
- *  Enumeration used to represent CRSDTypes
- */
-SIX_Enum_ENUM_3(CRSDType,
-    SAR, 1,
-    TX, 2,
-    RX, 3
-);
-
-/*!
  *  \struct PhaseSGN
  *
  *  Enumeration used to represent PhaseSGNs

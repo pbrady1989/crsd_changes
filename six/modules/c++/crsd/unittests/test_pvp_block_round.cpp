@@ -34,6 +34,7 @@
 #include <io/FileInputStream.h>
 #include <io/FileOutputStream.h>
 #include <io/TempFile.h>
+#include <crsd/Enums.h>
 #include <stdlib.h>
 #include <types/RowCol.h>
 #include <cstdio>
@@ -156,7 +157,7 @@ bool runTest(bool /*scale*/,
 
 TEST_CASE(testPVPBlockSimple)
 {
-    const std::string type = "CRSDsar";
+    six::CRSDType type = six::CRSDType::SAR;
     const types::RowCol<size_t> dims(128, 256);
     const std::vector<std::complex<int16_t>> writeData =
             generateComplexData<int16_t>(dims.area());
@@ -167,7 +168,6 @@ TEST_CASE(testPVPBlockSimple)
     meta.ppp.reset(new crsd::Ppp());
 
     meta.setVersion("1.0.0");
-    meta.setType(type);
     crsd::setPVPXML(*(meta.pvp));
     crsd::setPPPXML(*(meta.ppp));
     crsd::PVPBlock pvpBlock(*(meta.pvp), meta.data);

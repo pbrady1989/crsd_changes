@@ -94,7 +94,7 @@ public:
      *  \throws except::Exception if file is not CRSD
      */
     static
-    std::string readType(io::SeekableInputStream& inStream);
+    CRSDType readType(io::SeekableInputStream& inStream);
 
     /*
      *  \func read

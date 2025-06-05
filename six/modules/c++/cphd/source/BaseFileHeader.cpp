@@ -53,7 +53,6 @@ std::string BaseFileHeader::readVersion(io::SeekableInputStream& inStream)
     inStream.readln(buf, sizeof(buf));
 
     const KeyValuePair kvPair(tokenize(buf, "/"));
-    std::cout << "buf:" << buf << std::endl;
     if (kvPair.first != FILE_TYPE)
     {
         throw except::Exception(Ctxt("Not a CPHD file"));
@@ -61,6 +60,7 @@ std::string BaseFileHeader::readVersion(io::SeekableInputStream& inStream)
 
     // Remove any trailing whitespace from the version
     std::string ret = kvPair.second;
+    std::cout << ret << std::endl;
     str::trim(ret);
 
     return ret;

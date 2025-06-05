@@ -51,7 +51,8 @@ TEST_CASE(testReadType)
 {
     io::ByteStream crsdTypeHeader;
     crsdTypeHeader.write(FILE_TYPE_HEADER, strlen(FILE_TYPE_HEADER));
-    TEST_ASSERT_EQ(crsd::FileHeader::readType(crsdTypeHeader), "CRSDsar");
+    six::CRSDType crsdType = crsd::FileHeader::readType(crsdTypeHeader);
+    TEST_ASSERT_EQ(six::toString(crsdType), "CRSDsar");
 }
 
 TEST_CASE(testCanReadHeaderWithoutBreaking)
@@ -88,19 +89,7 @@ TEST_CASE(testCanReadHeaderWithoutBreaking)
         "\f\n";
     fileHeaderContentWithoutSupport.write(fileHeaderTxtNoSupport);
     crsd::FileHeader headerWithoutSupport;
-    headerWithoutSupport.read(fileHeaderContentWithoutSupport);
-    TEST_ASSERT_EQ(headerWithoutSupport.getXMLBlockSize(), 3);
-    TEST_ASSERT_EQ(headerWithoutSupport.getXMLBlockByteOffset(), 10);
-    TEST_ASSERT_EQ(headerWithoutSupport.getSupportBlockSize(), 0);
-    TEST_ASSERT_EQ(headerWithoutSupport.getSupportBlockByteOffset(), 0);
-    TEST_ASSERT_EQ(headerWithoutSupport.getPppBlockSize(), 3);
-    TEST_ASSERT_EQ(headerWithoutSupport.getPppBlockByteOffset(), 3);
-    TEST_ASSERT_EQ(headerWithoutSupport.getPvpBlockSize(), 5);
-    TEST_ASSERT_EQ(headerWithoutSupport.getPvpBlockByteOffset(), 19);
-    TEST_ASSERT_EQ(headerWithoutSupport.getSignalBlockSize(), 6);
-    TEST_ASSERT_EQ(headerWithoutSupport.getSignalBlockByteOffset(), 24);
-    TEST_ASSERT_EQ(headerWithoutSupport.getClassification(), "UNCLASSIFIED");
-    TEST_ASSERT_EQ(headerWithoutSupport.getReleaseInfo(), "UNRESTRICTED");
+    TEST_THROWS(headerWithoutSupport.read(fileHeaderContentWithoutSupport));
 
     std::string fileHeaderTxtNoClass = "CRSDsar/1.0\n"
             "XML_BLOCK_SIZE := 3\n"

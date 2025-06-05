@@ -79,6 +79,7 @@ void setPVPXML(Pvp& pvp)
     pvp.append(pvp.rcvEB);
     pvp.append(pvp.signal);
     pvp.append(pvp.ampSF);
+    pvp.append(pvp.dgrgc);
     pvp.append(pvp.txPulseIndex);
 }
 
@@ -150,7 +151,7 @@ void setUpMetadata(Metadata& metadata)
 {
     // // We must set pvpNumBytes
     // // Set default pvp size based on setPVP function
-    metadata.data.receiveParameters->numBytesPVP = (1*7 + 2*3 + 3*4) * 8;
+    metadata.data.receiveParameters->numBytesPVP = (1*9 + 2*3 + 3*4) * 8;
     metadata.data.transmitParameters->numBytesPPP = (1*8 + 2*3 + 3*4) * 8;
     metadata.sceneCoordinates.iarp.ecf = getRandomVector3();
     metadata.sceneCoordinates.iarp.llh = LatLonAlt(0,0,0);

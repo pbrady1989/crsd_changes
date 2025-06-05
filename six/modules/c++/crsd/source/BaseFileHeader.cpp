@@ -57,6 +57,9 @@ std::string BaseFileHeader::readVersion(io::SeekableInputStream& inStream)
     inStream.seek(0, io::Seekable::START);
     inStream.readln(buf, sizeof(buf));
     const KeyValuePair kvPair(tokenize(buf, "/"));
+    //std::cout << "buf: " << buf << std::endl;
+    //std::cout << "kvPair.first: " << kvPair.first << std::endl;
+    //std::cout << "kvPair.second: " << kvPair.second << std::endl;
     if ( (kvPair.first  != FILE_TYPE_SAR) 
        && (kvPair.first != FILE_TYPE_TX) 
        && (kvPair.first != FILE_TYPE_RX) )
@@ -71,7 +74,7 @@ std::string BaseFileHeader::readVersion(io::SeekableInputStream& inStream)
     return (ret);
 }
 
-std::string BaseFileHeader::readType(io::SeekableInputStream& inStream)
+CRSDType BaseFileHeader::readType(io::SeekableInputStream& inStream)
 {
     char buf[128];
     inStream.seek(0, io::Seekable::START);
@@ -89,7 +92,7 @@ std::string BaseFileHeader::readType(io::SeekableInputStream& inStream)
     std::string ret = kvPair.first;
     str::trim(ret);
 
-    return (ret);
+    return (six::toType<CRSDType>(ret));
 }
 
 void BaseFileHeader::tokenize(const std::string& in,

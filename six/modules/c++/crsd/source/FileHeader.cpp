@@ -54,9 +54,7 @@ void FileHeader::read(io::SeekableInputStream& inStream)
     mVersion = readVersion(inStream);
 
      // Read mType (CRSD type) first
-    std::string crsdType = readType(inStream);
-
-    mType = six::toType<CRSDType>(crsdType);
+    mType = readType(inStream);
 
     // Block read the header for more efficient IO
     KeyValuePair headerEntry;
@@ -134,29 +132,90 @@ void FileHeader::read(io::SeekableInputStream& inStream)
     }
 
     // check for any required values that are uninitialized
-    if (mXmlBlockSize == 0  ||
-        mXmlBlockByteOffset == 0  ||
-        mPvpBlockSize == 0  ||
-        mPvpBlockByteOffset == 0  ||
-        mPppBlockSize == 0  ||
-        mPppBlockByteOffset == 0  ||
-        mSignalBlockSize == 0  ||
-        mSignalBlockByteOffset == 0 ||
-        mClassification.empty() ||
-        mReleaseInfo.empty())
+    if (mType == CRSDType::SAR)
     {
-        std::ostringstream err;
-        err << "CRSD header information is incomplete" << " ,  mXmlBlockSize=" << std::to_string(mXmlBlockSize) 
-                  << " , mXmlBlockByteOffset=" << std::to_string(mXmlBlockByteOffset) 
-                  << " ,  mPvpBlockSize=" << std::to_string(mPvpBlockSize) 
-                  << " , mPvpBlockByteOffset=" << std::to_string(mPvpBlockByteOffset) 
-                  << " ,  mPppBlockSize=" << std::to_string(mPppBlockSize) 
-                  << " , mPppBlockByteOffset=" << std::to_string(mPppBlockByteOffset) 
-                  << " ,  mSignalBlockSize=" << std::to_string(mSignalBlockSize) 
-                  << " , mSignalBlockByteOffset=" << std::to_string(mSignalBlockByteOffset) 
-                  << " ,  mClassification=" << mClassification
-                  << " , mReleaseInfo=" << mReleaseInfo;
-        throw except::Exception(Ctxt(err.str()));
+        // SAR CRSD files require the XML block, 
+        // Support Block, PPP, PVP, and Signal Blocks
+        if (mXmlBlockSize == 0  ||
+            mXmlBlockByteOffset == 0  ||
+            mPvpBlockSize == 0  ||
+            mPvpBlockByteOffset == 0  ||
+            mPppBlockSize == 0  ||
+            mPppBlockByteOffset == 0  ||
+            mSignalBlockSize == 0  ||
+            mSignalBlockByteOffset == 0 ||
+            mSupportBlockByteOffset == 0 ||
+            mSupportBlockSize == 0 ||
+            mClassification.empty() ||
+            mReleaseInfo.empty())
+        {
+            std::ostringstream err;
+            err << "CRSD SAR header information is incomplete: " << "mXmlBlockSize=" << std::to_string(mXmlBlockSize) 
+                    << " , mXmlBlockByteOffset=" << std::to_string(mXmlBlockByteOffset) 
+                    << " ,  mPvpBlockSize=" << std::to_string(mPvpBlockSize) 
+                    << " , mPvpBlockByteOffset=" << std::to_string(mPvpBlockByteOffset) 
+                    << " ,  mPppBlockSize=" << std::to_string(mPppBlockSize) 
+                    << " , mPppBlockByteOffset=" << std::to_string(mPppBlockByteOffset) 
+                    << " ,  mSignalBlockSize=" << std::to_string(mSignalBlockSize) 
+                    << " , mSignalBlockByteOffset=" << std::to_string(mSignalBlockByteOffset) 
+                    << " ,  mSupportBlockSize=" << std::to_string(mSupportBlockSize) 
+                    << " , mSupportBlockByteOffset=" << std::to_string(mSupportBlockByteOffset) 
+                    << " ,  mClassification=" << mClassification
+                    << " , mReleaseInfo=" << mReleaseInfo;
+            throw except::Exception(Ctxt(err.str()));
+        }
+    }
+    else if (mType == CRSDType::TX)
+    {
+        // TX CRSD files require the XML, 
+        // Support, and PPP Blocks
+        if (mXmlBlockSize == 0  ||
+            mXmlBlockByteOffset == 0  ||
+            mPppBlockSize == 0  ||
+            mPppBlockByteOffset == 0 ||
+            mSupportBlockByteOffset == 0 ||
+            mSupportBlockSize == 0 ||
+            mClassification.empty() ||
+            mReleaseInfo.empty())
+        {
+            std::ostringstream err;
+            err << "CRSD TX header information is incomplete: " << "mXmlBlockSize=" << std::to_string(mXmlBlockSize) 
+                    << " , mXmlBlockByteOffset=" << std::to_string(mXmlBlockByteOffset) 
+                    << " ,  mPppBlockSize=" << std::to_string(mPppBlockSize) 
+                    << " , mPppBlockByteOffset=" << std::to_string(mPppBlockByteOffset) 
+                    << " ,  mSupportBlockSize=" << std::to_string(mSupportBlockSize) 
+                    << " , mSupportBlockByteOffset=" << std::to_string(mSupportBlockByteOffset) 
+                    << " ,  mClassification=" << mClassification
+                    << " , mReleaseInfo=" << mReleaseInfo;
+            throw except::Exception(Ctxt(err.str()));
+        }
+    }
+    else if (mType == CRSDType::RCV)
+    {
+        // TX CRSD files require the XML, 
+        // Support, and PPP Blocks
+        if (mXmlBlockSize == 0  ||
+            mXmlBlockByteOffset == 0  ||
+            mPvpBlockSize == 0  ||
+            mPvpBlockByteOffset == 0 ||
+            mSupportBlockByteOffset == 0 ||
+            mSupportBlockSize == 0 ||
+            mClassification.empty() ||
+            mReleaseInfo.empty())
+        {
+            std::ostringstream err;
+            err << "CRSD TX header information is incomplete: " << "mXmlBlockSize=" << std::to_string(mXmlBlockSize) 
+                    << " , mXmlBlockByteOffset=" << std::to_string(mXmlBlockByteOffset) 
+                    << " ,  mPvpBlockSize=" << std::to_string(mPvpBlockSize) 
+                    << " , mPvpBlockByteOffset=" << std::to_string(mPvpBlockByteOffset) 
+                    << " ,  mSupportBlockSize=" << std::to_string(mSupportBlockSize) 
+                    << " , mSupportBlockByteOffset=" << std::to_string(mSupportBlockByteOffset) 
+                    << " ,  mSignalBlockSize=" << std::to_string(mSignalBlockSize) 
+                    << " , mSignalBlockByteOffset=" << std::to_string(mSignalBlockByteOffset) 
+                    << " ,  mClassification=" << mClassification
+                    << " , mReleaseInfo=" << mReleaseInfo;
+            throw except::Exception(Ctxt(err.str()));
+        }
     }
 }
 
@@ -168,7 +227,7 @@ std::string FileHeader::toString() const
     // Send the values as they are, no calculating
 
     // File type
-    os << mType << "/" << mVersion << LINE_TERMINATOR;
+    os << six::toString<CRSDType>(mType) << "/" << mVersion << LINE_TERMINATOR;
 
     // SUPPORT block is required fields, if present
     os << "SUPPORT_BLOCK_SIZE" << KVP_DELIMITER << mSupportBlockSize
@@ -204,6 +263,7 @@ std::string FileHeader::toString() const
        << LINE_TERMINATOR
        << "RELEASE_INFO" << KVP_DELIMITER << mReleaseInfo << LINE_TERMINATOR
        << SECTION_TERMINATOR << LINE_TERMINATOR;
+
     return os.str();
 }
 
@@ -234,6 +294,10 @@ size_t FileHeader::set(int64_t xmlBlockSize,
 
 size_t FileHeader::set()
 {
+    // CRSDsar Required: XML, Support, PVP, PPP, and Signal Blocks
+    // CRSDtx Required:  XML, Support, and PPP Blocks
+    // CRSDrcv Required: XML, Support, PVP, and Signal Blocks
+
     // Compute the three offsets that depend on a stable header size
     // loop until header size doesn't change
     size_t initialHeaderSize;
@@ -245,41 +309,47 @@ size_t FileHeader::set()
         int64_t xmlOffset = initialHeaderSize + 2;
         setXMLBlockByteOffset(xmlOffset);
 
+        // Add two for the XML section terminator
+        int64_t supportOff = getXMLBlockByteOffset() + getXMLBlockSize() + 2;
+        setSupportBlockByteOffset(supportOff);
 
-        if (mSupportBlockSize > 0)
+        // We will put this section last. so make sure we know where to put it 
+        // depending on the type of CRSD file
+        int64_t pvpOff = getSupportBlockByteOffset() + getSupportBlockSize() + 2;
+
+        if (mType == CRSDType::SAR ||
+            mType == CRSDType::TX)
         {
-            // Add two for the XML section terminator
-            int64_t supportOff = getXMLBlockByteOffset() + getXMLBlockSize() + 2;
-            setSupportBlockByteOffset(supportOff);
+            int64_t pppOff = getSupportBlockByteOffset() + getSupportBlockSize() + 2;
 
-            // Calculate pvp offset based on support position and size
-            int64_t pvpOff = getSupportBlockByteOffset() +
-                    getSupportBlockSize();
+            // Add padding (ppp are doubles)
+            const int64_t pppRemainder = pppOff % sizeof(double);
+            if (pppRemainder != 0)
+            {
+                pppOff += sizeof(double) - pppRemainder;
+            }
+
+            setPppBlockByteOffset(pvpOff);
+
+            pvpOff = getPppBlockByteOffset() + getPppBlockSize() + 2;
+        }
+
+        if (mType == CRSDType::SAR ||
+            mType == CRSDType::RCV)
+        {
             // Add padding (pvp are doubles)
             const int64_t pvpRemainder = pvpOff % sizeof(double);
             if (pvpRemainder != 0)
             {
                 pvpOff += sizeof(double) - pvpRemainder;
             }
-            setPvpBlockByteOffset(pvpOff);
-        }
-        else
-        {
-            // Add two for the XML section terminator
-            int64_t pvpOff = getXMLBlockByteOffset() +
-                    getXMLBlockSize() + 2;
-            // Add padding (pvp are doubles)
-            const int64_t pvpRemainder = pvpOff % sizeof(double);
-            if (pvpRemainder != 0)
-            {
-                pvpOff += sizeof(double) - pvpRemainder;
-            }
-            setPvpBlockByteOffset(pvpOff);
-        }
 
-        // Position to the CRSD, no padding needed, as PVP entries are all
-        // doubles
-        setSignalBlockByteOffset(getPvpBlockByteOffset() + getPvpBlockSize());
+            setPvpBlockByteOffset(pvpOff);
+
+            // Position to the CRSD, no padding needed, as PVP entries are all
+            // doubles
+            setSignalBlockByteOffset(getPvpBlockByteOffset() + getPvpBlockSize());
+        }
 
     } while (size() != initialHeaderSize);
 

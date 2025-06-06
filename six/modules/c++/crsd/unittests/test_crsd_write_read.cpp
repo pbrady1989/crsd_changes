@@ -330,7 +330,7 @@ bool runTest(bool /*scale*/,
     return checkData("./output.crsd", numThreads, meta, pvpBlock, pppBlock);
 }
 
-TEST_CASE(testPVPBlockSimple)
+TEST_CASE(testCRSDWriteReadSimple)
 {
     six::CRSDType type = six::CRSDType::SAR;
     const types::RowCol<size_t> dims(128, 256);
@@ -426,7 +426,5 @@ TEST_CASE(testPVPBlockAdditional)
 }
 
 TEST_MAIN(
-        TEST_CHECK(testPVPBlockSimple);
-        //TEST_CHECK(testPVPBlockOptional);
-        //TEST_CHECK(testPVPBlockAdditional);
+        TEST_CHECK(testCRSDWriteReadSimple);
         )

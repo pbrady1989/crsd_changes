@@ -42,7 +42,7 @@ coda_add_tests(
     SOURCES
         test_file_header.cpp
         test_crsd_xml_control.cpp
-        test_pvp_block_round.cpp)
+        test_crsd_write_read.cpp)
 
 # coda_add_tests(
 #     MODULE_NAME ${MODULE_NAME}

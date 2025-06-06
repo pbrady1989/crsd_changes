@@ -75,25 +75,103 @@ struct SARImage
     //! Equality operators
     bool operator==(const SARImage& other) const
     {
-        return  codTime == other.codTime &&
-                dwellTime == other.dwellTime &&
-                referenceTime == other.referenceTime &&
-                arpPos == other.arpPos &&
-                arpVel == other.arpVel &&
-                bistaticAngle == other.bistaticAngle &&
-                bistaticAngleRate == other.bistaticAngleRate &&
-                sideOfTrack == other.sideOfTrack &&
-                slantRange == other.slantRange &&
-                groundRange == other.groundRange &&
-                dopplerConeAngle == other.dopplerConeAngle &&
-                squintAngle == other.squintAngle &&
-                azimuthAngle == other.azimuthAngle &&
-                grazeAngle == other.grazeAngle &&
-                incidenceAngle == other.incidenceAngle &&
-                twistAngle == other.twistAngle &&
-                slopeAngle == other.slopeAngle &&
-                layoverAngle == other.layoverAngle;
+        bool isEqual = true;
+
+        
+        if (codTime != other.codTime)
+        {
+            std::cout << __LINE__ << std::endl;
+            isEqual = false;
+        }
+        if (dwellTime != other.dwellTime)
+        {
+            std::cout << __LINE__ << std::endl;
+            isEqual = false;
+        }
+        if (referenceTime != other.referenceTime)
+        {
+            std::cout << __LINE__ << std::endl;
+            isEqual = false;
+        }
+        if (arpPos != other.arpPos)
+        {
+            std::cout << __LINE__ << std::endl;
+            isEqual = false;
+        }
+        if (arpVel != other.arpVel)
+        {
+            std::cout << __LINE__ << std::endl;
+            isEqual = false;
+        }
+        if (bistaticAngle != other.bistaticAngle)
+        {
+            std::cout << __LINE__ << std::endl;
+            isEqual = false;
+        }
+        if (bistaticAngleRate != other.bistaticAngleRate)
+        {
+            std::cout << __LINE__ << std::endl;
+            isEqual = false;
+        }
+        if (sideOfTrack != other.sideOfTrack)
+        {
+            std::cout << __LINE__ << std::endl;
+            isEqual = false;
+        }
+        if (slantRange != other.slantRange)
+        {
+            std::cout << __LINE__ << std::endl;
+            isEqual = false;
+        }
+        if (groundRange != other.groundRange)
+        {
+            std::cout << __LINE__ << std::endl;
+            isEqual = false;
+        }
+        if (dopplerConeAngle != other.dopplerConeAngle)
+        {
+            std::cout << __LINE__ << std::endl;
+            isEqual = false;
+        }
+        if (squintAngle != other.squintAngle)
+        {
+            std::cout << __LINE__ << std::endl;
+            isEqual = false;
+        }
+        if (azimuthAngle != other.azimuthAngle)
+        {
+            std::cout << __LINE__ << std::endl;
+            isEqual = false;
+        }
+        if (grazeAngle != other.grazeAngle)
+        {
+            std::cout << __LINE__ << std::endl;
+            isEqual = false;
+        }
+        if (incidenceAngle != other.incidenceAngle)
+        {
+            std::cout << __LINE__ << std::endl;
+            isEqual = false;
+        }
+        if (twistAngle != other.twistAngle)
+        {
+            std::cout << __LINE__ << std::endl;
+            isEqual = false;
+        }
+        if (slopeAngle != other.slopeAngle)
+        {
+            std::cout << __LINE__ << std::endl;
+            isEqual = false;
+        }
+        if (layoverAngle != other.layoverAngle)
+        {
+            std::cout << __LINE__ << std::endl;
+            isEqual = false;
+        }
+
+        return isEqual;
     }
+    
     bool operator!=(const SARImage& other) const
     {
         return !((*this) == other);

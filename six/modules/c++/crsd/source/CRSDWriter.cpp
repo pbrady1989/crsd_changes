@@ -200,7 +200,6 @@ void CRSDWriter::writePPPData(const std::byte* pppBlock, size_t index)
     const size_t size = (mMetadata.data.transmitParameters->txSequence[index].getNumPulses() *
                          mMetadata.data.getNumBytesPPPSet()) /
             8;
-
     //! The vector based parameters are always 64 bit
     (*mDataWriter)(pppBlock, size, 8);
 }
@@ -329,7 +328,6 @@ void CRSDWriter::writePVPData(const PVPBlock& pvpBlock)
     std::vector<std::byte> pvpData;
     for (size_t ii = 0; ii < numChannels; ++ii)
     {
-        std::cout << "Getting pvp data for channel " << ii << std::endl;
         pvpBlock.getPVPdata(ii, pvpData);
         if (pvpData.empty())
         {
@@ -337,9 +335,7 @@ void CRSDWriter::writePVPData(const PVPBlock& pvpBlock)
             ostr << "PVPBlock of channel " << ii << " is empty";
             throw except::Exception(Ctxt(ostr.str()));
         }
-        std::cout << "Writing pvp data for channel " << ii << std::endl;
         writePVPData(pvpData.data(), ii);
-        std::cout << "Succesfully wrote pvp data for channel " << ii << std::endl;
     }
 }
 

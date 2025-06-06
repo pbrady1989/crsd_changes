@@ -159,13 +159,13 @@ PVPBlock::PVPSet::PVPSet() :
 void PVPBlock::PVPSet::write(const PVPBlock& pvpBlock, const Pvp& p, const sys::byte* input)
 {
     ::setData(input + p.rcvStart.getByteOffset(), rcvStart.first);
-    ::setData(input + p.rcvStart.getByteOffset() + sizeof(int64_t), rcvStart.second);
+    ::setData(input + p.rcvStart.getByteOffset() + sizeof(rcvStart.first), rcvStart.second);
     ::setData(input + p.rcvPos.getByteOffset(), rcvPos);
     ::setData(input + p.rcvVel.getByteOffset(), rcvVel);
     ::setData(input + p.frcv1.getByteOffset(), frcv1);
     ::setData(input + p.frcv2.getByteOffset(), frcv2);
     ::setData(input + p.refPhi0.getByteOffset(), refPhi0.first);
-    ::setData(input + p.refPhi0.getByteOffset() + sizeof(int64_t), refPhi0.second);
+    ::setData(input + p.refPhi0.getByteOffset() + sizeof(refPhi0.first), refPhi0.second);
     ::setData(input + p.refFreq.getByteOffset(), refFreq);
     ::setData(input + p.dfiC0.getByteOffset(), dfiC0);
     ::setData(input + p.ficRate.getByteOffset(), ficRate);
@@ -308,12 +308,14 @@ void PVPBlock::PVPSet::write(const PVPBlock& pvpBlock, const Pvp& p, const sys::
 void PVPBlock::PVPSet::read(const Pvp& p, sys::ubyte* dest_) const
 {
     auto dest = reinterpret_cast<std::byte*>(dest_);
-    ::getData(dest + p.rcvStart.getByteOffset(), rcvStart);
+    ::getData(dest + p.rcvStart.getByteOffset(), rcvStart.first);
+    ::getData(dest + p.rcvStart.getByteOffset() + sizeof(rcvStart.first), rcvStart.second);
     ::getData(dest + p.rcvPos.getByteOffset(), rcvPos);
     ::getData(dest + p.rcvVel.getByteOffset(), rcvVel);
     ::getData(dest + p.frcv1.getByteOffset(), frcv1);
     ::getData(dest + p.frcv2.getByteOffset(), frcv2);
-    ::getData(dest + p.refPhi0.getByteOffset(), refPhi0);
+    ::getData(dest + p.refPhi0.getByteOffset(), refPhi0.first);
+    ::getData(dest + p.refPhi0.getByteOffset() + sizeof(refPhi0.first), refPhi0.second);
     ::getData(dest + p.refFreq.getByteOffset(), refFreq);
     ::getData(dest + p.dfiC0.getByteOffset(), dfiC0);
     ::getData(dest + p.ficRate.getByteOffset(), ficRate);

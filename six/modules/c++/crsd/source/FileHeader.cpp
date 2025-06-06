@@ -359,18 +359,22 @@ size_t FileHeader::set()
 //! Pad bytes don't include the Section terminator
 int64_t FileHeader::getPvpPadBytes() const
 {
-    if (mSupportBlockSize != 0)
+    // PVP will always follows the Support in the CRSDrcv case, or
+    // PPP in the CRSDsar case. No PVP for CRSDtx files.
+    if (getPppBlockSize() != 0)
     {
-        return (getPvpBlockByteOffset() - (getSupportBlockByteOffset() + getSupportBlockSize()));
+        return (getPvpBlockByteOffset() - (getPppBlockByteOffset() + getPppBlockSize()));
     }
-    return (getPvpBlockByteOffset() - (getXMLBlockByteOffset() + getXMLBlockSize() + 2));
+    return (getPvpBlockByteOffset() - (getSupportBlockByteOffset() + getSupportBlockSize() + 2));
 }
 
 
 //! Pad bytes don't include the Section terminator
 int64_t FileHeader::getPppPadBytes() const
 {
-    return (getPppBlockByteOffset() - (getPvpBlockByteOffset() + getPvpBlockSize()));
+    // PPP will always follows the Support in the CRSDsar or CRSDtx cases
+    // This section is not present in CRSDrcv files.
+    return (getPppBlockByteOffset() - (getSupportBlockByteOffset() + getSupportBlockSize()));
 }
 
 

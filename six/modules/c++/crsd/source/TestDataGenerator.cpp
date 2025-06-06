@@ -89,7 +89,7 @@ void setVectorParameters(size_t channel,
 {
     double time1 = getRandom();
     double time2 = getRandom();
-    pvpBlock.setRcvStart(std::pair<int64_t,double>(getRandom(),getRandom()), channel, vector);
+    pvpBlock.setRcvStart(std::pair<int64_t,double>(12345,-333.0), channel, vector);
     pvpBlock.setRcvPos(getRandomVector3(), channel, vector);
     pvpBlock.setRcvVel(getRandomVector3(), channel, vector);
 
@@ -105,7 +105,7 @@ void setVectorParameters(size_t channel,
     pvpBlock.setAmpSF(getRandom(), channel, vector);
     pvpBlock.setDGRGC(getRandom(), channel, vector);
     pvpBlock.setTxPulseIndex(static_cast<int64_t>(getRandom()), channel, vector);
-    pvpBlock.setRefPhi0(std::pair<int64_t,double>(getRandom(),getRandom()), channel, vector);
+    pvpBlock.setRefPhi0(std::pair<int64_t,double>(111,-234.0), channel, vector);
 }
 
 void setPPPXML(Ppp& ppp)
@@ -172,6 +172,15 @@ void setUpMetadata(Metadata& metadata)
     {
         metadata.referenceGeometry.sarParameters->arpPos = getRandomVector3();
         metadata.referenceGeometry.sarParameters->arpVel = getRandomVector3();
+        metadata.referenceGeometry.sarParameters->sideOfTrack = six::SideOfTrackType::LEFT;
+    }
+    if (metadata.referenceGeometry.txParameters.get())
+    {
+        metadata.referenceGeometry.txParameters->sideOfTrack = six::SideOfTrackType::LEFT;
+    }
+    if (metadata.referenceGeometry.rcvParameters.get())
+    {
+        metadata.referenceGeometry.rcvParameters->sideOfTrack = six::SideOfTrackType::LEFT;
     }
     if (metadata.txSequence.get())
     {

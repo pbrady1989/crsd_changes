@@ -143,10 +143,10 @@ void writeCRSD(const std::string& outPathname,
     writer.writeMetadata(pvpBlock, pppBlock);
     std::cout << "Writing support block..." << std::endl;
     writer.writeSupportData(writeSupportData.data());
-    std::cout << "Writing PVP data..." << std::endl;
-    writer.writePVPData(pvpBlock);
     std::cout << "Writing PPP data..." << std::endl;
     writer.writePPPData(pppBlock);
+    std::cout << "Writing PVP data..." << std::endl;
+    writer.writePVPData(pvpBlock);
     std::cout << "Successfully wrote PPP and PVP data..." << std::endl;
     for (size_t ii = 0; ii < numChannels; ++ii)
     {
@@ -198,14 +198,44 @@ bool checkData(const std::string& pathname,
                   << metadata.data.getNumBytesPPPSet() << std::endl;
         return false;
     }
-    if (metadata.pvp != reader.getMetadata().pvp)
+    if (metadata.global != reader.getMetadata().global)
     {
-        std::cout << "PVP metadata mismatch." << std::endl;
+        std::cout << "Global metadata mismatch." << std::endl;
         return false;
     }
-    if (pvpBlock != reader.getPVPBlock())
+    if (metadata.data != reader.getMetadata().data)
     {
-        std::cout << "PVPBlock mismatch." << std::endl;
+        std::cout << "Data metadata mismatch." << std::endl;
+        return false;
+    }
+    if (metadata.sarInfo != reader.getMetadata().sarInfo)
+    {
+        std::cout << "SAR info metadata mismatch." << std::endl;
+        return false;
+    }
+    if (metadata.productInfo != reader.getMetadata().productInfo)
+    {
+        std::cout << "Product info metadata mismatch." << std::endl;
+        return false;
+    }
+    if (metadata.receiveInfo != reader.getMetadata().receiveInfo)
+    {
+        std::cout << "Receive info metadata mismatch." << std::endl;
+        return false;
+    }
+    if (metadata.transmitInfo != reader.getMetadata().transmitInfo)
+    {
+        std::cout << "Transmit info metadata mismatch." << std::endl;
+        return false;
+    }
+    if (metadata.sceneCoordinates != reader.getMetadata().sceneCoordinates)
+    {
+        std::cout << "Scene coordinates metadata mismatch." << std::endl;
+        return false;
+    }
+    if (metadata.referenceGeometry != reader.getMetadata().referenceGeometry)
+    {
+        std::cout << "Reference geometry metadata mismatch." << std::endl;
         return false;
     }
     if (metadata.ppp != reader.getMetadata().ppp)
@@ -216,8 +246,71 @@ bool checkData(const std::string& pathname,
     if (pppBlock != reader.getPPPBlock())
     {
         std::cout << "PPPBlock mismatch." << std::endl;
+        std::cout << "pppBlock.getFX1(): " << pppBlock.getFX1(0,0) << std::endl;
+        std::cout << "reader.getPPPBlock().getFX1(): " << reader.getPPPBlock().getFX1(0,0) << std::endl;
+        std::cout << "pppBlock.getFX2(): " << pppBlock.getFX2(0,0) << std::endl;
+        std::cout << "reader.getPPPBlock().getFX2(): " << reader.getPPPBlock().getFX2(0,0) << std::endl;
+        std::cout << "pppBlock.getFX1(): " << pppBlock.getFxFreq0(0,0) << std::endl;
+        std::cout << "reader.getPPPBlock().getFX1(): " << reader.getPPPBlock().getFxFreq0(0,0) << std::endl;
+        std::cout << "pppBlock.getFX1(): " << pppBlock.getFxRate(0,0) << std::endl;
+        std::cout << "reader.getPPPBlock().getFX1(): " << reader.getPPPBlock().getFxRate(0,0) << std::endl;
+        std::cout << "pppBlock.getFX1(): " << pppBlock.getFxResponseIndex(0,0) << std::endl;
+        std::cout << "reader.getPPPBlock().getFX1(): " << reader.getPPPBlock().getFxResponseIndex(0,0) << std::endl;
+        std::cout << "pppBlock.getFX1(): " << pppBlock.getNumBytesPPPSet() << std::endl;
+        std::cout << "reader.getPPPBlock().getFX1(): " << reader.getPPPBlock().getNumBytesPPPSet() << std::endl;
+        std::cout << "pppBlock.getFX1(): " << pppBlock.getTxACX(0,0) << std::endl;
+        std::cout << "reader.getPPPBlock().getFX1(): " << reader.getPPPBlock().getTxACX(0,0) << std::endl;
+        std::cout << "pppBlock.getTxRadInt(): " << pppBlock.getTxRadInt(0,0) << std::endl;
+        std::cout << "reader.getPPPBlock().getTxRadInt(): " << reader.getPPPBlock().getTxRadInt(0,0) << std::endl;
+        std::cout << "pppBlock.getFX1(): " << pppBlock.getTxACY(0,0) << std::endl;
+        std::cout << "reader.getPPPBlock().getFX1(): " << reader.getPPPBlock().getTxACY(0,0) << std::endl;
+        std::cout << "pppBlock.getFX1(): " << pppBlock.getTXMT(0,0) << std::endl;
+        std::cout << "reader.getPPPBlock().getFX1(): " << reader.getPPPBlock().getTXMT(0,0) << std::endl;
+        std::cout << "pppBlock.getPhiX0(): " << pppBlock.getPhiX0(0,0).first << std::endl;
+        std::cout << "reader.getPPPBlock().getPhiX0(): " << reader.getPPPBlock().getPhiX0(0,0).first << std::endl;
+        std::cout << "pppBlock.getPhiX0(): " << pppBlock.getPhiX0(0,0).second << std::endl;
+        std::cout << "reader.getPPPBlock().getPhiX0(): " << reader.getPPPBlock().getPhiX0(0,0).second << std::endl;
+        std::cout << "pppBlock.getTxPos(): " << pppBlock.getTxPos(0,0) << std::endl;
+        std::cout << "reader.getPPPBlock().getTxPos(): " << reader.getPPPBlock().getTxPos(0,0) << std::endl;
+        std::cout << "pppBlock.getTxVel(): " << pppBlock.getTxVel(0,0) << std::endl;
+        std::cout << "reader.getPPPBlock().getTxVel(): " << reader.getPPPBlock().getTxVel(0,0) << std::endl;
+        std::cout << "pppBlock.getTxTime(): " << pppBlock.getTxStart(0,0).first << std::endl;
+        std::cout << "reader.getPPPBlock().getTxStart(): " << reader.getPPPBlock().getTxStart(0,0).first << std::endl;
+        std::cout << "pppBlock.getTxTime(): " << pppBlock.getTxStart(0,0).second << std::endl;
+        std::cout << "reader.getPPPBlock().getTxStart(): " << reader.getPPPBlock().getTxStart(0,0).second << std::endl;
+
         return false;
     }
+    if (metadata.pvp != reader.getMetadata().pvp)
+    {
+        std::cout << "PVP metadata mismatch." << std::endl;
+        return false;
+    }
+    if (pvpBlock != reader.getPVPBlock())
+    {
+        std::cout << "PVPBlock mismatch." << std::endl;
+    
+        std::cout << "pvpBlock.getRefPhi0(): " << pvpBlock.getRefPhi0(0,0).first << std::endl;
+        std::cout << "reader.getPVPBlock().getRefPhi0(): " << reader.getPVPBlock().getRefPhi0(0,0).first << std::endl;
+        std::cout << "pvpBlock.getRefPhi0(): " << pvpBlock.getRefPhi0(0,0).second << std::endl;
+        std::cout << "reader.getPVPBlock().getRefPhi0(): " << reader.getPVPBlock().getRefPhi0(0,0).second << std::endl;
+        std::cout << "pvpBlock.getRcvStart(): " << pvpBlock.getRcvStart(0,0).first << std::endl;
+        std::cout << "reader.getPVPBlock().getRcvStart(): " << reader.getPVPBlock().getRcvStart(0,0).first << std::endl;
+        std::cout << "pvpBlock.getRcvStart(): " << pvpBlock.getRcvStart(0,0).second << std::endl;
+        std::cout << "reader.getPVPBlock().getRcvStart(): " << reader.getPVPBlock().getRcvStart(0,0).second << std::endl;
+
+        std::cout << "pvpBlock.getRefPhi0(): " << pvpBlock.getRefPhi0(0,1).first << std::endl;
+        std::cout << "reader.getPVPBlock().getRefPhi0(): " << reader.getPVPBlock().getRefPhi0(0,1).first << std::endl;
+        std::cout << "pvpBlock.getRefPhi0(): " << pvpBlock.getRefPhi0(0,1).second << std::endl;
+        std::cout << "reader.getPVPBlock().getRefPhi0(): " << reader.getPVPBlock().getRefPhi0(0,1).second << std::endl;
+        std::cout << "pvpBlock.getRcvStart(): " << pvpBlock.getRcvStart(0,1).first << std::endl;
+        std::cout << "reader.getPVPBlock().getRcvStart(): " << reader.getPVPBlock().getRcvStart(0,1).first << std::endl;
+        std::cout << "pvpBlock.getRcvStart(): " << pvpBlock.getRcvStart(0,1).second << std::endl;
+        std::cout << "reader.getPVPBlock().getRcvStart(): " << reader.getPVPBlock().getRcvStart(0,1).second << std::endl;
+
+        return false;
+    }
+    
     return true;
 }
 
@@ -231,8 +324,7 @@ bool runTest(bool /*scale*/,
              const types::RowCol<size_t> dims)
 {
     io::TempFile tempfile;
-    const size_t numThreads = 1;//std::thread::hardware_concurrency();
-    std::cout << "Running test with " << numThreads << " threads." << std::endl;
+    const size_t numThreads = std::thread::hardware_concurrency();
     setSupport(meta.data);
     writeCRSD("./output.crsd", numThreads, dims, writeData, writeSupportData, meta, pvpBlock, pppBlock);
     return checkData("./output.crsd", numThreads, meta, pvpBlock, pppBlock);

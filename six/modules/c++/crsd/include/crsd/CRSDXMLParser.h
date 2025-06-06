@@ -101,7 +101,7 @@ private:
     XMLElem toXML(const CollectionInformation& obj, XMLElem parent);
     XMLElem toXML(const Global& obj, XMLElem parent);
     XMLElem toXML(const SARInfo& obj, XMLElem parent);
-    XMLElem toXML(const TransmitInfo& obj, XMLElem parent);
+    XMLElem toXML(const TransmitInfo& obj, XMLElem parent, std::string type);
     XMLElem toXML(const SceneCoordinates& obj, XMLElem parent);
     XMLElem toXML(const Data& obj, XMLElem parent);
     XMLElem toXML(const Channel& obj, XMLElem parent);

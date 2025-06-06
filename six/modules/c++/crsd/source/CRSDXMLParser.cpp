@@ -58,82 +58,99 @@ CRSDXMLParser::CRSDXMLParser(
 std::unique_ptr<xml::lite::Document> CRSDXMLParser::toXML(
         const Metadata& metadata)
 {
-    
+    const bool DEBUG = false;
     std::unique_ptr<xml::lite::Document> doc(new xml::lite::Document());
 
     XMLElem root = newElement("CRSD");
     doc->setRootElement(root);
 
-    std::cout << "Converting global to XML..." << std::endl;
+    if (DEBUG)
+        std::cout << "Converting global to XML..." << std::endl;
     toXML(metadata.global, root);    
 
-    std::cout << "Converting scene to XML..." << std::endl;
+    if (DEBUG)
+        std::cout << "Converting scene to XML..." << std::endl;
     toXML(metadata.sceneCoordinates, root);    
 
-    std::cout << "Converting data to XML..." << std::endl;
+    if (DEBUG)
+        std::cout << "Converting data to XML..." << std::endl;
     toXML(metadata.data, root);    
 
-    std::cout << "Converting productInfo to XML..." << std::endl;
+    if (DEBUG)
+        std::cout << "Converting productInfo to XML..." << std::endl;
     toXML(metadata.productInfo, root);    
 
-    std::cout << "Converting support to XML..." << std::endl;
+    if (DEBUG)
+        std::cout << "Converting support to XML..." << std::endl;
     toXML(metadata.supportArray, root);    
 
-    std::cout << "Converting refGeo to XML..." << std::endl;
+    if (DEBUG)
+        std::cout << "Converting refGeo to XML..." << std::endl;
     toXML(metadata.referenceGeometry, root);    
 
-    std::cout << "Converting antenna to XML..." << std::endl;
+    if (DEBUG)
+        std::cout << "Converting antenna to XML..." << std::endl;
     toXML(metadata.antenna,root);    
 
     if (metadata.dwell.get())
     {
-        std::cout << "Converting dwell to XML..." << std::endl;
+        if (DEBUG)
+            std::cout << "Converting dwell to XML..." << std::endl;
         toXML(*(metadata.dwell), root);
     }
     if (metadata.pvp.get())
     {
-        std::cout << "Converting pvp to XML..." << std::endl;
+        if (DEBUG)
+            std::cout << "Converting pvp to XML..." << std::endl;
         toXML(*(metadata.pvp), root);
     }
     if (metadata.ppp.get())
     {
-        std::cout << "Converting ppp to XML..." << std::endl;
+        if (DEBUG)
+            std::cout << "Converting ppp to XML..." << std::endl;
         toXML(*(metadata.ppp), root);
     }
     if (metadata.sarInfo.get())
     {
-        std::cout << "Converting sarInfo to XML..." << std::endl;
+        if (DEBUG)
+            std::cout << "Converting sarInfo to XML..." << std::endl;
         toXML(*(metadata.sarInfo), root);
     }
     if (metadata.transmitInfo.get())
     {
-        std::cout << "Converting transmitInfo to XML..." << std::endl;
-        toXML(*(metadata.transmitInfo), root);
+        if (DEBUG)
+            std::cout << "Converting transmitInfo to XML..." << std::endl;
+        toXML(*(metadata.transmitInfo), root, "TransmitInfo");
     }
     if (metadata.receiveInfo.get())
     {
-        std::cout << "Converting receiveInfo to XML..." << std::endl;
-        toXML(*(metadata.receiveInfo), root);
+        if (DEBUG)
+            std::cout << "Converting receiveInfo to XML..." << std::endl;
+        toXML(*(metadata.receiveInfo), root, "ReceiveInfo");
     }
     if (metadata.txSequence.get())
     {
-        std::cout << "Converting txSequence to XML..." << std::endl;
+        if (DEBUG)
+            std::cout << "Converting txSequence to XML..." << std::endl;
         toXML(*(metadata.txSequence), root);
     }
     if (metadata.errorParameters.get())
     {
-        std::cout << "Converting errorParams to XML..." << std::endl;
+        if (DEBUG)
+            std::cout << "Converting errorParams to XML..." << std::endl;
         toXML(*(metadata.errorParameters), root);
     }
     for (const auto& geoInfo : metadata.geoInfo)
     {
-        std::cout << "Converting geoInfo to XML..." << std::endl;
+        if (DEBUG)
+            std::cout << "Converting geoInfo to XML..." << std::endl;
         toXML(geoInfo, root);
     }
     //set the XMLNS
     root->setNamespacePrefix("", getDefaultURI());
 
-    std::cout << "Done converting to XML..." << std::endl;
+    if (DEBUG)
+        std::cout << "Done converting to XML..." << std::endl;
     
     return doc;
 }
@@ -641,7 +658,7 @@ XMLElem CRSDXMLParser::toXML(const ReferenceGeometry& refGeo, XMLElem parent)
         createDouble("DwellTime", refGeo.sarParameters->dwellTime, sarXML);
         createDouble("ReferenceTime", refGeo.sarParameters->referenceTime, sarXML);
         mCommon.createVector3D("ARPPos", refGeo.sarParameters->arpPos, sarXML);
-        mCommon.createVector3D("ARPVel", refGeo.sarParameters->arpPos, sarXML);
+        mCommon.createVector3D("ARPVel", refGeo.sarParameters->arpVel, sarXML);
         createDouble("BistaticAngle", refGeo.sarParameters->bistaticAngle, sarXML);
         createDouble("BistaticAngleRate", refGeo.sarParameters->bistaticAngleRate, sarXML);
         const auto side = refGeo.sarParameters->sideOfTrack.toString();
@@ -869,9 +886,13 @@ XMLElem CRSDXMLParser::toXML(const SARInfo& sarInfo, XMLElem parent)
     return sarInfoXML;
 }
 
-XMLElem CRSDXMLParser::toXML(const TransmitInfo& transmitInfo, XMLElem parent)
+XMLElem CRSDXMLParser::toXML(const TransmitInfo& transmitInfo, XMLElem parent, std::string type)
 {
-    XMLElem transmitInfoXML = newElement("TransmitInfo", parent);
+    if ( (type != "TransmitInfo") && (type != "ReceiveInfo"))
+    {
+        throw std::invalid_argument("Invalid type for TransmitInfo/ReceiveInfo XML element: " + type);
+    }
+    XMLElem transmitInfoXML = newElement(type, parent);
     createString("SensorName", transmitInfo.sensorName, transmitInfoXML);
     createString("EventName", transmitInfo.eventName, transmitInfoXML);
     mCommon.addParameters("Parameter", getDefaultURI(), transmitInfo.parameter, transmitInfoXML);
@@ -922,6 +943,8 @@ std::unique_ptr<Metadata> CRSDXMLParser::fromXML(
         const xml::lite::Document* doc)
 {
     
+    const bool DEBUG = false;
+
     std::unique_ptr<Metadata> crsd(new Metadata());
 
     const auto root = doc->getRootElement();
@@ -952,73 +975,88 @@ std::unique_ptr<Metadata> CRSDXMLParser::fromXML(
     crsd->geoInfo.resize(geoInfoXMLVec.size());
 
     // Parse XML for each section (required sections here)
-    std::cout << "Reading in ProductInfo" << std::endl;
+    if (DEBUG)
+        std::cout << "Reading in ProductInfo" << std::endl;
     fromXML(productInfoXML, crsd->productInfo);
-    std::cout << "Reading in Global" << std::endl;
+    if (DEBUG)
+        std::cout << "Reading in Global" << std::endl;
     fromXML(globalXML, crsd->global);
-    std::cout << "Reading in SceneCoordinates" << std::endl;
+    if (DEBUG)
+        std::cout << "Reading in SceneCoordinates" << std::endl;
     fromXML(sceneCoordsXML, crsd->sceneCoordinates);
-    std::cout << "Reading in Data" << std::endl;
+    if (DEBUG)
+        std::cout << "Reading in Data" << std::endl;
     fromXML(dataXML, crsd->data);
-    std::cout << "Reading in ReferenceGeometry" << std::endl;
+    if (DEBUG)
+        std::cout << "Reading in ReferenceGeometry" << std::endl;
     fromXML(refGeoXML, crsd->referenceGeometry);
-    std::cout << "Reading in SupportArray" << std::endl;
+    if (DEBUG)
+        std::cout << "Reading in SupportArray" << std::endl;
     fromXML(supportArrayXML, crsd->supportArray);
-    std::cout << "Reading in Antenna" << std::endl;
+    if (DEBUG)
+        std::cout << "Reading in Antenna" << std::endl;
     fromXML(antennaXML, crsd->antenna);
     
     if(pvpXML)
     {
-        std::cout << "Reading in PVP" << std::endl;
+        if (DEBUG)
+            std::cout << "Reading in PVP" << std::endl;
         crsd->pvp.reset(new Pvp());
         fromXML(pvpXML, *(crsd->pvp));
         
     }
     if(pppXML)
     {
-        std::cout << "Reading in PPP" << std::endl;
+        if (DEBUG)
+            std::cout << "Reading in PPP" << std::endl;
         crsd->ppp.reset(new Ppp());
         fromXML(pppXML, *(crsd->ppp));
         
     }
     if(dwellXML)
     {
-        std::cout << "Reading in Dwell" << std::endl;
+        if (DEBUG)
+            std::cout << "Reading in Dwell" << std::endl;
         crsd->dwell.reset(new Dwell());
         fromXML(dwellXML, *(crsd->dwell));
         
     }
     if(channelXML)
     {
-        std::cout << "Reading in Channel" << std::endl;
+        if (DEBUG)
+            std::cout << "Reading in Channel" << std::endl;
         crsd->channel.reset(new Channel());
         fromXML(channelXML, *(crsd->channel));
         
     }
     if(txSequenceXML)
     {
-        std::cout << "Reading in TxSequence" << std::endl;
+        if (DEBUG)
+            std::cout << "Reading in TxSequence" << std::endl;
         crsd->txSequence.reset(new TxSequence());
         fromXML(txSequenceXML, *(crsd->txSequence));
         
     }
     if(receiveInfoXML)
     {
-        std::cout << "Reading in ReceiveInfo" << std::endl;
+        if (DEBUG)
+            std::cout << "Reading in ReceiveInfo" << std::endl;
         crsd->receiveInfo.reset(new TransmitInfo());
         fromXML(receiveInfoXML, *(crsd->receiveInfo));
         
     }
     if(transmitInfoXML)
     {
-        std::cout << "Reading in TransmitInfo" << std::endl;
+        if (DEBUG)
+            std::cout << "Reading in TransmitInfo" << std::endl;
         crsd->transmitInfo.reset(new TransmitInfo());
         fromXML(transmitInfoXML, *(crsd->transmitInfo));
         
     }
     if(sarInfoXML)
     {
-        std::cout << "Reading in SARInfo" << std::endl;
+        if (DEBUG)
+            std::cout << "Reading in SARInfo" << std::endl;
         crsd->sarInfo.reset(new SARInfo());
         fromXML(sarInfoXML, *(crsd->sarInfo));
         

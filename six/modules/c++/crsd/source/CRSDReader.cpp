@@ -59,9 +59,11 @@ void CRSDReader::initialize(std::shared_ptr<io::SeekableInputStream> inStream,
                             std::shared_ptr<logging::Logger> logger,
                             const std::vector<std::string>& schemaPaths_)
 {
+    std::cout << "Reading in file header..." << std::endl;
     mFileHeader.read(*inStream);
 
     // Read in the XML string
+    std::cout << "Reading in XML block..." << std::endl;
     inStream->seek(mFileHeader.getXMLBlockByteOffset(), io::Seekable::START);
 
     six::MinidomParser xmlParser;
@@ -78,17 +80,21 @@ void CRSDReader::initialize(std::shared_ptr<io::SeekableInputStream> inStream,
         [](const std::string& s) { return s; });
     mMetadata = CRSDXMLControl(logger.get()).fromXML(xmlParser.getDocument(), schemaPaths);
 
+    std::cout << "Reading in support block..." << std::endl;
     mSupportBlock = std::make_unique<SupportBlock>(inStream, mMetadata.data, mFileHeader);
 
     // Load the PVPBlock into memory
+    std::cout << "reading in PVP block..." << std::endl;
     mPVPBlock = PVPBlock(mMetadata);
     mPVPBlock.load(*inStream, mFileHeader, numThreads);
 
     // Load the PPPBlock into memory
+    std::cout << "reading in PPP block..." << std::endl;
     mPPPBlock = PPPBlock(mMetadata);
     mPPPBlock.load(*inStream, mFileHeader, numThreads);
 
     // Setup for wideband reading
+    std::cout << "reading in wideband block..." << std::endl;
     mWideband = std::make_unique<Wideband>(inStream, mMetadata,
         mFileHeader.getSignalBlockByteOffset(), mFileHeader.getSignalBlockSize());
 }

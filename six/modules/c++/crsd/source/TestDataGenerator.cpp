@@ -150,6 +150,9 @@ void setPulseParameters(size_t txSequence,
 void setUpMetadata(Metadata& metadata)
 {
     // // We must set pvpNumBytes
+    if (metadata.sarInfo.get())
+        metadata.sarInfo->collectType = CollectType::MONOSTATIC;
+
     // // Set default pvp size based on setPVP function
     metadata.data.receiveParameters->numBytesPVP = (1*9 + 2*3 + 3*4) * 8;
     metadata.data.transmitParameters->numBytesPPP = (1*8 + 2*3 + 3*4) * 8;

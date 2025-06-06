@@ -173,12 +173,22 @@ void Data::setSupportArray(const std::string& id, size_t numRows,
         ostr << "Identifier " << id << " is not unique";
         throw except::Exception(ostr.str());
     }
-
     if (mOffsetMap.count(offset))
     {
-        std::ostringstream ostr;
-        ostr << "Offset " << offset << " is not unique";
-        throw except::Exception(ostr.str());
+        // Default for support array map is to be populated with an empty first
+        // entry, so if offset is 0, it is not an error, just replace it with 
+        // the new entry
+        if (offset == 0)
+        {
+            mOffsetMap.erase(offset);
+            supportArrayMap.erase("");
+        }
+        else
+        {
+            std::ostringstream ostr;
+            ostr << "Offset " << offset << " is not unique";
+            throw except::Exception(ostr.str());
+        }
     }
 
     // Add to ordered map

@@ -138,7 +138,7 @@ size_t Pvp::getReqSetSize() const
     size_t res = rcvStart.getSize() + rcvPos.getSize() + rcvVel.getSize() +
             frcv1.getSize() + frcv2.getSize() + refPhi0.getSize() + refFreq.getSize() +
             dfiC0.getSize() + ficRate.getSize() + rcvACX.getSize() + rcvACY.getSize() +
-            rcvEB.getSize() + signal.getSize();
+            rcvEB.getSize() + signal.getSize() + ampSF.getSize() + dgrgc.getSize();
     for (auto it = addedPVP.begin(); it != addedPVP.end(); ++it)
     {
         res += it->second.getSize();

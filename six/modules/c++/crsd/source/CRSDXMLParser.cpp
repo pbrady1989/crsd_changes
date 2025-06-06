@@ -309,7 +309,7 @@ XMLElem CRSDXMLParser::toXML(const Data& data, XMLElem parent)
     }
     if (data.transmitParameters.get())
     {
-        XMLElem transmitXML = newElement("Transmit", supportXML);
+        XMLElem transmitXML = newElement("Transmit", dataXML);
         createString("Identifier", data.transmitParameters->getIdentifier(), transmitXML);
         createInt("NumBytesPPP", data.transmitParameters->getNumBytesPPP(), transmitXML);
         createInt("NumTxSequences", data.transmitParameters->getNumTxSequences(), transmitXML);
@@ -324,7 +324,7 @@ XMLElem CRSDXMLParser::toXML(const Data& data, XMLElem parent)
 
     if (data.receiveParameters.get())
     {
-        XMLElem rcvXML = newElement("Receive", supportXML);
+        XMLElem rcvXML = newElement("Receive", dataXML);
         createString("SignalArrayFormat", data.receiveParameters->getSignalArrayFormat(), rcvXML);
         createInt("NumBytesPVP", data.receiveParameters->getNumBytesPVP(), rcvXML);
         createInt("NumCRSDChannels", data.receiveParameters->getNumCRSDChannels(), rcvXML);
@@ -332,7 +332,7 @@ XMLElem CRSDXMLParser::toXML(const Data& data, XMLElem parent)
         {
             XMLElem channelXML = newElement("Channel", rcvXML);
             createString("Identifier", data.receiveParameters->channels[ii].identifier, channelXML);
-            createInt("NumPulses", data.receiveParameters->channels[ii].getNumVectors(), channelXML);
+            createInt("NumVectors", data.receiveParameters->channels[ii].getNumVectors(), channelXML);
             createInt("NumSamples", data.receiveParameters->channels[ii].getNumSamples(), channelXML);
             createInt("SignalArrayByteOffset", data.receiveParameters->channels[ii].getSignalArrayByteOffset(), channelXML);
             createInt("PVPArrayByteOffset", data.receiveParameters->channels[ii].pvpArrayByteOffset, channelXML);
@@ -952,72 +952,73 @@ std::unique_ptr<Metadata> CRSDXMLParser::fromXML(
     crsd->geoInfo.resize(geoInfoXMLVec.size());
 
     // Parse XML for each section (required sections here)
+    std::cout << "Reading in ProductInfo" << std::endl;
     fromXML(productInfoXML, crsd->productInfo);
-    
+    std::cout << "Reading in Global" << std::endl;
     fromXML(globalXML, crsd->global);
-    
+    std::cout << "Reading in SceneCoordinates" << std::endl;
     fromXML(sceneCoordsXML, crsd->sceneCoordinates);
-    
+    std::cout << "Reading in Data" << std::endl;
     fromXML(dataXML, crsd->data);
-    
+    std::cout << "Reading in ReferenceGeometry" << std::endl;
     fromXML(refGeoXML, crsd->referenceGeometry);
-    
+    std::cout << "Reading in SupportArray" << std::endl;
     fromXML(supportArrayXML, crsd->supportArray);
-    
+    std::cout << "Reading in Antenna" << std::endl;
     fromXML(antennaXML, crsd->antenna);
     
     if(pvpXML)
     {
-        
+        std::cout << "Reading in PVP" << std::endl;
         crsd->pvp.reset(new Pvp());
         fromXML(pvpXML, *(crsd->pvp));
         
     }
     if(pppXML)
     {
-        
+        std::cout << "Reading in PPP" << std::endl;
         crsd->ppp.reset(new Ppp());
         fromXML(pppXML, *(crsd->ppp));
         
     }
     if(dwellXML)
     {
-        
+        std::cout << "Reading in Dwell" << std::endl;
         crsd->dwell.reset(new Dwell());
         fromXML(dwellXML, *(crsd->dwell));
         
     }
     if(channelXML)
     {
-        
+        std::cout << "Reading in Channel" << std::endl;
         crsd->channel.reset(new Channel());
         fromXML(channelXML, *(crsd->channel));
         
     }
     if(txSequenceXML)
     {
-        
+        std::cout << "Reading in TxSequence" << std::endl;
         crsd->txSequence.reset(new TxSequence());
         fromXML(txSequenceXML, *(crsd->txSequence));
         
     }
     if(receiveInfoXML)
     {
-        
+        std::cout << "Reading in ReceiveInfo" << std::endl;
         crsd->receiveInfo.reset(new TransmitInfo());
         fromXML(receiveInfoXML, *(crsd->receiveInfo));
         
     }
     if(transmitInfoXML)
     {
-        
+        std::cout << "Reading in TransmitInfo" << std::endl;
         crsd->transmitInfo.reset(new TransmitInfo());
         fromXML(transmitInfoXML, *(crsd->transmitInfo));
         
     }
     if(sarInfoXML)
     {
-        
+        std::cout << "Reading in SARInfo" << std::endl;
         crsd->sarInfo.reset(new SARInfo());
         fromXML(sarInfoXML, *(crsd->sarInfo));
         
@@ -1336,7 +1337,10 @@ void CRSDXMLParser::fromXML(const xml::lite::Element* sceneCoordsXML,
 void CRSDXMLParser::fromXML(const xml::lite::Element* dataXML, Data& data)
 {
     const xml::lite::Element* supportXML = getFirstAndOnly(dataXML, "Support");
-
+    if (!supportXML)
+    {
+        throw except::Exception(Ctxt("Data element must have a Support element"));
+    }
     // Support Arrays
     std::vector<XMLElem> supportsXML;
     supportXML->getElementsByTagName("SupportArray", supportsXML);

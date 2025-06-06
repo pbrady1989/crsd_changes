@@ -327,6 +327,7 @@ bool runTest(bool /*scale*/,
     const size_t numThreads = std::thread::hardware_concurrency();
     setSupport(meta.data);
     writeCRSD("./output.crsd", numThreads, dims, writeData, writeSupportData, meta, pvpBlock, pppBlock);
+    std::cout << "Reading CRSD data from file and checking against stored data..." << std::endl;
     return checkData("./output.crsd", numThreads, meta, pvpBlock, pppBlock);
 }
 

@@ -66,6 +66,44 @@ void setSupport(crsd::Data& d)
     d.setSupportArray("AddedSupport", NUM_ROWS, NUM_COLS, sizeof(double), 2*NUM_ROWS*NUM_COLS*sizeof(double));
 }
 
+std::vector<std::byte> checkSupportData(
+        const std::string& pathname,
+        size_t /*size*/,
+        size_t numThreads)
+{
+
+    crsd::CRSDReader reader(pathname, numThreads);
+    const crsd::SupportBlock& supportBlock = reader.getSupportBlock();
+    std::unique_ptr<std::byte[]> readPtr;
+    supportBlock.readAll(numThreads, readPtr);
+    std::vector<std::byte> readData(readPtr.get(), readPtr.get() + reader.getMetadata().data.getAllSupportSize());
+    return readData;
+}
+
+template<typename T>
+bool compareVectors(const std::vector<std::byte>& readData,
+                    const T* writeData,
+                    size_t writeDataSize)
+{
+    if (writeDataSize * sizeof(T) != readData.size())
+    {
+        std::cerr << "Size mismatch. Writedata size: "<< writeDataSize * sizeof(T)
+                  << "ReadData size: " << readData.size() << "\n";
+        return false;
+    }
+    const std::byte* ptr = reinterpret_cast<const std::byte*>(writeData);
+    for (size_t ii = 0; ii < readData.size(); ++ii, ++ptr)
+    {
+        if (*ptr != readData[ii])
+        {
+            std::cerr << "Value mismatch at index " << ii << std::endl;
+            std::cerr << "readData: " << static_cast<char>(readData[ii]) << " " << "writeData: " << static_cast<char>(*ptr) << "\n";
+            return false;
+        }
+    }
+    return true;
+}
+
 template <typename T>
 std::vector<std::complex<T>> generateComplexData(size_t length)
 {
@@ -155,14 +193,16 @@ void writeCRSD(const std::string& outPathname,
     }
 }
 
+template <typename T>
 bool checkData(const std::string& pathname,
                size_t numThreads,
                crsd::Metadata& metadata,
                crsd::PVPBlock& pvpBlock,
-               crsd::PPPBlock& pppBlock)
+               crsd::PPPBlock& pppBlock,
+               const std::vector<std::complex<T>>& writeData,
+               const std::vector<double>& writeSupportData)
 {
     crsd::CRSDReader reader(pathname, numThreads);
-
     if (reader.getMetadata().data.getNumChannels() != metadata.data.getNumChannels())
     {
         std::cout << "Number of channels mismatch: "
@@ -286,6 +326,7 @@ bool checkData(const std::string& pathname,
         std::cout << "PVP metadata mismatch." << std::endl;
         return false;
     }
+
     if (pvpBlock != reader.getPVPBlock())
     {
         std::cout << "PVPBlock mismatch." << std::endl;
@@ -310,6 +351,21 @@ bool checkData(const std::string& pathname,
 
         return false;
     }
+
+    const std::vector<std::byte> readData =
+            checkSupportData(pathname, NUM_SUPPORT*NUM_ROWS*NUM_COLS*sizeof(T), numThreads);
+
+    if (!compareVectors(readData, writeSupportData.data(), writeSupportData.size()))
+    {
+        std::cout << "Data mismatch in support block." << std::endl;
+        return false;
+    }
+
+    // if (reader.getSupportBlock() != writeSupportData)
+    // {
+    //     std::cout << "Support block data mismatch." << std::endl;
+    //     return false;
+    // }
     
     return true;
 }
@@ -328,7 +384,7 @@ bool runTest(bool /*scale*/,
     setSupport(meta.data);
     writeCRSD("./output.crsd", numThreads, dims, writeData, writeSupportData, meta, pvpBlock, pppBlock);
     std::cout << "Reading CRSD data from file and checking against stored data..." << std::endl;
-    return checkData("./output.crsd", numThreads, meta, pvpBlock, pppBlock);
+    return checkData("./output.crsd", numThreads, meta, pvpBlock, pppBlock, writeData, writeSupportData);
 }
 
 TEST_CASE(testCRSDWriteReadSimple)
@@ -356,7 +412,7 @@ TEST_CASE(testCRSDWriteReadSimple)
                 pppBlock,
                 addedParams2);
     const std::vector<double> writeSupportData =
-            generateSupportData<double>(NUM_SUPPORT*dims.area());
+            generateSupportData<double>(NUM_SUPPORT*NUM_ROWS*NUM_COLS);
     TEST_ASSERT_TRUE(runTest(scale, writeData, writeSupportData, meta, pvpBlock, pppBlock, dims));
 }
 

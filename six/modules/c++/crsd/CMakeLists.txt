@@ -47,7 +47,8 @@ coda_add_tests(
         test_dwell.cpp
         test_reference_geometry.cpp
         test_pvp_block.cpp
-        test_pvp.cpp)
+        test_pvp.cpp
+        test_read_wideband.cpp)
 
 # coda_add_tests(
 #     MODULE_NAME ${MODULE_NAME}

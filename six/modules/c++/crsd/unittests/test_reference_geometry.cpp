@@ -1,10 +1,10 @@
 /* =========================================================================
- * This file is part of cphd-c++
+ * This file is part of crsd-c++
  * =========================================================================
  *
  * (C) Copyright 2004 - 2019, MDA Information Systems LLC
  *
- * cphd-c++ is free software; you can redistribute it and/or modify
+ * crsd-c++ is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
@@ -19,41 +19,41 @@
  * see <http://www.gnu.org/licenses/>.
  *
  */
-#include <cphd/ReferenceGeometry.h>
+#include <crsd/ReferenceGeometry.h>
 
 #include <iostream>
 #include <memory>
 
 #include <xml/lite/MinidomParser.h>
 #include <six/Init.h>
-#include <cphd/Enums.h>
-#include <cphd/Types.h>
+#include <crsd/Enums.h>
+#include <crsd/Types.h>
 
 #include "TestCase.h"
 
 TEST_CASE(testEquality)
 {
-    cphd::ReferenceGeometry refGeo;
-    cphd::ReferenceGeometry refGeoOther;
-    refGeo.monostatic.reset(new cphd::Monostatic());
-    refGeoOther.monostatic.reset(new cphd::Monostatic());
+    crsd::ReferenceGeometry refGeo;
+    crsd::ReferenceGeometry refGeoOther;
+    refGeo.sarParameters.reset(new crsd::SARImage());
+    refGeoOther.sarParameters.reset(new crsd::SARImage());
 
     // Fill Values
-    refGeo.monostatic->azimuthAngle = 1.0;
-    refGeo.monostatic->grazeAngle = 1.0;
-    refGeo.monostatic->twistAngle = 1.0;
-    refGeo.monostatic->slopeAngle = 1.0;
-    refGeo.monostatic->layoverAngle = 1.0;
-    refGeo.monostatic->sideOfTrack = six::SideOfTrackType::LEFT;
-    refGeo.monostatic->slantRange = 20.0;
+    refGeo.sarParameters->azimuthAngle = 1.0;
+    refGeo.sarParameters->grazeAngle = 1.0;
+    refGeo.sarParameters->twistAngle = 1.0;
+    refGeo.sarParameters->slopeAngle = 1.0;
+    refGeo.sarParameters->layoverAngle = 1.0;
+    refGeo.sarParameters->sideOfTrack = six::SideOfTrackType::LEFT;
+    refGeo.sarParameters->slantRange = 20.0;
 
-    refGeoOther.monostatic->azimuthAngle = 2.0;
-    refGeoOther.monostatic->grazeAngle = 2.0;
-    refGeoOther.monostatic->twistAngle = 2.0;
-    refGeoOther.monostatic->slopeAngle = 2.0;
-    refGeoOther.monostatic->layoverAngle = 2.0;
-    refGeoOther.monostatic->sideOfTrack = six::SideOfTrackType::LEFT;
-    refGeoOther.monostatic->slantRange = 20.0;
+    refGeoOther.sarParameters->azimuthAngle = 2.0;
+    refGeoOther.sarParameters->grazeAngle = 2.0;
+    refGeoOther.sarParameters->twistAngle = 2.0;
+    refGeoOther.sarParameters->slopeAngle = 2.0;
+    refGeoOther.sarParameters->layoverAngle = 2.0;
+    refGeoOther.sarParameters->sideOfTrack = six::SideOfTrackType::LEFT;
+    refGeoOther.sarParameters->slantRange = 20.0;
 
     TEST_ASSERT_NOT_EQ(refGeo, refGeoOther);
 }

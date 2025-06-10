@@ -1,10 +1,10 @@
 /* =========================================================================
- * This file is part of cphd-c++
+ * This file is part of crsd-c++
  * =========================================================================
  *
  * (C) Copyright 2004 - 2019, MDA Information Systems LLC
  *
- * cphd-c++ is free software; you can redistribute it and/or modify
+ * crsd-c++ is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
@@ -19,20 +19,20 @@
  * see <http://www.gnu.org/licenses/>.
  *
  */
-#include <cphd/Channel.h>
+#include <crsd/Channel.h>
 
 #include <memory>
 
 #include <xml/lite/MinidomParser.h>
 #include <six/Init.h>
-#include <cphd/Enums.h>
-#include <cphd/Types.h>
+#include <crsd/Enums.h>
+#include <crsd/Types.h>
 
 #include "TestCase.h"
 
 TEST_CASE(EmptyChannel)
 {
-    cphd::Channel channel1, channel2;
+    crsd::Channel channel1, channel2;
     channel1.parameters.resize(3);
     channel2.parameters.resize(3);
     TEST_ASSERT_TRUE((channel1.parameters == channel2.parameters));
@@ -41,7 +41,9 @@ TEST_CASE(EmptyChannel)
 
 TEST_CASE(TestPolygonInvalid)
 {
-    cphd::Channel channel;
+    crsd::Channel channel;
+    channel.parameters.resize(1);
+    channel.parameters[0].sarImage.reset(new crsd::ChannelSARImage());
 
     six::Vector2 vertex1, vertex2;
     vertex1[0] = 0;
@@ -49,37 +51,18 @@ TEST_CASE(TestPolygonInvalid)
     vertex2[0] = 5;
     vertex2[1] = 5;
 
-    channel.parameters.resize(1);
-    channel.parameters[0].imageArea.x1y1[0] = 0;
-    channel.parameters[0].imageArea.x1y1[1] = 0;
-    channel.parameters[0].imageArea.x2y2[0] = 10;
-    channel.parameters[0].imageArea.x2y2[1] = 10;
-    channel.parameters[0].imageArea.polygon.push_back(vertex1);
-    channel.parameters[0].imageArea.polygon.push_back(vertex2);
+    channel.parameters[0].sarImage->imageArea.x1y1[0] = 0;
+    channel.parameters[0].sarImage->imageArea.x1y1[1] = 0;
+    channel.parameters[0].sarImage->imageArea.x2y2[0] = 10;
+    channel.parameters[0].sarImage->imageArea.x2y2[1] = 10;
+    channel.parameters[0].sarImage->imageArea.polygon.push_back(vertex1);
+    channel.parameters[0].sarImage->imageArea.polygon.push_back(vertex2);
 
-    TEST_ASSERT_FALSE(channel.parameters[0].imageArea.polygon.size() >= 3);
-}
-
-
-TEST_CASE(TxRcvMultIds)
-{
-    cphd::Channel channel;
-    channel.parameters.resize(2);
-    channel.parameters[0].txRcv.reset(new cphd::ChannelParameter::TxRcv());
-    channel.parameters[0].txRcv->txWFId.push_back("TransmitWaveformParam1");
-    channel.parameters[0].txRcv->txWFId.push_back("TransmitWaveformParam2");
-    channel.parameters[0].txRcv->txWFId.push_back("TransmitWaveformParam3");
-
-    channel.parameters[0].txRcv->rcvId.push_back("ReceiverWaveformParam1");
-    channel.parameters[0].txRcv->rcvId.push_back("ReceiverWaveformParam2");
-
-    TEST_ASSERT_EQ(channel.parameters[0].txRcv->txWFId.size(), static_cast<size_t>(3));
-    TEST_ASSERT_EQ(channel.parameters[0].txRcv->rcvId.size(), static_cast<size_t>(2));
+    TEST_ASSERT_FALSE(channel.parameters[0].sarImage->imageArea.polygon.size() >= 3);
 }
 
 TEST_MAIN(
         TEST_CHECK(EmptyChannel);
         TEST_CHECK(TestPolygonInvalid);
-        TEST_CHECK(TxRcvMultIds);
         )
 

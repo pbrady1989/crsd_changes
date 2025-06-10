@@ -45,7 +45,8 @@ coda_add_tests(
         test_crsd_write_read.cpp
         test_channel.cpp
         test_dwell.cpp
-        test_reference_geometry.cpp)
+        test_reference_geometry.cpp
+        test_pvp_block.cpp)
 
 # coda_add_tests(
 #     MODULE_NAME ${MODULE_NAME}

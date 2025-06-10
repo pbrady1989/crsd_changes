@@ -75,6 +75,15 @@ inline void setData(const std::byte* data_,
 }
 
 inline void setData(const std::byte* data_,
+                    int64_t& dest)
+{
+    const void* pData_ = data_;
+    auto data = static_cast<const unsigned char*>(pData_);
+    setData(data, dest);
+
+}
+
+inline void setData(const std::byte* data_,
                     crsd::Vector3& dest)
 {
     const void* pData_ = data_;
@@ -158,13 +167,16 @@ PVPBlock::PVPSet::PVPSet() :
 
 void PVPBlock::PVPSet::write(const PVPBlock& pvpBlock, const Pvp& p, const sys::byte* input)
 {
-    ::setData(input + p.rcvStart.getByteOffset(), rcvStart.first);
+    double tmpVal;
+    ::setData(input + p.rcvStart.getByteOffset(), tmpVal);
+    rcvStart.first = static_cast<int64_t>(tmpVal);
     ::setData(input + p.rcvStart.getByteOffset() + sizeof(rcvStart.first), rcvStart.second);
     ::setData(input + p.rcvPos.getByteOffset(), rcvPos);
     ::setData(input + p.rcvVel.getByteOffset(), rcvVel);
     ::setData(input + p.frcv1.getByteOffset(), frcv1);
     ::setData(input + p.frcv2.getByteOffset(), frcv2);
-    ::setData(input + p.refPhi0.getByteOffset(), refPhi0.first);
+    ::setData(input + p.refPhi0.getByteOffset(), tmpVal);
+    refPhi0.first = static_cast<int64_t>(tmpVal);
     ::setData(input + p.refPhi0.getByteOffset() + sizeof(refPhi0.first), refPhi0.second);
     ::setData(input + p.refFreq.getByteOffset(), refFreq);
     ::setData(input + p.dfiC0.getByteOffset(), dfiC0);

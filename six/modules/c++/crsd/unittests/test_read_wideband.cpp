@@ -39,7 +39,7 @@ TEST_CASE(testReadCompressedChannel)
     metadata.data.receiveParameters->signalArrayFormat = crsd::SignalArrayFormat::CI2;
     metadata.data.receiveParameters->signalCompression.reset(new crsd::Data::SignalCompression());
     metadata.data.receiveParameters->signalCompression->identifier = "Test Compression";
-    metadata.data.receiveParameters->channels[0].compressedSignalSize = 4;
+    metadata.data.receiveParameters->signalCompression->compressedSignalSize = 4;
 
     crsd::Wideband wideband(input, metadata, 0, 4);
 
@@ -65,8 +65,6 @@ TEST_CASE(testReadUncompressedChannel)
     metadata.data.receiveParameters->channels[0].numSamples = 1;
     metadata.data.receiveParameters->channels[0].numVectors = 4;
     metadata.data.receiveParameters->signalArrayFormat = crsd::SignalArrayFormat::CI2;
-    metadata.data.receiveParameters->channels[0].compressedSignalSize =
-            six::Init::undefined<size_t>();
 
     crsd::Wideband wideband(input, metadata, 0, 4);
 
@@ -159,7 +157,7 @@ TEST_CASE(testCannotDoPartialReadOfCompressedChannel)
     metadata.data.receiveParameters->signalArrayFormat = crsd::SignalArrayFormat::CI2;
     metadata.data.receiveParameters->signalCompression.reset(new crsd::Data::SignalCompression());
     metadata.data.receiveParameters->signalCompression->identifier = "Test Compression";
-    metadata.data.receiveParameters->channels[0].compressedSignalSize = 4;
+    metadata.data.receiveParameters->signalCompression->compressedSignalSize = 4;
 
     crsd::Wideband wideband(input, metadata, 0, 4);
 

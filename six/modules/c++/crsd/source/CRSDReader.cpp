@@ -59,7 +59,7 @@ void CRSDReader::initialize(std::shared_ptr<io::SeekableInputStream> inStream,
                             std::shared_ptr<logging::Logger> logger,
                             const std::vector<std::string>& schemaPaths_)
 {
-    const bool DEBUG = false;
+    const bool DEBUG = true;
     if (DEBUG)
         std::cout << "Reading in file header..." << std::endl;
     

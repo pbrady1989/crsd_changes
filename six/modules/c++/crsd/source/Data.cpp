@@ -110,8 +110,7 @@ Data::Channel::Channel() :
     numVectors(0),
     numSamples(0),
     signalArrayByteOffset(0),
-    pvpArrayByteOffset(0),
-    compressedSignalSize(six::Init::undefined<size_t>())
+    pvpArrayByteOffset(0)
 {
 }
 
@@ -119,18 +118,16 @@ Data::Channel::Channel(size_t vectors, size_t samples) :
     numVectors(vectors),
     numSamples(samples),
     signalArrayByteOffset(0),
-    pvpArrayByteOffset(0),
-    compressedSignalSize(six::Init::undefined<size_t>())
+    pvpArrayByteOffset(0)
 {
 }
 
 Data::Channel::Channel(size_t vectors, size_t samples,
-        size_t signalByteOffset, size_t pvpByteOffset,size_t compressedSize) :
+        size_t signalByteOffset, size_t pvpByteOffset) :
     numVectors(vectors),
     numSamples(samples),
     signalArrayByteOffset(signalByteOffset),
-    pvpArrayByteOffset(pvpByteOffset),
-    compressedSignalSize(compressedSize)
+    pvpArrayByteOffset(pvpByteOffset)
 {
 }
 
@@ -239,7 +236,17 @@ size_t Data::getNumSamples(size_t channel) const
 size_t Data::getCompressedSignalSize(size_t channel) const
 {
     verifyChannelInRange(channel);
-    return receiveParameters->channels[channel].getCompressedSignalSize();
+    if (receiveParameters->signalCompression.get())
+    {
+        return receiveParameters->signalCompression->getCompressedSignalSize();
+    }
+    else
+    {
+        std::ostringstream ostr;
+        ostr << "This case is not compressed, so there is no signal compression size! \n";
+        throw except::Exception(ostr.str());
+    }
+    
 }
 size_t Data::getSignalSize(size_t channel) const
 {
@@ -326,8 +333,7 @@ std::ostream& operator<< (std::ostream& os, const Data::Channel& c)
         << "    NumVectors     : " << c.numVectors << "\n"
         << "    NumSamples     : " << c.numSamples << "\n"
         << "    SignalArrayByteOffset : " << c.signalArrayByteOffset << "\n"
-        << "    PVPArrayByteOffset : " << c.pvpArrayByteOffset << "\n"
-        << "    CompressedSignalSize : " << c.compressedSignalSize << "\n";
+        << "    PVPArrayByteOffset : " << c.pvpArrayByteOffset << "\n";
     return os;
 }
 

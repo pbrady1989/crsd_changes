@@ -943,7 +943,7 @@ std::unique_ptr<Metadata> CRSDXMLParser::fromXML(
         const xml::lite::Document* doc)
 {
     
-    const bool DEBUG = false;
+    const bool DEBUG = true;
 
     std::unique_ptr<Metadata> crsd(new Metadata());
 
@@ -1423,6 +1423,7 @@ void CRSDXMLParser::fromXML(const xml::lite::Element* dataXML, Data& data)
         XMLElem sigCompressXML = getOptional(receiveXML, "SignalCompression");
         if (sigCompressXML)
         {
+            data.receiveParameters->signalCompression.reset(new crsd::Data::SignalCompression());
             parseString(getFirstAndOnly(sigCompressXML, "Identifier"), data.receiveParameters->signalCompression->identifier);
             parseUInt(getFirstAndOnly(sigCompressXML, "CompressedSignalSize"), data.receiveParameters->signalCompression->compressedSignalSize); 
             std::vector<XMLElem> processXML;

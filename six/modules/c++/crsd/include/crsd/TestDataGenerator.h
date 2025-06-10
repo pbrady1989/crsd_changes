@@ -164,7 +164,10 @@ void setUpData(Metadata& metadata,
                const std::vector<T>& writeData)
 {
     const size_t numChannels = 1;
-    metadata.data.receiveParameters.reset(new crsd::Data::Receive());
+    if (!metadata.data.receiveParameters.get())
+    {
+        metadata.data.receiveParameters.reset(new crsd::Data::Receive());
+    }
     for (size_t ii = 0; ii < numChannels; ++ii)
     {
         metadata.data.receiveParameters->channels.push_back(crsd::Data::Channel(dims.row, dims.col));
@@ -182,16 +185,23 @@ void setUpData(Metadata& metadata,
         // If compressed data
         if (metadata.data.isCompressed())
         {
+
+            std::cout << "Using compressed CRSD data..." << std::endl;            
             // SignalArrayFormat doesn't matter for storing
             metadata.data.receiveParameters->signalArrayFormat = crsd::SignalArrayFormat::CF8;
             for (size_t ii = 0; ii < numChannels; ++ii)
             {
-                metadata.data.receiveParameters->channels[ii].compressedSignalSize = dims.area();
+                if (!metadata.data.receiveParameters->signalCompression.get())
+                {
+                    metadata.data.receiveParameters->signalCompression.reset(new crsd::Data::SignalCompression());
+                }
+                metadata.data.receiveParameters->signalCompression->compressedSignalSize = dims.area();
             }
         }
         // Must set the sample type
         else
         {
+            std::cout << "Using uncompressed CRSD data..." << std::endl;  
             metadata.data.receiveParameters->signalArrayFormat = getSignalArrayFormat(sizeof(writeData[0]));
         }
     }

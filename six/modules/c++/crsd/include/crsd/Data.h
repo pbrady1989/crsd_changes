@@ -373,8 +373,7 @@ struct Data
          *  \param compressedSize (Optional) Size of the compressed signal block
          */
         Channel(size_t vectors, size_t samples,
-                size_t signalByteOffset, size_t pvpByteOffset,
-                size_t compressedSize = six::Init::undefined<size_t>());
+                size_t signalByteOffset, size_t pvpByteOffset);
 
         //! Equality operators
         bool operator==(const Channel& other) const
@@ -383,8 +382,7 @@ struct Data
                    numVectors == other.numVectors &&
                    numSamples == other.numSamples &&
                    signalArrayByteOffset == other.signalArrayByteOffset &&
-                   pvpArrayByteOffset == other.pvpArrayByteOffset &&
-                   compressedSignalSize == other.compressedSignalSize;
+                   pvpArrayByteOffset == other.pvpArrayByteOffset;
         }
         bool operator!=(const Channel& other) const
         {
@@ -403,10 +401,6 @@ struct Data
         size_t getSignalArrayByteOffset() const
         {
             return signalArrayByteOffset;
-        }
-        size_t getCompressedSignalSize() const
-        {
-            return compressedSignalSize;
         }
 
         //! String that uniquely identifies the CPHD channel
@@ -427,10 +421,6 @@ struct Data
         //! (in bytes) to the start of the PVP Array for the
         //! channel.
         size_t pvpArrayByteOffset;
-
-        //! (Optional) Size (in bytes) of the compressed signal array
-        //! byte sequence for the data channel.
-        size_t compressedSignalSize; // Optional
     };
 
     /*
@@ -475,8 +465,7 @@ struct Data
          *  \param compressedSize (Optional) Size of the compressed signal block
          */
         Receive(size_t vectors, size_t samples,
-                size_t signalByteOffset, size_t pvpByteOffset,
-                size_t compressedSize = six::Init::undefined<size_t>());
+                size_t signalByteOffset, size_t pvpByteOffset);
 
         //! Equality operators
         bool operator==(const Receive& other) const

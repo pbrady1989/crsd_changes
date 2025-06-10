@@ -1,10 +1,10 @@
 /* =========================================================================
- * This file is part of cphd-c++
+ * This file is part of crsd-c++
  * =========================================================================
  *
  * (C) Copyright 2004 - 2019, MDA Information Systems LLC
  *
- * cphd-c++ is free software; you can redistribute it and/or modify
+ * crsd-c++ is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
@@ -31,14 +31,14 @@
 #include <nitf/coda-oss.hpp>
 #include <types/RowCol.h>
 #include <io/TempFile.h>
-#include <cphd/CPHDWriter.h>
-#include <cphd/CPHDReader.h>
-#include <cphd/Wideband.h>
-#include <cphd/Metadata.h>
-#include <cphd/PVP.h>
-#include <cphd/PVPBlock.h>
-#include <cphd/ReferenceGeometry.h>
-#include <cphd/TestDataGenerator.h>
+#include <crsd/CRSDWriter.h>
+#include <crsd/CRSDReader.h>
+#include <crsd/Wideband.h>
+#include <crsd/Metadata.h>
+#include <crsd/PVP.h>
+#include <crsd/PVPBlock.h>
+#include <crsd/ReferenceGeometry.h>
+#include <crsd/TestDataGenerator.h>
 #include <TestCase.h>
 
 /*!
@@ -74,11 +74,12 @@ inline std::vector<double> generateScaleFactors(size_t length, bool scale)
 }
 
 template<typename T>
-void writeCPHD(const std::string& outPathname, size_t /*numThreads*/,
+void writeCRSD(const std::string& outPathname, size_t /*numThreads*/,
         const types::RowCol<size_t> dims,
         const std::vector<std::complex<T> >& writeData,
-        cphd::Metadata& metadata,
-        cphd::PVPBlock& pvpBlock)
+        crsd::Metadata& metadata,
+        crsd::PVPBlock& pvpBlock,
+        crsd::PPPBlock& pppBlock)
 {
     const size_t numChannels = 1;
     const std::vector<size_t> numVectors(numChannels, dims.row);
@@ -87,16 +88,17 @@ void writeCPHD(const std::string& outPathname, size_t /*numThreads*/,
     {
         for (size_t jj = 0; jj < numVectors[ii]; ++jj)
         {
-            cphd::setVectorParameters(ii, jj, pvpBlock);
+            crsd::setVectorParameters(ii, jj, pvpBlock);
         }
     }
 
-    cphd::CPHDWriter writer(metadata, outPathname);
-    writer.writeMetadata(pvpBlock);
+    crsd::CRSDWriter writer(metadata, outPathname);
+    writer.writeMetadata(pvpBlock, pppBlock);
+    writer.writePPPData(pppBlock);
     writer.writePVPData(pvpBlock);
     for (size_t ii = 0; ii < numChannels; ++ii)
     {
-        writer.writeCPHDData(writeData.data(),dims.area());
+        writer.writeCRSDData(writeData.data(),dims.area());
     }
 }
 
@@ -105,8 +107,8 @@ std::vector<std::complex<float> > checkData(const std::string& pathname,
         const std::vector<double>& scaleFactors,
         const types::RowCol<size_t> dims)
 {
-    cphd::CPHDReader reader(pathname, numThreads);
-    const cphd::Wideband& wideband = reader.getWideband();
+    crsd::CRSDReader reader(pathname, numThreads);
+    const crsd::Wideband& wideband = reader.getWideband();
     std::vector<std::complex<float> > readData(dims.area());
 
     size_t sizeInBytes = readData.size() * sizeof(readData[0]);
@@ -114,7 +116,7 @@ std::vector<std::complex<float> > checkData(const std::string& pathname,
     std::span<std::byte> scratch(scratchData.data(), scratchData.size());
     std::span<std::complex<float>> data(readData.data(), readData.size());
 
-    wideband.read(0, 0, cphd::Wideband::ALL, 0, cphd::Wideband::ALL,
+    wideband.read(0, 0, crsd::Wideband::ALL, 0, crsd::Wideband::ALL,
                   scaleFactors, numThreads, scratch, data);
 
     return readData;
@@ -152,12 +154,17 @@ bool runTest(bool scale, const std::vector<std::complex<T> >& writeData)
     const types::RowCol<size_t> dims(128, 128);
     const std::vector<double> scaleFactors =
             generateScaleFactors(dims.row, scale);
-    cphd::Metadata meta = cphd::Metadata();
+    crsd::Metadata meta = crsd::Metadata();
     setUpData(meta, dims, writeData);
-    cphd::setPVPXML(meta.pvp);
-    cphd::PVPBlock pvpBlock(meta.pvp, meta.data);
+    meta.pvp.reset(new crsd::Pvp());
+    meta.ppp.reset(new crsd::Ppp());
+    meta.setVersion("1.0.0");
+    crsd::setPVPXML(*(meta.pvp));
+    crsd::setPPPXML(*(meta.ppp));
+    crsd::PVPBlock pvpBlock(*(meta.pvp), meta.data);
+    crsd::PPPBlock pppBlock(*(meta.ppp), meta.data);
 
-    writeCPHD(tempfile.pathname(), numThreads, dims, writeData, meta, pvpBlock);
+    writeCRSD(tempfile.pathname(), numThreads, dims, writeData, meta, pvpBlock, pppBlock);
     const std::vector<std::complex<float> > readData =
             checkData(tempfile.pathname(), numThreads,
                       scaleFactors, dims);

@@ -1,10 +1,10 @@
 /* =========================================================================
- * This file is part of cphd-c++
+ * This file is part of crsd-c++
  * =========================================================================
  *
  * (C) Copyright 2004 - 2019, MDA Information Systems LLC
  *
- * cphd-c++ is free software; you can redistribute it and/or modify
+ * crsd-c++ is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
@@ -34,14 +34,14 @@
 #include <io/TempFile.h>
 #include <io/FileInputStream.h>
 #include <io/FileOutputStream.h>
-#include <cphd/CPHDWriter.h>
-#include <cphd/CPHDReader.h>
-#include <cphd/Wideband.h>
-#include <cphd/Metadata.h>
-#include <cphd/PVP.h>
-#include <cphd/PVPBlock.h>
-#include <cphd/ReferenceGeometry.h>
-#include <cphd/TestDataGenerator.h>
+#include <crsd/CRSDWriter.h>
+#include <crsd/CRSDReader.h>
+#include <crsd/Wideband.h>
+#include <crsd/Metadata.h>
+#include <crsd/PVP.h>
+#include <crsd/PVPBlock.h>
+#include <crsd/ReferenceGeometry.h>
+#include <crsd/TestDataGenerator.h>
 #include <TestCase.h>
 
 /*!
@@ -59,11 +59,12 @@ std::vector<std::byte> generateCompressedData(size_t length)
     return data;
 }
 
-void writeCompressedCPHD(const std::string& outPathname, size_t numThreads,
+void writeCompressedCRSD(const std::string& outPathname, size_t numThreads,
         const types::RowCol<size_t> dims,
         const std::vector<std::byte>& writeData,
-        cphd::Metadata& metadata,
-        cphd::PVPBlock& pvpBlock)
+        crsd::Metadata& metadata,
+        crsd::PVPBlock& pvpBlock,
+        crsd::PPPBlock& pppBlock)
 {
     const size_t numChannels = 1;
     const std::vector<size_t> numVectors(numChannels, dims.row);
@@ -72,19 +73,19 @@ void writeCompressedCPHD(const std::string& outPathname, size_t numThreads,
     {
         for (size_t jj = 0; jj < numVectors[ii]; ++jj)
         {
-            cphd::setVectorParameters(ii, jj, pvpBlock);
+            crsd::setVectorParameters(ii, jj, pvpBlock);
         }
     }
 
-    cphd::CPHDWriter writer(metadata, outPathname, std::vector<std::string>(), numThreads);
+    crsd::CRSDWriter writer(metadata, outPathname, std::vector<std::string>(), numThreads);
 
-    writer.writeMetadata(pvpBlock);
-
+    writer.writeMetadata(pvpBlock, pppBlock);
+    writer.writePPPData(pppBlock);
     writer.writePVPData(pvpBlock);
 
     for (size_t ii = 0; ii < numChannels; ++ii)
     {
-        writer.writeCPHDData(writeData.data(),1,ii);
+        writer.writeCRSDData(writeData.data(),1,ii);
     }
 }
 
@@ -93,8 +94,8 @@ std::vector<std::byte> checkCompressedData(const std::string& pathname,
         const types::RowCol<size_t>& dims)
 {
 
-    cphd::CPHDReader reader(pathname, numThreads);
-    const cphd::Wideband& wideband = reader.getWideband();
+    crsd::CRSDReader reader(pathname, numThreads);
+    const crsd::Wideband& wideband = reader.getWideband();
     std::vector<std::byte> readData(dims.area());
 
     std::span<std::byte> data(readData.data(), readData.size());
@@ -124,13 +125,19 @@ bool runTest(const std::vector<std::byte>& writeData)
     io::TempFile tempfile;
     const size_t numThreads = std::thread::hardware_concurrency();
     const types::RowCol<size_t> dims(128, 256);
-    cphd::Metadata meta = cphd::Metadata();
-    meta.data.signalCompressionID = "Huffman";
-    cphd::setUpData(meta, dims, writeData);
-    cphd::setPVPXML(meta.pvp);
-    cphd::PVPBlock pvpBlock(meta.pvp, meta.data);
+    crsd::Metadata meta = crsd::Metadata();
+    meta.data.receiveParameters.reset(new crsd::Data::Receive());
+    meta.data.receiveParameters->signalCompression.reset(new crsd::Data::SignalCompression());
+    meta.data.receiveParameters->signalCompression->identifier = "Huffman";
+    meta.pvp.reset(new crsd::Pvp());
+    meta.ppp.reset(new crsd::Ppp());
+    meta.setVersion("1.0.0");
+    crsd::setPVPXML(*(meta.pvp));
+    crsd::setPPPXML(*(meta.ppp));
+    crsd::PVPBlock pvpBlock(*(meta.pvp), meta.data);
+    crsd::PPPBlock pppBlock(*(meta.ppp), meta.data);
 
-    writeCompressedCPHD(tempfile.pathname(), numThreads, dims, writeData, meta, pvpBlock);
+    writeCompressedCRSD(tempfile.pathname(), numThreads, dims, writeData, meta, pvpBlock, pppBlock);
     const std::vector<std::byte> readData =
             checkCompressedData(tempfile.pathname(), numThreads,
             dims);

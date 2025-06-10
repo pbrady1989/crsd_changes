@@ -49,7 +49,8 @@ coda_add_tests(
         test_pvp_block.cpp
         test_pvp.cpp
         test_read_wideband.cpp
-        test_signal_block_round.cpp)
+        test_signal_block_round.cpp
+        test_compressed_signal_block_round.cpp)
 
 # coda_add_tests(
 #     MODULE_NAME ${MODULE_NAME}

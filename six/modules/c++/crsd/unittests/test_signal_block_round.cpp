@@ -41,6 +41,43 @@
 #include <crsd/TestDataGenerator.h>
 #include <TestCase.h>
 
+static constexpr size_t NUM_SUPPORT = 3;
+static constexpr size_t NUM_ROWS = 3;
+static constexpr size_t NUM_COLS = 4;
+
+template<typename T>
+std::vector<T> generateSupportData(size_t length)
+{
+    std::vector<T> data(length);
+    srand(0);
+    for (size_t ii = 0; ii < data.size(); ++ii)
+    {
+        data[ii] = rand() % 16;
+    }
+    return data;
+}
+
+void setSupport(crsd::Data& d)
+{
+    d.setSupportArray("1.0", NUM_ROWS, NUM_COLS, sizeof(double), 0);
+    d.setSupportArray("2.0", NUM_ROWS, NUM_COLS, sizeof(double), NUM_ROWS*NUM_COLS*sizeof(double));
+    d.setSupportArray("AddedSupport", NUM_ROWS, NUM_COLS, sizeof(double), 2*NUM_ROWS*NUM_COLS*sizeof(double));
+}
+
+std::vector<std::byte> checkSupportData(
+        const std::string& pathname,
+        size_t /*size*/,
+        size_t numThreads)
+{
+
+    crsd::CRSDReader reader(pathname, numThreads);
+    const crsd::SupportBlock& supportBlock = reader.getSupportBlock();
+    std::unique_ptr<std::byte[]> readPtr;
+    supportBlock.readAll(numThreads, readPtr);
+    std::vector<std::byte> readData(readPtr.get(), readPtr.get() + reader.getMetadata().data.getAllSupportSize());
+    return readData;
+}
+
 /*!
  * Tests write and read of Signal Block
  * Fails if values don't match
@@ -77,6 +114,7 @@ template<typename T>
 void writeCRSD(const std::string& outPathname, size_t /*numThreads*/,
         const types::RowCol<size_t> dims,
         const std::vector<std::complex<T> >& writeData,
+        const std::vector<double>& writeSupportData,
         crsd::Metadata& metadata,
         crsd::PVPBlock& pvpBlock,
         crsd::PPPBlock& pppBlock)
@@ -93,11 +131,17 @@ void writeCRSD(const std::string& outPathname, size_t /*numThreads*/,
     }
 
     crsd::CRSDWriter writer(metadata, outPathname);
+    std::cout << "Writing metadata portion..." << std::endl;
     writer.writeMetadata(pvpBlock, pppBlock);
+    std::cout << "Writing support block..." << std::endl;
+    writer.writeSupportData(writeSupportData.data());
+    std::cout << "Writing PPP data..." << std::endl;
     writer.writePPPData(pppBlock);
+    std::cout << "Writing PVP data..." << std::endl;
     writer.writePVPData(pvpBlock);
     for (size_t ii = 0; ii < numChannels; ++ii)
     {
+        std::cout << "Writing CRSD data for channel " << ii << "..." << std::endl;
         writer.writeCRSDData(writeData.data(),dims.area());
     }
 }
@@ -125,6 +169,7 @@ std::vector<std::complex<float> > checkData(const std::string& pathname,
 template<typename T>
 bool compareVectors(const std::vector<std::complex<float> >& readData,
                     const std::vector<std::complex<T> >& writeData,
+                    const std::vector<double>& writeSupportData,
                     const std::vector<double>& scaleFactors,
                     bool scale)
 {
@@ -150,25 +195,36 @@ template<typename T>
 bool runTest(bool scale, const std::vector<std::complex<T> >& writeData)
 {
     io::TempFile tempfile;
+    six::CRSDType type = six::CRSDType::SAR;
     const size_t numThreads = std::thread::hardware_concurrency();
     const types::RowCol<size_t> dims(128, 128);
     const std::vector<double> scaleFactors =
             generateScaleFactors(dims.row, scale);
-    crsd::Metadata meta = crsd::Metadata();
+    crsd::Metadata meta = crsd::Metadata(type);
+
     setUpData(meta, dims, writeData);
     meta.pvp.reset(new crsd::Pvp());
     meta.ppp.reset(new crsd::Ppp());
+
     meta.setVersion("1.0.0");
+
     crsd::setPVPXML(*(meta.pvp));
+
     crsd::setPPPXML(*(meta.ppp));
+
     crsd::PVPBlock pvpBlock(*(meta.pvp), meta.data);
+
     crsd::PPPBlock pppBlock(*(meta.ppp), meta.data);
 
-    writeCRSD(tempfile.pathname(), numThreads, dims, writeData, meta, pvpBlock, pppBlock);
+    const std::vector<double> writeSupportData =
+            generateSupportData<double>(NUM_SUPPORT*NUM_ROWS*NUM_COLS);
+
+    setSupport(meta.data);
+    writeCRSD("output.crsd", numThreads, dims, writeData, writeSupportData, meta, pvpBlock, pppBlock);
     const std::vector<std::complex<float> > readData =
-            checkData(tempfile.pathname(), numThreads,
+            checkData("output.crsd", numThreads,
                       scaleFactors, dims);
-    return compareVectors(readData, writeData, scaleFactors, scale);
+    return compareVectors(readData, writeData, writeSupportData, scaleFactors, scale);
     return true;
 }
 

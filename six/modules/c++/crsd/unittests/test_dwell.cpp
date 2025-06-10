@@ -1,10 +1,10 @@
 /* =========================================================================
- * This file is part of cphd-c++
+ * This file is part of crsd-c++
  * =========================================================================
  *
  * (C) Copyright 2004 - 2019, MDA Information Systems LLC
  *
- * cphd-c++ is free software; you can redistribute it and/or modify
+ * crsd-c++ is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
@@ -22,23 +22,23 @@
 #include <iostream>
 #include <memory>
 
-#include <cphd/Dwell.h>
+#include <crsd/Dwell.h>
 #include <xml/lite/MinidomParser.h>
 #include <six/Init.h>
-#include <cphd/Enums.h>
-#include <cphd/Types.h>
+#include <crsd/Enums.h>
+#include <crsd/Types.h>
 
 #include "TestCase.h"
 
 TEST_CASE(testDerivativeCODValid)
 {
-    cphd::Dwell dwell;
-    cphd::COD cod1;
+    crsd::Dwell dwell;
+    crsd::COD cod1;
     size_t numCODTimes = 1;
     dwell.cod.resize(numCODTimes);
     dwell.cod[0] = cod1;
 
-    cphd::Poly2D p2D(1, 1);
+    crsd::Poly2D p2D(1, 1);
     dwell.cod[0].codTimePoly = p2D;
     dwell.cod[0].codTimePoly[0][0] = 1;
     dwell.cod[0].codTimePoly[1][0] = 2;
@@ -46,7 +46,7 @@ TEST_CASE(testDerivativeCODValid)
     dwell.cod[0].codTimePoly[1][1] = 4;
 
     // Test Derivative in terms of x
-    cphd::Poly2D derivativeX2D(1,1);
+    crsd::Poly2D derivativeX2D(1,1);
     derivativeX2D[0][0] = 2;
     derivativeX2D[0][1] = 4;
     TEST_ASSERT_EQ(dwell.cod[0].codTimePoly.derivativeX(),derivativeX2D);
@@ -54,13 +54,13 @@ TEST_CASE(testDerivativeCODValid)
 
 TEST_CASE(testDerivativeDwellValid)
 {
-    cphd::Dwell dwell;
-    cphd::DwellTime dtime1;
+    crsd::Dwell dwell;
+    crsd::DwellTime dtime1;
     size_t numDwellTimes = 1;
     dwell.dtime.resize(numDwellTimes);
     dwell.dtime[0] = dtime1;
 
-    cphd::Poly2D p2D(1, 1);
+    crsd::Poly2D p2D(1, 1);
     dwell.dtime[0].dwellTimePoly = p2D;
     dwell.dtime[0].dwellTimePoly[0][0] = 1;
     dwell.dtime[0].dwellTimePoly[1][0] = 2;
@@ -68,7 +68,7 @@ TEST_CASE(testDerivativeDwellValid)
     dwell.dtime[0].dwellTimePoly[1][1] = 4;
 
     // Test Derivative in terms of x
-    cphd::Poly2D derivativeY2D(1,1);
+    crsd::Poly2D derivativeY2D(1,1);
     derivativeY2D[0][0] = 3;
     derivativeY2D[1][0] = 4;
     TEST_ASSERT_EQ(dwell.dtime[0].dwellTimePoly.derivativeY(),derivativeY2D);
@@ -77,15 +77,15 @@ TEST_CASE(testDerivativeDwellValid)
 
 TEST_CASE(testEquality)
 {
-    cphd::Dwell dwell;
-    cphd::DwellTime dtime1, dtime2;
+    crsd::Dwell dwell;
+    crsd::DwellTime dtime1, dtime2;
 
     size_t numDwellTimes = 2;
     dwell.dtime.resize(numDwellTimes);
     dwell.dtime[0] = dtime1;
     dwell.dtime[1] = dtime2;
 
-    cphd:: Poly2D p2D_1(2,1), p2D_2(2,1);
+    crsd:: Poly2D p2D_1(2,1), p2D_2(2,1);
 
     dwell.dtime[0].dwellTimePoly = p2D_1;
     dwell.dtime[1].dwellTimePoly = p2D_2;
@@ -97,7 +97,7 @@ TEST_CASE(testEquality)
         dwell.dtime[i].dwellTimePoly[2][0] = 5;
     }
 
-    cphd:: Poly2D derivX(1,1);
+    crsd:: Poly2D derivX(1,1);
     derivX[0][0] = 3;
     derivX[0][1] = 4;
     derivX[1][0] = 10;

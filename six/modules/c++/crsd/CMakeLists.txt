@@ -54,15 +54,13 @@ coda_add_tests(
         test_ppp_block.cpp
         test_ppp.cpp)
 
-# coda_add_tests(
-#     MODULE_NAME ${MODULE_NAME}
-#     DIRECTORY "tests"
-#    DEPS cli-c++
-#    SOURCES
-#        test_compare_cphd.cpp
-#        test_metadata_round.cpp
-#        test_round_trip.cpp)
+coda_add_tests(
+    MODULE_NAME ${MODULE_NAME}
+    DIRECTORY "tests"
+    DEPS cli-c++
+    SOURCES
+        test_metadata_round.cpp)
 
 # Install the schemas
 file(GLOB crsd_schemas "${CMAKE_CURRENT_SOURCE_DIR}/conf/schema/*")
-install(FILES ${cphd_schemas} DESTINATION "conf/schema/six")
+install(FILES ${crsd_schemas} DESTINATION "conf/schema/six")

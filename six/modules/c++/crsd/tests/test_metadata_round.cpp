@@ -1,10 +1,10 @@
 /* =========================================================================
- * This file is part of cphd-c++
+ * This file is part of crsd-c++
  * =========================================================================
  *
  * (C) Copyright 2004 - 2019, MDA Information Systems LLC
  *
- * cphd-c++ is free software; you can redistribute it and/or modify
+ * crsd-c++ is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
@@ -33,10 +33,10 @@
 #include <logging/NullLogger.h>
 #include <xml/lite/MinidomParser.h>
 
-#include <cphd/CPHDXMLControl.h>
-#include <cphd/Global.h>
-#include <cphd/Metadata.h>
-#include <cphd/SceneCoordinates.h>
+#include <crsd/CRSDXMLControl.h>
+#include <crsd/Global.h>
+#include <crsd/Metadata.h>
+#include <crsd/SceneCoordinates.h>
 
 #include "TestCase.h"
 
@@ -58,25 +58,32 @@ bool testEqual(const std::string& inPathname, const std::string& outPathname,
     // Read in first XML file
     xml::lite::MinidomParser xmlParser;
     parseXMLFile(xmlParser, inPathname);
-    cphd::CPHDXMLControl xmlControl(new logging::NullLogger(), true);
-    const std::unique_ptr<cphd::Metadata> metadata =
+    std::cout << "inPathname: " << inPathname << std::endl;
+    crsd::CRSDXMLControl xmlControl(new logging::NullLogger(), true);
+    std::cout << "schemas[0]: " << schemas[0] << std::endl;
+    const std::unique_ptr<crsd::Metadata> metadata =
             xmlControl.fromXML(xmlParser.getDocument(), schemas);
-
+    std::cout << __LINE__ << std::endl;
     const auto xmlMetadata(xmlControl.toXMLString(*metadata));
+    std::cout << __LINE__ << std::endl;
 
     //Output XML file to temp file
     io::FileOutputStream ofs(outPathname);
     ofs.write(xmlMetadata.c_str(), xmlMetadata.size());
+    std::cout << __LINE__ << std::endl;
 
     // Read in second XML file from temp file
     xml::lite::MinidomParser xmlParser2;
     parseXMLFile(xmlParser2, outPathname);
+    std::cout << __LINE__ << std::endl;
 
-    cphd::CPHDXMLControl xmlControl2(new logging::NullLogger(), true);
+    crsd::CRSDXMLControl xmlControl2(new logging::NullLogger(), true);
+    std::cout << __LINE__ << std::endl;
 
     // Populate metadata object from XML Document
-    const std::unique_ptr<cphd::Metadata> metadata2 =
+    const std::unique_ptr<crsd::Metadata> metadata2 =
             xmlControl2.fromXML(xmlParser2.getDocument(), schemas);
+    std::cout << __LINE__ << std::endl;
 
     // Check if both metadata are equal
     return (*metadata == *metadata2);
@@ -115,7 +122,6 @@ int main(int argc, char** argv)
         const std::string inPathname(options->get<std::string>("input"));
         const size_t numThreads(options->get<size_t>("threads"));
         const cli::Value* value = options->getValue("schema");
-
         std::vector<std::string> schemaPathnames;
         for (size_t ii = 0; ii < value->size(); ++ii)
         {

@@ -137,7 +137,7 @@ public:
     {
         // convert to std::string
         xml.streamTo(oss);
-        return validate(oss.stream().str(), xmlID, errors);
+        return validate(oss.stream().str() , xmlID, errors);
     }
     bool validate(io::InputStream& xml,
                   const std::string& xmlID,

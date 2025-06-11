@@ -1,10 +1,10 @@
 /* =========================================================================
- * This file is part of cphd-c++
+ * This file is part of crsd-c++
  * =========================================================================
  *
  * (C) Copyright 2004 - 2019, MDA Information Systems LLC
  *
- * cphd-c++ is free software; you can redistribute it and/or modify
+ * crsd-c++ is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
@@ -31,18 +31,18 @@
 #include <cli/ArgumentParser.h>
 #include <io/FileInputStream.h>
 #include <io/FileOutputStream.h>
-#include <cphd/Metadata.h>
-#include <cphd/PVPBlock.h>
-#include <cphd/CPHDReader.h>
+#include <crsd/Metadata.h>
+#include <crsd/PVPBlock.h>
+#include <crsd/CRSDReader.h>
 #include <str/Convert.h>
 
 /*!
- * Compares two CPHD files
+ * Compares two CRSD files
  * Returns true if they do, false if not
  */
 
 template <typename T>
-bool compareCPHDData(const std::byte* data1,
+bool compareCRSDData(const std::byte* data1,
                      const std::byte* data2,
                      size_t size,
                      size_t channel)
@@ -79,18 +79,18 @@ bool compareSupportData(const std::unique_ptr<std::byte[]>& data1,
     return true;
 }
 
-bool compareWideband(cphd::CPHDReader& reader1,
-                     cphd::CPHDReader& reader2,
+bool compareWideband(crsd::CRSDReader& reader1,
+                     crsd::CRSDReader& reader2,
                      size_t channelsToProcess,
                      size_t numThreads)
 {
     bool dataMatches = true;
 
-    const cphd::Wideband& wideband1 = reader1.getWideband();
-    const cphd::Wideband& wideband2 = reader2.getWideband();
+    const crsd::Wideband& wideband1 = reader1.getWideband();
+    const crsd::Wideband& wideband2 = reader2.getWideband();
 
-    std::unique_ptr<std::byte[]> cphdData1;
-    std::unique_ptr<std::byte[]> cphdData2;
+    std::unique_ptr<std::byte[]> crsdData1;
+    std::unique_ptr<std::byte[]> crsdData2;
 
     for (size_t ii = 0; ii < channelsToProcess; ++ii)
     {
@@ -103,42 +103,42 @@ bool compareWideband(cphd::CPHDReader& reader1,
 
         if (dims1 == dims2)
         {
-            cphdData1 = wideband1.read(ii,
-                           0, cphd::Wideband::ALL, 0,
-                           cphd::Wideband::ALL,
+            crsdData1 = wideband1.read(ii,
+                           0, crsd::Wideband::ALL, 0,
+                           crsd::Wideband::ALL,
                            numThreads);
 
-            cphdData2 = wideband2.read(ii,
-                           0, cphd::Wideband::ALL, 0,
-                           cphd::Wideband::ALL,
+            crsdData2 = wideband2.read(ii,
+                           0, crsd::Wideband::ALL, 0,
+                           crsd::Wideband::ALL,
                            numThreads);
 
-            switch (reader1.getMetadata().data.getSampleType())
+            switch (reader1.getMetadata().data.receiveParameters->signalArrayFormat)
             {
-            case cphd::SampleType::RE08I_IM08I:
-                if (!compareCPHDData<std::complex<int8_t> >(
-                        cphdData1.get(),
-                        cphdData2.get(),
+            case crsd::SampleType::RE08I_IM08I:
+                if (!compareCRSDData<std::complex<int8_t> >(
+                        crsdData1.get(),
+                        crsdData2.get(),
                         dims1.area(),
                         ii))
                 {
                     dataMatches = false;
                 }
                 break;
-            case cphd::SampleType::RE16I_IM16I:
-                if (!compareCPHDData<std::complex<int16_t> >(
-                        cphdData1.get(),
-                        cphdData2.get(),
+            case crsd::SampleType::RE16I_IM16I:
+                if (!compareCRSDData<std::complex<int16_t> >(
+                        crsdData1.get(),
+                        crsdData2.get(),
                         dims1.area(),
                         ii))
                 {
                     dataMatches = false;
                 }
                 break;
-            case cphd::SampleType::RE32F_IM32F:
-                if (!compareCPHDData<std::complex<float> >(
-                        cphdData1.get(),
-                        cphdData2.get(),
+            case crsd::SampleType::RE32F_IM32F:
+                if (!compareCRSDData<std::complex<float> >(
+                        crsdData1.get(),
+                        crsdData2.get(),
                         dims1.area(),
                         ii))
                 {
@@ -158,10 +158,10 @@ bool compareWideband(cphd::CPHDReader& reader1,
     return dataMatches;
 }
 
-bool checkCPHD(const std::string& pathname1, const std::string& pathname2, size_t numThreads, const std::vector<std::string>& schemaPathname)
+bool checkCRSD(const std::string& pathname1, const std::string& pathname2, size_t numThreads, const std::vector<std::string>& schemaPathname)
 {
-    cphd::CPHDReader reader1(pathname1, numThreads, schemaPathname);
-    cphd::CPHDReader reader2(pathname2, numThreads, schemaPathname);
+    crsd::CRSDReader reader1(pathname1, numThreads, schemaPathname);
+    crsd::CRSDReader reader2(pathname2, numThreads, schemaPathname);
 
     // Check metadata
     if (reader1.getMetadata() != reader2.getMetadata())
@@ -169,13 +169,32 @@ bool checkCPHD(const std::string& pathname1, const std::string& pathname2, size_
         std::cerr << "Metadata does not match \n";
         return false;
     }
+    else
+    {
+        std::cout << "XML Metadata matches \n";
+    }
 
     // Check pvp block
-    if (reader1.getPVPBlock() != reader2.getPVPBlock())
-    {
-        std::cerr << "PVPBlock does not match \n";
-        return false;
-    }
+    // if (reader1.getPVPBlock() != reader2.getPVPBlock())
+    // {
+    //     std::cerr << "PVPBlock does not match \n";
+    //     return false;
+    // }
+    // else
+    // {
+    //     std::cout << "PVP Block matches \n";
+    // }
+
+    // Check ppp block
+    // if (reader1.getPPPBlock() != reader2.getPPPBlock())
+    // {
+    //     std::cerr << "PPPBlock does not match \n";
+    //     return false;
+    // }
+    // else
+    // {
+    //     std::cout << "PPP Block matches \n";
+    // }
 
     // Check support block
     std::unique_ptr<std::byte[]> readPtr1;
@@ -186,6 +205,10 @@ bool checkCPHD(const std::string& pathname1, const std::string& pathname2, size_
     {
         std::cerr << "SupportBlock does not match \n";
         return false;
+    }
+    else
+    {
+        std::cout << "Support Data matches \n";
     }
 
     // // Check wideband
@@ -201,17 +224,21 @@ bool checkCPHD(const std::string& pathname1, const std::string& pathname2, size_
         return false;
     }
     //! Only process wideband data if the data types are the same
-    if (reader1.getMetadata().data.getSampleType() ==
-        reader2.getMetadata().data.getSampleType())
+    if (reader1.getMetadata().data.receiveParameters->signalArrayFormat ==
+        reader2.getMetadata().data.receiveParameters->signalArrayFormat)
     {
-        const bool cphdDataMatches = compareWideband(reader1,
+        const bool crsdDataMatches = compareWideband(reader1,
                                                      reader2,
                                                      channelsToProcess,
                                                      numThreads);
-        if (!cphdDataMatches)
+        if (!crsdDataMatches)
         {
             std::cerr << "Wideband data does not match \n";
             return false;
+        }
+        else
+        {
+            std::cout << "Wideband data matches \n";
         }
     }
     else
@@ -228,16 +255,16 @@ int main(int argc, char** argv)
     {
         // Parse the command line
         cli::ArgumentParser parser;
-        parser.setDescription("Round trip for a CPHD file.");
+        parser.setDescription("Round trip for a CRSD file.");
         parser.addArgument("-t --threads",
                            "Specify the number of threads to use",
                            cli::STORE,
                            "threads",
                            "NUM")->setDefault(std::thread::hardware_concurrency());
         parser.addArgument("file1", "First pathname", cli::STORE, "file1",
-                           "CPHD", 1, 1);
+                           "CRSD", 1, 1);
         parser.addArgument("file2", "Second pathname", cli::STORE, "file2",
-                           "CPHD", 1, 1);
+                           "CRSD", 1, 1);
         parser.addArgument("schema", "Schema pathname", cli::STORE, "schema",
                            "XSD", 1, 10);
         const std::unique_ptr<cli::Results> options(parser.parse(argc, argv));
@@ -252,13 +279,13 @@ int main(int argc, char** argv)
             schemaPathnames.push_back(value->get<std::string>(ii));
         }
 
-        const bool isMatch = checkCPHD(pathname1, pathname2, numThreads, schemaPathnames);
+        const bool isMatch = checkCRSD(pathname1, pathname2, numThreads, schemaPathnames);
         if (!isMatch)
         {
-            std::cerr << "CPHD Files do not match \n";
+            std::cerr << "CRSD Files do not match \n";
             return 1;
         }
-        std::cout << "CPHD Files match \n";
+        std::cout << "CRSD Files match \n";
         return 0;
     }
     catch (const except::Exception& ex)

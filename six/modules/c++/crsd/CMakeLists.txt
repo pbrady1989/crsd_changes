@@ -60,7 +60,8 @@ coda_add_tests(
     DEPS cli-c++
     SOURCES
         test_metadata_round.cpp
-        test_round_trip.cpp)
+        test_round_trip.cpp
+        test_compare_crsd.cpp)
 
 # Install the schemas
 file(GLOB crsd_schemas "${CMAKE_CURRENT_SOURCE_DIR}/conf/schema/*")

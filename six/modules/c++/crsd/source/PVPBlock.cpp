@@ -320,13 +320,13 @@ void PVPBlock::PVPSet::write(const PVPBlock& pvpBlock, const Pvp& p, const sys::
 void PVPBlock::PVPSet::read(const Pvp& p, sys::ubyte* dest_) const
 {
     auto dest = reinterpret_cast<std::byte*>(dest_);
-    ::getData(dest + p.rcvStart.getByteOffset(), rcvStart.first);
+    ::getData(dest + p.rcvStart.getByteOffset(), static_cast<double>(rcvStart.first));
     ::getData(dest + p.rcvStart.getByteOffset() + sizeof(rcvStart.first), rcvStart.second);
     ::getData(dest + p.rcvPos.getByteOffset(), rcvPos);
     ::getData(dest + p.rcvVel.getByteOffset(), rcvVel);
     ::getData(dest + p.frcv1.getByteOffset(), frcv1);
     ::getData(dest + p.frcv2.getByteOffset(), frcv2);
-    ::getData(dest + p.refPhi0.getByteOffset(), refPhi0.first);
+    ::getData(dest + p.refPhi0.getByteOffset(), static_cast<double>(refPhi0.first));
     ::getData(dest + p.refPhi0.getByteOffset() + sizeof(refPhi0.first), refPhi0.second);
     ::getData(dest + p.refFreq.getByteOffset(), refFreq);
     ::getData(dest + p.dfiC0.getByteOffset(), dfiC0);

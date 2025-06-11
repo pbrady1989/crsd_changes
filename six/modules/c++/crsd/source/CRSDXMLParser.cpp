@@ -943,7 +943,7 @@ std::unique_ptr<Metadata> CRSDXMLParser::fromXML(
         const xml::lite::Document* doc)
 {
     
-    const bool DEBUG = true;
+    const bool DEBUG = false;
 
     std::unique_ptr<Metadata> crsd(new Metadata());
 

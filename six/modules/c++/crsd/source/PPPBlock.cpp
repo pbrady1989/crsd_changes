@@ -310,14 +310,14 @@ void PPPBlock::PPPSet::write(const PPPBlock& pppBlock, const Ppp& p, const sys::
 void PPPBlock::PPPSet::read(const Ppp& p, sys::ubyte* dest_) const
 {
     auto dest = reinterpret_cast<std::byte*>(dest_);
-    ::getData(dest + p.txTime.getByteOffset(), txTime.first);
+    ::getData(dest + p.txTime.getByteOffset(), static_cast<double>(txTime.first));
     ::getData(dest + p.txTime.getByteOffset() + sizeof(txTime.first), txTime.second);
     ::getData(dest + p.txPos.getByteOffset(), txPos);
     ::getData(dest + p.txVel.getByteOffset(), txVel);
     ::getData(dest + p.fx1.getByteOffset(), fx1);
     ::getData(dest + p.fx2.getByteOffset(), fx2);
     ::getData(dest + p.txmt.getByteOffset(), txmt);
-    ::getData(dest + p.phiX0.getByteOffset(), phiX0.first);
+    ::getData(dest + p.phiX0.getByteOffset(),static_cast<double>(phiX0.first));
     ::getData(dest + p.phiX0.getByteOffset() + sizeof(phiX0.first), phiX0.second);
     ::getData(dest + p.fxFreq0.getByteOffset(), fxFreq0);
     ::getData(dest + p.fxRate.getByteOffset(), fxRate);

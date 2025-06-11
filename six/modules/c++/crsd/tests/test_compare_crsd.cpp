@@ -160,7 +160,10 @@ bool compareWideband(crsd::CRSDReader& reader1,
 
 bool checkCRSD(const std::string& pathname1, const std::string& pathname2, size_t numThreads, const std::vector<std::string>& schemaPathname)
 {
+
+    std::cout << "***reading in first file***" << std::endl;
     crsd::CRSDReader reader1(pathname1, numThreads, schemaPathname);
+    std::cout << "***reading in second file***" << std::endl;
     crsd::CRSDReader reader2(pathname2, numThreads, schemaPathname);
 
     // Check metadata
@@ -174,27 +177,68 @@ bool checkCRSD(const std::string& pathname1, const std::string& pathname2, size_
         std::cout << "XML Metadata matches \n";
     }
 
-    // Check pvp block
-    // if (reader1.getPVPBlock() != reader2.getPVPBlock())
-    // {
-    //     std::cerr << "PVPBlock does not match \n";
-    //     return false;
-    // }
-    // else
-    // {
-    //     std::cout << "PVP Block matches \n";
-    // }
-
     // Check ppp block
-    // if (reader1.getPPPBlock() != reader2.getPPPBlock())
-    // {
-    //     std::cerr << "PPPBlock does not match \n";
-    //     return false;
-    // }
-    // else
-    // {
-    //     std::cout << "PPP Block matches \n";
-    // }
+    if (reader1.getPPPBlock() != reader2.getPPPBlock())
+    {
+        std::cout << "reader1.getPPPBlock().getFX1(): " << reader1.getPPPBlock().getFX1(0,0) << std::endl;
+        std::cout << "reader2.getPPPBlock().getFX2(): " << reader2.getPPPBlock().getFX2(0,0) << std::endl;
+        std::cout << "reader1.getPPPBlock().getPhiX0(): " << reader1.getPPPBlock().getPhiX0(0,0).first << std::endl;
+        std::cout << "reader2.getPPPBlock().getPhiX0(): " << reader2.getPPPBlock().getPhiX0(0,0).first << std::endl;
+        std::cout << "reader1.getPPPBlock().getPhiX0(): " << reader1.getPPPBlock().getPhiX0(0,0).second << std::endl;
+        std::cout << "reader2.getPPPBlock().getPhiX0(): " << reader2.getPPPBlock().getPhiX0(0,0).second << std::endl;
+        std::cout << "reader1.getPPPBlock().getTxStart(): " << reader1.getPPPBlock().getTxStart(0,0).first << std::endl;
+        std::cout << "reader2.getPPPBlock().getTxStart(): " << reader2.getPPPBlock().getTxStart(0,0).first << std::endl;
+        std::cout << "reader1.getPPPBlock().getTxStart(): " << reader1.getPPPBlock().getTxStart(0,0).second << std::endl;
+        std::cout << "reader2.getPPPBlock().getTxStart(): " << reader2.getPPPBlock().getTxStart(0,0).second << std::endl;
+
+        std::cout << "reader1.getPPPBlock().getPhiX0(): " << reader1.getPPPBlock().getPhiX0(0,1).first << std::endl;
+        std::cout << "reader2.getPPPBlock().getPhiX0(): " << reader2.getPPPBlock().getPhiX0(0,1).first << std::endl;
+        std::cout << "reader1.getPPPBlock().getPhiX0(): " << reader1.getPPPBlock().getPhiX0(0,1).second << std::endl;
+        std::cout << "reader2.getPPPBlock().getPhiX0(): " << reader2.getPPPBlock().getPhiX0(0,1).second << std::endl;
+        std::cout << "reader1.getPPPBlock().getTxStart(): " << reader1.getPPPBlock().getTxStart(0,1).first << std::endl;
+        std::cout << "reader2.getPPPBlock().getTxStart(): " << reader2.getPPPBlock().getTxStart(0,1).first << std::endl;
+        std::cout << "reader1.getPPPBlock().getTxStart(): " << reader1.getPPPBlock().getTxStart(0,1).second << std::endl;
+        std::cout << "reader2.getPPPBlock().getTxStart(): " << reader2.getPPPBlock().getTxStart(0,1).second << std::endl;
+
+        std::cerr << "PPPBlock does not match \n";
+        return false;
+    }
+    else
+    {
+        std::cout << "PPP Block matches \n";
+    }
+
+    // Check pvp block
+    if (reader1.getPVPBlock() != reader2.getPVPBlock())
+    {
+        std::cout << "reader1.getPVPBlock().getFRCV1(): " << reader1.getPVPBlock().getFRCV1(0,0) << std::endl;
+        std::cout << "reader2.getPVPBlock().getFRCV1(): " << reader2.getPVPBlock().getFRCV1(0,0) << std::endl;
+        std::cout << "reader1.getPVPBlock().getRefPhi0(): " << reader1.getPVPBlock().getRefPhi0(0,0).first << std::endl;
+        std::cout << "reader2.getPVPBlock().getRefPhi0(): " << reader2.getPVPBlock().getRefPhi0(0,0).first << std::endl;
+        std::cout << "reader1.getPVPBlock().getRefPhi0(): " << reader1.getPVPBlock().getRefPhi0(0,0).second << std::endl;
+        std::cout << "reader2.getPVPBlock().getRefPhi0(): " << reader2.getPVPBlock().getRefPhi0(0,0).second << std::endl;
+        std::cout << "reader1.getPVPBlock().getRcvStart(): " << reader1.getPVPBlock().getRcvStart(0,0).first << std::endl;
+        std::cout << "reader2.getPVPBlock().getRcvStart(): " << reader2.getPVPBlock().getRcvStart(0,0).first << std::endl;
+        std::cout << "reader1.getPVPBlock().getRcvStart(): " << reader1.getPVPBlock().getRcvStart(0,0).second << std::endl;
+        std::cout << "reader2.getPVPBlock().getRcvStart(): " << reader2.getPVPBlock().getRcvStart(0,0).second << std::endl;
+
+        std::cout << "reader1.getPVPBlock().getRefPhi0(): " << reader1.getPVPBlock().getRefPhi0(0,1).first << std::endl;
+        std::cout << "reader2.getPVPBlock().getRefPhi0(): " << reader2.getPVPBlock().getRefPhi0(0,1).first << std::endl;
+        std::cout << "reader1.getPVPBlock().getRefPhi0(): " << reader1.getPVPBlock().getRefPhi0(0,1).second << std::endl;
+        std::cout << "reader2.getPVPBlock().getRefPhi0(): " << reader2.getPVPBlock().getRefPhi0(0,1).second << std::endl;
+        std::cout << "reader1.getPVPBlock().getRcvStart(): " << reader1.getPVPBlock().getRcvStart(0,1).first << std::endl;
+        std::cout << "reader2.getPVPBlock().getRcvStart(): " << reader2.getPVPBlock().getRcvStart(0,1).first << std::endl;
+        std::cout << "reader1.getPVPBlock().getRcvStart(): " << reader1.getPVPBlock().getRcvStart(0,1).second << std::endl;
+        std::cout << "reader2.getPVPBlock().getRcvStart(): " << reader2.getPVPBlock().getRcvStart(0,1).second << std::endl;
+        
+        std::cerr << "PVPBlock does not match \n";
+        return false;
+
+    }
+    else
+    {
+        std::cout << "PVP Block matches \n";
+    }
 
     // Check support block
     std::unique_ptr<std::byte[]> readPtr1;

@@ -84,6 +84,7 @@ void testRoundTrip(const std::string& inPathname, const std::string& outPathname
     // Check if signal data is compressed
     if (metadata.data.isCompressed())
     {
+        std::cout << "Writing compressed data......" << std::endl;
         // If data is compressed
         for (size_t channel = 0, idx = 0; channel < metadata.data.getNumChannels(); ++channel)
         {
@@ -100,6 +101,7 @@ void testRoundTrip(const std::string& inPathname, const std::string& outPathname
     else
     {
         // If data is not compressed
+        std::cout << "Writing uncompressed data......" << std::endl;
         for (size_t channel = 0, idx = 0; channel < metadata.data.getNumChannels(); ++channel)
         {
             const size_t bufSize = metadata.data.getSignalSize(channel);
@@ -113,6 +115,7 @@ void testRoundTrip(const std::string& inPathname, const std::string& outPathname
         switch (signalFormat)
         {
         case crsd::SignalArrayFormat::CI2:
+            std::cout << "Writing CI2 data......" << std::endl;
             writer.write(
                     pvpBlock,
                     pppBlock,
@@ -120,6 +123,7 @@ void testRoundTrip(const std::string& inPathname, const std::string& outPathname
                     readPtr.get());
             break;
         case crsd::SignalArrayFormat::CI4:
+            std::cout << "Writing CI4 data......" << std::endl;
             writer.write(
                     pvpBlock,
                     pppBlock,
@@ -127,6 +131,7 @@ void testRoundTrip(const std::string& inPathname, const std::string& outPathname
                     readPtr.get());
             break;
         case crsd::SignalArrayFormat::CF8:
+            std::cout << "Writing CF8 data......" << std::endl;
             writer.write(
                     pvpBlock,
                     pppBlock,

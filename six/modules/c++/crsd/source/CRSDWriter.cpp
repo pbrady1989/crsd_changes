@@ -249,11 +249,11 @@ void CRSDWriter::write(const PVPBlock& pvpBlock,
 
     // Write pvp data block
     // Padding is added in writePVPData
-    writePVPData(pvpBlock);
+    writePPPData(pppBlock);
 
     // Write pvp data block
     // Padding is added in writePVPData
-    writePPPData(pppBlock);
+    writePVPData(pvpBlock);
 
     // Doesn't require padding because pvp block is always 8 bytes words
     // Write wideband (or signal) block

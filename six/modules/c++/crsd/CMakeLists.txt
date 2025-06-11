@@ -50,7 +50,8 @@ coda_add_tests(
         test_pvp.cpp
         test_read_wideband.cpp
         test_signal_block_round.cpp
-        test_compressed_signal_block_round.cpp)
+        test_compressed_signal_block_round.cpp
+        test_ppp_block.cpp)
 
 # coda_add_tests(
 #     MODULE_NAME ${MODULE_NAME}

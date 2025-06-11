@@ -222,5 +222,51 @@ void setUpMetadata(Metadata& metadata)
     }
     metadata.productInfo.classification = "unclass";
     metadata.productInfo.releaseInfo = "to everyone";
+
+    if (metadata.channel.get())
+    {
+        metadata.channel->parameters[0].identifier = "";
+        metadata.channel->parameters[0].refVectorIndex = 0;
+        metadata.channel->parameters[0].refFreqFixed = false;
+        metadata.channel->parameters[0].fRcvFixed = false;
+        metadata.channel->parameters[0].signalNormal = false;
+        metadata.channel->parameters[0].f0Ref = 0.0;
+        metadata.channel->parameters[0].fxBW = 0.0;
+        metadata.channel->parameters[0].fs = 0.0;
+        metadata.channel->parameters[0].bwInst = 0.0;
+        metadata.channel->parameters[0].rcvStartTime1 = 0.0;
+        metadata.channel->parameters[0].rcvStartTime2 = 0.0;
+        metadata.channel->parameters[0].fRcvMin = 0.0;
+        metadata.channel->parameters[0].fRcvMax = 0.0;
+        metadata.channel->parameters[0].rcvAPCId = "rcvAPC";
+        metadata.channel->parameters[0].rcvAPATId = "rcvAPAT";
+        metadata.channel->parameters[0].rcvRefPoint.ecf = getRandomVector3();
+        metadata.channel->parameters[0].rcvRefPoint.iac = getRandomVector2();
+        metadata.channel->parameters[0].rcvPolarization.ampH = 0.0;
+        metadata.channel->parameters[0].rcvPolarization.ampV = 0.0;
+        metadata.channel->parameters[0].rcvPolarization.phaseH = 0.0;
+        metadata.channel->parameters[0].rcvPolarization.phaseV = 0.0;
+        metadata.channel->parameters[0].rcvPolarization.polarizationID = PolarizationType::UNSPECIFIED;
+        metadata.channel->parameters[0].rcvRefIrradiance = 0.0;
+        metadata.channel->parameters[0].rcvRefIrradianceErrorStdDev = 0.0;
+        metadata.channel->parameters[0].rcvRefLAtm = 0.0;
+        metadata.channel->parameters[0].pncrsd = 0.0;
+        metadata.channel->parameters[0].bncrsd = 0.0;
+        metadata.channel->parameters[0].sarImage.reset(new ChannelSARImage());
+        metadata.channel->parameters[0].sarImage->txID = "txID";
+        metadata.channel->parameters[0].sarImage->refVectorPulseIndex = 0;
+        metadata.channel->parameters[0].sarImage->txPolarization.ampH = 0.0;
+        metadata.channel->parameters[0].sarImage->txPolarization.ampV = 0.0;
+        metadata.channel->parameters[0].sarImage->txPolarization.phaseH = 0.0;
+        metadata.channel->parameters[0].sarImage->txPolarization.phaseV = 0.0;
+        metadata.channel->parameters[0].sarImage->txPolarization.polarizationID = PolarizationType::UNSPECIFIED;
+        metadata.channel->parameters[0].sarImage->dwellTime.polynomials.reset(new Polynomials());
+        metadata.channel->parameters[0].sarImage->dwellTime.polynomials->codId = "codId";
+        metadata.channel->parameters[0].sarImage->dwellTime.polynomials->dwellId = "dwellId";
+        metadata.channel->parameters[0].sarImage->imageArea.x1y1 = getRandomVector2();
+        metadata.channel->parameters[0].sarImage->imageArea.x2y2 = getRandomVector2();
+        metadata.channel->parameters[0].sarImage->imageArea.polygon.resize(4);
+
+    }
 }
 }

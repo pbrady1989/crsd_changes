@@ -207,6 +207,7 @@ void setUpMetadata(Metadata& metadata)
         metadata.txSequence->parameters[0].xmid = "xmid";
         metadata.txSequence->parameters[0].txTime1 = 0;
         metadata.txSequence->parameters[0].txTime2 = 0;
+        metadata.txSequence->txWFType = TxWFType::LFM;
     }
 
     metadata.supportArray.antGainPhase[0].setIdentifier("antGainPhase");

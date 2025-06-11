@@ -1,10 +1,10 @@
 /* =========================================================================
- * This file is part of cphd-c++
+ * This file is part of crsd-c++
  * =========================================================================
  *
  * (C) Copyright 2004 - 2019, MDA Information Systems LLC
  *
- * cphd-c++ is free software; you can redistribute it and/or modify
+ * crsd-c++ is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
@@ -26,8 +26,8 @@
 #include <thread>
 #include <std/span>
 
-#include <cphd/CPHDReader.h>
-#include <cphd/CPHDWriter.h>
+#include <crsd/CRSDReader.h>
+#include <crsd/CRSDWriter.h>
 
 #include <mem/BufferView.h>
 #include <mem/ScopedArray.h>
@@ -37,42 +37,45 @@
 #include <cli/ArgumentParser.h>
 #include <io/FileInputStream.h>
 #include <io/FileOutputStream.h>
-#include <cphd/Metadata.h>
-#include <cphd/PVPBlock.h>
+#include <crsd/Metadata.h>
+#include <crsd/PVPBlock.h>
 
 /*!
- * Reads in CPHD file from InputFile
- * Writes out CPHD file to OutputFile
+ * Reads in CRSD file from InputFile
+ * Writes out CRSD file to OutputFile
  * Files should match
  */
 void testRoundTrip(const std::string& inPathname, const std::string& outPathname, size_t numThreads, const std::vector<std::string>& schemaPathnames)
 {
-    //! Open the CPHD file
-    cphd::CPHDReader reader(inPathname, numThreads, schemaPathnames);
-    std::cout << "Succesfully finished reading from CPHD: " << inPathname << "\n";
+    //! Open the CRSD file
+    crsd::CRSDReader reader(inPathname, numThreads, schemaPathnames);
+    std::cout << "Succesfully finished reading from CRSD: " << inPathname << "\n";
 
     // Read fileheader
-    const cphd::FileHeader& header = reader.getFileHeader();
+    const crsd::FileHeader& header = reader.getFileHeader();
 
     // Read metadata
-    const cphd::Metadata& metadata = reader.getMetadata();
+    const crsd::Metadata& metadata = reader.getMetadata();
 
     // Read SupportBlock
-    const cphd::SupportBlock& supportBlock = reader.getSupportBlock();
+    const crsd::SupportBlock& supportBlock = reader.getSupportBlock();
     std::unique_ptr<std::byte[]> readPtr;
     supportBlock.readAll(numThreads, readPtr);
 
     // Read PVPBlock
-    const cphd::PVPBlock& pvpBlock = reader.getPVPBlock();
+    const crsd::PVPBlock& pvpBlock = reader.getPVPBlock();
+
+    // Read PPPBlock
+    const crsd::PPPBlock& pppBlock = reader.getPPPBlock();
 
     // Read Wideband
-    const cphd::Wideband& wideband = reader.getWideband();
+    const crsd::Wideband& wideband = reader.getWideband();
 
-    const cphd::SignalArrayFormat signalFormat =
-            metadata.data.getSampleType();
+    const crsd::SignalArrayFormat signalFormat =
+            metadata.data.receiveParameters->getSignalArrayFormat();
 
     // Create the writer
-    cphd::CPHDWriter writer(reader.getMetadata(), outPathname, schemaPathnames, numThreads);
+    crsd::CRSDWriter writer(reader.getMetadata(), outPathname, schemaPathnames, numThreads);
 
     // Declare and allocate the wideband data storage
     std::unique_ptr<std::byte[]> data;
@@ -90,6 +93,7 @@ void testRoundTrip(const std::string& inPathname, const std::string& outPathname
         }
         writer.write(
                 pvpBlock,
+                pppBlock,
                 data.get(),
                 readPtr.get());
     }
@@ -99,37 +103,40 @@ void testRoundTrip(const std::string& inPathname, const std::string& outPathname
         for (size_t channel = 0, idx = 0; channel < metadata.data.getNumChannels(); ++channel)
         {
             const size_t bufSize = metadata.data.getSignalSize(channel);
-            wideband.read(channel, 0, cphd::Wideband::ALL,
-                 0, cphd::Wideband::ALL, numThreads,
+            wideband.read(channel, 0, crsd::Wideband::ALL,
+                 0, crsd::Wideband::ALL, numThreads,
                 std::span<std::byte>(&data[idx], bufSize));
             idx += bufSize;
         }
 
-        // Write full CPHD not compressed data
+        // Write full CRSD not compressed data
         switch (signalFormat)
         {
-        case cphd::SignalArrayFormat::CI2:
+        case crsd::SignalArrayFormat::CI2:
             writer.write(
                     pvpBlock,
+                    pppBlock,
                     reinterpret_cast<const std::complex<int8_t>* >(data.get()),
                     readPtr.get());
             break;
-        case cphd::SignalArrayFormat::CI4:
+        case crsd::SignalArrayFormat::CI4:
             writer.write(
                     pvpBlock,
+                    pppBlock,
                     reinterpret_cast<const std::complex<int16_t>* >(data.get()),
                     readPtr.get());
             break;
-        case cphd::SignalArrayFormat::CF8:
+        case crsd::SignalArrayFormat::CF8:
             writer.write(
                     pvpBlock,
+                    pppBlock,
                     reinterpret_cast<const std::complex<float>* >(data.get()),
                     readPtr.get());
             break;
         }
     }
 
-    std::cout << "Succesfully finished writing to CPHD: " << outPathname << "\n";
+    std::cout << "Succesfully finished writing to CRSD: " << outPathname << "\n";
 }
 
 int main(int argc, char** argv)
@@ -138,16 +145,16 @@ int main(int argc, char** argv)
     {
         // Parse the command line
         cli::ArgumentParser parser;
-        parser.setDescription("Round trip for a CPHD file.");
+        parser.setDescription("Round trip for a CRSD file.");
         parser.addArgument("-t --threads",
                            "Specify the number of threads to use",
                            cli::STORE,
                            "threads",
                            "NUM")->setDefault(std::thread::hardware_concurrency());
         parser.addArgument("input", "Input pathname", cli::STORE, "input",
-                           "CPHD", 1, 1);
+                           "CRSD", 1, 1);
         parser.addArgument("output", "Output pathname", cli::STORE, "output",
-                           "CPHD", 1, 1);
+                           "CRSD", 1, 1);
         parser.addArgument("schema", "Schema pathname", cli::STORE, "schema",
                            "XSD", 1, 10);
         const std::unique_ptr<cli::Results> options(parser.parse(argc, argv));

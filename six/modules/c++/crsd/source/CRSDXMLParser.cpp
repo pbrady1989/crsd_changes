@@ -61,7 +61,7 @@ std::unique_ptr<xml::lite::Document> CRSDXMLParser::toXML(
     const bool DEBUG = false;
     std::unique_ptr<xml::lite::Document> doc(new xml::lite::Document());
 
-    XMLElem root = newElement("CRSD");
+    XMLElem root = newElement(six::toString<CRSDType>(metadata.getType()));
     doc->setRootElement(root);
 
     if (DEBUG)
@@ -97,6 +97,12 @@ std::unique_ptr<xml::lite::Document> CRSDXMLParser::toXML(
         if (DEBUG)
             std::cout << "Converting dwell to XML..." << std::endl;
         toXML(*(metadata.dwell), root);
+    }
+     if (metadata.channel.get())
+    {
+        if (DEBUG)
+            std::cout << "Converting channel to XML..." << std::endl;
+        toXML(*(metadata.channel), root);
     }
     if (metadata.pvp.get())
     {
@@ -327,7 +333,6 @@ XMLElem CRSDXMLParser::toXML(const Data& data, XMLElem parent)
     if (data.transmitParameters.get())
     {
         XMLElem transmitXML = newElement("Transmit", dataXML);
-        createString("Identifier", data.transmitParameters->getIdentifier(), transmitXML);
         createInt("NumBytesPPP", data.transmitParameters->getNumBytesPPP(), transmitXML);
         createInt("NumTxSequences", data.transmitParameters->getNumTxSequences(), transmitXML);
         for (size_t ii = 0; ii < data.transmitParameters->txSequence.size(); ++ii)
@@ -453,15 +458,29 @@ XMLElem CRSDXMLParser::toXML(const Channel& channel, XMLElem parent)
             createString("TxId", channel.parameters[ii].sarImage->txID, sarXML);
             createInt("RefVectorPulseIndex", channel.parameters[ii].sarImage->refVectorPulseIndex,sarXML);
             XMLElem txPolXML = newElement("TxPolarization", sarXML);
-            createString("PolarizationID", channel.parameters[ii].rcvPolarization.polarizationID, txPolXML);
+            createString("PolarizationID", channel.parameters[ii].sarImage->txPolarization.polarizationID, txPolXML);
             createDouble("AmpH", channel.parameters[ii].sarImage->txPolarization.ampH, txPolXML);
             createDouble("AmpV", channel.parameters[ii].sarImage->txPolarization.ampV, txPolXML);
             createDouble("PhaseH", channel.parameters[ii].sarImage->txPolarization.phaseH, txPolXML);
             createDouble("PhaseV", channel.parameters[ii].sarImage->txPolarization.phaseV, txPolXML);
             XMLElem dwellTimesXML = newElement("DwellTimes", sarXML);
-            createString("CODId", channel.parameters[ii].sarImage->dwellTime.codId, dwellTimesXML);
-            createString("DwellId", channel.parameters[ii].sarImage->dwellTime.dwellId, dwellTimesXML);
-            createString("DTAId", channel.parameters[ii].sarImage->dwellTime.dtaId, dwellTimesXML);
+            if (channel.parameters[ii].sarImage->dwellTime.polynomials.get())
+            {
+                XMLElem polynomialsXML = newElement("Polynomials", dwellTimesXML);
+                createString("CODId", channel.parameters[ii].sarImage->dwellTime.polynomials->codId, polynomialsXML);
+                createString("DwellId", channel.parameters[ii].sarImage->dwellTime.polynomials->dwellId, polynomialsXML);
+            }
+            else if (channel.parameters[ii].sarImage->dwellTime.array.get())
+            {
+                XMLElem arrayXML = newElement("Array", dwellTimesXML);
+                createString("DTAId", channel.parameters[ii].sarImage->dwellTime.array->dtaId, arrayXML);
+            }
+            else
+            {
+                throw except::Exception(Ctxt(
+                        "DwellTime must be one of two types"));
+            }
+            
             XMLElem imageAreaXML = newElement("ImageArea", sarXML);
             mCommon.createVector2D("X1Y1", channel.parameters[ii].sarImage->imageArea.x1y1, imageAreaXML);
             mCommon.createVector2D("X2Y2", channel.parameters[ii].sarImage->imageArea.x2y2, imageAreaXML);
@@ -677,9 +696,9 @@ XMLElem CRSDXMLParser::toXML(const ReferenceGeometry& refGeo, XMLElem parent)
     if (refGeo.txParameters.get())
     {
         XMLElem txXML = newElement("TxParameters", refGeoXML);
-        createDouble("CODTime", refGeo.txParameters->time, txXML);
-        mCommon.createVector3D("ARPPos", refGeo.txParameters->apcPos, txXML);
-        mCommon.createVector3D("ARPVel", refGeo.txParameters->apcVel, txXML);
+        createDouble("Time", refGeo.txParameters->time, txXML);
+        mCommon.createVector3D("APCPos", refGeo.txParameters->apcPos, txXML);
+        mCommon.createVector3D("APCVel", refGeo.txParameters->apcVel, txXML);
         const auto side = refGeo.txParameters->sideOfTrack.toString();
         createString("SideOfTrack", (side == "LEFT" ? "L" : "R"), txXML);
         createDouble("SlantRange", refGeo.txParameters->slantRange, txXML);
@@ -693,9 +712,9 @@ XMLElem CRSDXMLParser::toXML(const ReferenceGeometry& refGeo, XMLElem parent)
     if (refGeo.rcvParameters.get())
     {
         XMLElem rcvXML = newElement("RcvParameters", refGeoXML);
-        createDouble("CODTime", refGeo.rcvParameters->time, rcvXML);
-        mCommon.createVector3D("ARPPos", refGeo.rcvParameters->apcPos, rcvXML);
-        mCommon.createVector3D("ARPVel", refGeo.rcvParameters->apcVel, rcvXML);
+        createDouble("Time", refGeo.rcvParameters->time, rcvXML);
+        mCommon.createVector3D("APCPos", refGeo.rcvParameters->apcPos, rcvXML);
+        mCommon.createVector3D("APCVel", refGeo.rcvParameters->apcVel, rcvXML);
         const auto side = refGeo.rcvParameters->sideOfTrack.toString();
         createString("SideOfTrack", (side == "LEFT" ? "L" : "R"), rcvXML);
         createDouble("SlantRange", refGeo.rcvParameters->slantRange, rcvXML);
@@ -2107,13 +2126,15 @@ void CRSDXMLParser::parseChannelParameters(
         XMLElem polyXML = getOptional(dwellXML, "Polynomials");
         if (polyXML)
         {
-            parseString(getFirstAndOnly(polyXML, "CODId"), param.sarImage->dwellTime.codId);
-            parseString(getFirstAndOnly(polyXML, "DwellId"), param.sarImage->dwellTime.dwellId);
+            param.sarImage->dwellTime.polynomials.reset(new crsd::Polynomials());
+            parseString(getFirstAndOnly(polyXML, "CODId"), param.sarImage->dwellTime.polynomials->codId);
+            parseString(getFirstAndOnly(polyXML, "DwellId"), param.sarImage->dwellTime.polynomials->dwellId);
         }
         XMLElem arrayXML = getOptional(dwellXML, "Array");
         if (arrayXML)
         {
-            parseString(getFirstAndOnly(arrayXML, "DTAId"), param.sarImage->dwellTime.dtaId);
+            param.sarImage->dwellTime.array.reset(new crsd::PolyArray());
+            parseString(getFirstAndOnly(arrayXML, "DTAId"), param.sarImage->dwellTime.array->dtaId);
         }
         const xml::lite::Element* imageAreaXML = getFirstAndOnly(sarImageXML, "ImageArea");
         parseAreaType(imageAreaXML, param.sarImage->imageArea);

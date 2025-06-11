@@ -58,32 +58,24 @@ bool testEqual(const std::string& inPathname, const std::string& outPathname,
     // Read in first XML file
     xml::lite::MinidomParser xmlParser;
     parseXMLFile(xmlParser, inPathname);
-    std::cout << "inPathname: " << inPathname << std::endl;
     crsd::CRSDXMLControl xmlControl(new logging::NullLogger(), true);
-    std::cout << "schemas[0]: " << schemas[0] << std::endl;
     const std::unique_ptr<crsd::Metadata> metadata =
             xmlControl.fromXML(xmlParser.getDocument(), schemas);
-    std::cout << __LINE__ << std::endl;
     const auto xmlMetadata(xmlControl.toXMLString(*metadata));
-    std::cout << __LINE__ << std::endl;
 
     //Output XML file to temp file
     io::FileOutputStream ofs(outPathname);
     ofs.write(xmlMetadata.c_str(), xmlMetadata.size());
-    std::cout << __LINE__ << std::endl;
 
     // Read in second XML file from temp file
     xml::lite::MinidomParser xmlParser2;
     parseXMLFile(xmlParser2, outPathname);
-    std::cout << __LINE__ << std::endl;
 
     crsd::CRSDXMLControl xmlControl2(new logging::NullLogger(), true);
-    std::cout << __LINE__ << std::endl;
 
     // Populate metadata object from XML Document
     const std::unique_ptr<crsd::Metadata> metadata2 =
             xmlControl2.fromXML(xmlParser2.getDocument(), schemas);
-    std::cout << __LINE__ << std::endl;
 
     // Check if both metadata are equal
     return (*metadata == *metadata2);
@@ -91,8 +83,7 @@ bool testEqual(const std::string& inPathname, const std::string& outPathname,
 
 void runTests(const std::string& inPathname, size_t numThreads, const std::vector<std::string>& schemas)
 {
-    io::TempFile tempfile;
-    bool test1 = testEqual(inPathname, tempfile.pathname(), numThreads, schemas);
+    bool test1 = testEqual(inPathname, "outputCRSD.crsd", numThreads, schemas);
 
     if (!test1)
     {

@@ -142,6 +142,9 @@ public:
     //! \return Suported version to uri mapping
     static std::unordered_map<std::string, xml::lite::Uri> getVersionUriMap();
 
+    //! \return Suported crsd type to uri mapping
+    static std::unordered_map<std::string, xml::lite::Uri> getTypeUriMap();
+
 protected:
     logging::Logger *mLog = nullptr;
     bool mOwnLog = false;
@@ -176,6 +179,9 @@ private:
 
     // Given the URI get associated version
     std::string uriToVersion(const xml::lite::Uri&) const;
+
+    // Given the URI get associated version
+    std::string uriToType(const xml::lite::Uri&) const;
 };
 }
 

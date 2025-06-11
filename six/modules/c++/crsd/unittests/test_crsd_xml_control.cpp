@@ -1622,8 +1622,8 @@ void runTestSAR(const std::string& testName, const std::string& version)
     TEST_ASSERT_EQ(metadata->channel->parameters[0].sarImage->txPolarization.ampV, 0.0);
     TEST_ASSERT_EQ(metadata->channel->parameters[0].sarImage->txPolarization.phaseH, 0.0);
     TEST_ASSERT_EQ(metadata->channel->parameters[0].sarImage->txPolarization.phaseV, 0.0);  
-    TEST_ASSERT_EQ(metadata->channel->parameters[0].sarImage->dwellTime.codId, "COD1");    
-    TEST_ASSERT_EQ(metadata->channel->parameters[0].sarImage->dwellTime.dwellId, "DWELL1");
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].sarImage->dwellTime.polynomials->codId, "COD1");    
+    TEST_ASSERT_EQ(metadata->channel->parameters[0].sarImage->dwellTime.polynomials->dwellId, "DWELL1");
     TEST_ASSERT_EQ(metadata->channel->parameters[0].sarImage->imageArea.x1y1[0], 0.0);
     TEST_ASSERT_EQ(metadata->channel->parameters[0].sarImage->imageArea.x1y1[1], 0.0);
     TEST_ASSERT_EQ(metadata->channel->parameters[0].sarImage->imageArea.x2y2[0], 1000.0);

@@ -134,23 +134,93 @@ void Metadata::setType(const CRSDType& type)
 
 bool Metadata::operator==(const Metadata& other) const
 {
-    return global == other.global &&
-           sceneCoordinates == other.sceneCoordinates &&
-           data == other.data &&
-           channel == other.channel &&
-           ppp == other.ppp &&
-           pvp == other.pvp &&
-           dwell == other.dwell &&
-           referenceGeometry == other.referenceGeometry &&
-           supportArray == other.supportArray &&
-           antenna == other.antenna &&
-           txSequence == other.txSequence &&
-           errorParameters == other.errorParameters &&
-           productInfo == other.productInfo &&
-           sarInfo == other.sarInfo &&
-           receiveInfo == other.receiveInfo &&
-           transmitInfo == other.transmitInfo &&
-           geoInfo == other.geoInfo;
+    if (global != other.global)
+    {
+        std::cout << "Global metadata is not equal." << std::endl;
+        return false;
+    }
+    if (sceneCoordinates != other.sceneCoordinates)
+    {
+        std::cout << "Scene coordinates are not equal." << std::endl;
+        return false;
+    }
+    if (data != other.data)
+    {
+        std::cout << "Data metadata is not equal." << std::endl;
+        return false;
+    }
+    if (channel != other.channel)
+    {
+        std::cout << "Channel metadata is not equal." << std::endl;
+        return false;
+    }
+    if (ppp != other.ppp)
+    {
+        std::cout << "PPP metadata is not equal." << std::endl;
+        return false;
+    }
+    if (pvp != other.pvp)
+    {
+        std::cout << "PVP metadata is not equal." << std::endl;
+        return false;
+    }
+    if (dwell != other.dwell)
+    {
+        std::cout << "Dwell metadata is not equal." << std::endl;
+        return false;
+    }
+    if (referenceGeometry != other.referenceGeometry)
+    {
+        std::cout << "Reference geometry metadata is not equal." << std::endl;
+        return false;
+    }
+    if (supportArray != other.supportArray)
+    {
+        std::cout << "Support array metadata is not equal." << std::endl;
+        return false;
+    }
+    if (antenna != other.antenna)
+    {
+        std::cout << "Antenna metadata is not equal." << std::endl;
+        return false;
+    }
+    if (txSequence != other.txSequence)
+    {
+        std::cout << "TxSequence metadata is not equal." << std::endl;
+        return false;
+    }
+    if (errorParameters != other.errorParameters)
+    {
+        std::cout << "Error parameters metadata is not equal." << std::endl;
+        return false;
+    }
+    if (productInfo != other.productInfo)
+    {
+        std::cout << "Product info metadata is not equal." << std::endl;
+        return false;
+    }
+    if (sarInfo != other.sarInfo)
+    {
+        std::cout << "SAR info metadata is not equal." << std::endl;
+        return false;
+    }
+    if (receiveInfo != other.receiveInfo)
+    {
+        std::cout << "Receive info metadata is not equal." << std::endl;
+        return false;
+    }
+    if (transmitInfo != other.transmitInfo)
+    {
+        std::cout << "Transmit info metadata is not equal." << std::endl;
+        return false;
+    }
+    if (geoInfo.size() != other.geoInfo.size())
+    {
+        std::cout << "Geo info metadata size is not equal." << std::endl;
+        return false;
+    }
+
+    return true;
 }
 
 std::ostream& operator<< (std::ostream& os, const Metadata& d)

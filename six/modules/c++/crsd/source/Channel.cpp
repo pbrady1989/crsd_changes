@@ -33,6 +33,14 @@ Polarization::Polarization() :
 {
 }
 
+Polynomials::Polynomials()
+{
+}
+
+PolyArray::PolyArray()
+{
+}
+
 DwellTimes::DwellTimes()
 {
 }
@@ -93,11 +101,18 @@ std::ostream& operator<< (std::ostream& os, const RcvRefPoint& t)
 
 std::ostream& operator<< (std::ostream& os, const DwellTimes& d)
 {
-    os  << "      DwellTimes:: \n"
-        << "      CODId          : " << d.codId << "\n"
-        << "      DwellId        : " << d.dwellId << "\n"
-        << "      DTAId          : " << d.dtaId << "\n";
-        return os;
+    os  << "      DwellTimes:: \n";
+    if (d.polynomials.get())
+    {
+        os << "      CODId          : " << d.polynomials->codId << "\n"
+           << "      DwellId        : " << d.polynomials->dwellId << "\n";
+    }
+    else if (d.array.get())
+    {
+        os << "      DTAId          : " << d.array->dtaId << "\n";
+    }
+
+    return os;
 }
 
 std::ostream& operator<< (std::ostream& os, const ChannelSARImage& t)

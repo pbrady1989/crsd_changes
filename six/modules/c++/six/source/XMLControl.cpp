@@ -151,20 +151,16 @@ static void do_validate_(const xml::lite::Document& doc,
 {
     // validate against any specified schemas
     xml::lite::Validator validator(paths, log, true);
-    std::cout << __LINE__ << std::endl;
     const auto& rootElement = doc.getRootElement();
     if (rootElement->getUri().empty())
     {
         throw six::DESValidationException(Ctxt("INVALID XML: URI is empty so document version cannot be determined to use for validation"));
     }
-std::cout << __LINE__ << std::endl;
     // Pretty-print so that lines numbers are useful
     io::U8StringStream xmlStream;
     rootElement->prettyPrint(xmlStream);
-std::cout << __LINE__ << std::endl;
     std::vector<xml::lite::ValidationInfo> errors;
     validator.validate(xmlStream, rootElement->getUri(), errors);
-std::cout << __LINE__ << std::endl;
     // log any error found and throw
     if (!errors.empty())
     {
@@ -190,7 +186,6 @@ static void validate_(const xml::lite::Document& doc,
 {
     // If the paths we have don't exist, throw
     paths = check_whether_paths_exist(paths);
-    std::cout << __LINE__ << std::endl;
     // validate against any specified schemas
     if (!paths.empty())
     {

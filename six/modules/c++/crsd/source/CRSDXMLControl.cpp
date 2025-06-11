@@ -57,6 +57,7 @@ std::u8string CRSDXMLControl::toXMLString(
     const std::vector<std::filesystem::path>* pSchemaPaths,
     bool prettyPrint)
 {
+    prettyPrint = true;
     std::vector<std::string> schemaPaths;
     if (pSchemaPaths != nullptr)
     {
@@ -99,7 +100,18 @@ mem::auto_ptr<xml::lite::Document> CRSDXMLControl::toXML(
 std::unordered_map<std::string, xml::lite::Uri> CRSDXMLControl::getVersionUriMap()
 {
     return {
-        {"1.0.0", xml::lite::Uri("urn:CRSD:1.0.0")}
+        {"1.0.0", xml::lite::Uri("urn:CRSDsar:1.0.0")},
+        {"1.0.0", xml::lite::Uri("urn:CRSDtx:1.0.0")},
+        {"1.0.0", xml::lite::Uri("urn:CRSDrcv:1.0.0")}
+    };
+}
+
+std::unordered_map<std::string, xml::lite::Uri> CRSDXMLControl::getTypeUriMap()
+{
+    return {
+        {"CRSDsar", xml::lite::Uri("urn:CRSDsar:1.0.0")},
+        {"CRSDtx", xml::lite::Uri("urn:CRSDtx:1.0.0")},
+        {"CRSDrcv", xml::lite::Uri("urn:CRSDrcv:1.0.0")}
     };
 }
 
@@ -150,6 +162,7 @@ std::unique_ptr<Metadata> CRSDXMLControl::fromXML(const xml::lite::Document* doc
     std::unique_ptr<Metadata> metadata = fromXMLImpl(doc);
     const xml::lite::Uri uri(doc->getRootElement()->getUri());
     metadata->setVersion(uriToVersion(uri));
+    metadata->setType(six::toType<CRSDType>(uriToType(uri)));
     return metadata;
 }
 Metadata CRSDXMLControl::fromXML(const xml::lite::Document& doc, const std::vector<std::filesystem::path>& schemaPaths)
@@ -177,6 +190,23 @@ std::string CRSDXMLControl::uriToVersion(const xml::lite::Uri& uri) const
 {
     const auto versionUriMap = getVersionUriMap();
     for (const auto& p : versionUriMap)
+    {
+        if (p.second == uri)
+        {
+            return p.first;
+        }
+    }
+    std::ostringstream ostr;
+    ostr << "The URI " << uri << " is invalid. "
+         << "Either input a valid URI or "
+         << "add a <version, URI> entry to versionUriMap";
+    throw except::Exception(Ctxt(ostr.str()));
+}
+
+std::string CRSDXMLControl::uriToType(const xml::lite::Uri& uri) const
+{
+    const auto typeUriMap = getTypeUriMap();
+    for (const auto& p : typeUriMap)
     {
         if (p.second == uri)
         {

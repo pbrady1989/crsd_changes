@@ -72,6 +72,65 @@ struct Polarization
 };
 
 /*
+ *  \struct Polynomials
+ *
+ *  \brief COD Time & Dwell Time polynomials
+ *
+ *  See section 6.3 and section 7.2.6
+ */
+struct Polynomials
+{
+    //! COD Time & Dwell Time polynomials over the
+    //! image area
+    Polynomials();
+
+    // Equality operator
+    bool operator==(const Polynomials& other) const
+    {
+        return codId == other.codId &&
+               dwellId == other.dwellId;
+    }
+    bool operator!=(const Polynomials& other) const
+    {
+        return !((*this) == other);
+    }
+
+    //! Identifier of the center of Dwell Time polynomial
+    //! that maps reference surface position to COD time
+    std::string codId;
+
+    //! Identifier of the dwell Time polynomial that
+    //! maps reference surface position to dwell time
+    std::string dwellId;
+};
+
+/*
+ *  \struct PolyArray
+ *
+ *  \brief COD Time & Dwell Time polynomials
+ *
+ *  See section 6.3 and section 7.2.6
+ */
+struct PolyArray
+{
+    //! PolyArray Constructor
+    PolyArray();
+
+    // Equality operator
+    bool operator==(const PolyArray& other) const
+    {
+        return  dtaId == other.dtaId;
+    }
+    bool operator!=(const PolyArray& other) const
+    {
+        return !((*this) == other);
+    }
+
+    // Dwell Time support array identifier
+    std::string dtaId;
+};
+
+/*
  *  \struct DwellTimes
  *
  *  \brief COD Time & Dwell Time polynomials
@@ -87,9 +146,15 @@ struct DwellTimes
     // Equality operator
     bool operator==(const DwellTimes& other) const
     {
-        return codId == other.codId &&
-               dwellId == other.dwellId &&
-               dtaId == other.dtaId;
+        if (polynomials.get() && other.polynomials.get())
+        {
+            return polynomials->codId == other.polynomials->codId &&
+                   polynomials->dwellId == other.polynomials->dwellId;
+        }
+        else if (array.get() && other.array.get())
+        {
+                   array->dtaId == other.array->dtaId;
+        }
     }
     bool operator!=(const DwellTimes& other) const
     {
@@ -98,14 +163,11 @@ struct DwellTimes
 
     //! Identifier of the center of Dwell Time polynomial
     //! that maps reference surface position to COD time
-    std::string codId;
+    mem::ScopedCopyablePtr<Polynomials> polynomials;
 
-    //! Identifier of the dwell Time polynomial that
-    //! maps reference surface position to dwell time
-    std::string dwellId;
-
-    // Dwell Time support array identifier
-    std::string dtaId;
+    //! Identifier of the center of Dwell Time polynomial
+    //! that maps reference surface position to COD time
+    mem::ScopedCopyablePtr<PolyArray> array;
 };
 
 struct RcvRefPoint

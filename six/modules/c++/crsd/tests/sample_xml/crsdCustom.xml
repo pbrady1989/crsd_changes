@@ -1,4 +1,4 @@
-<?xml version="1.0.0"?><CRSDsar xmlns="urn:CRSD:1.0.0">
+<?xml version="1.0.0"?><CRSDsar xmlns="urn:CRSDsar:1.0.0">
   <ProductInfo>
     <ProductName>EXAMPLE_PRODUCT</ProductName>
     <Classification>UNCLASSIFIED</Classification>
@@ -581,6 +581,7 @@
       </MLFreqDilation>
       <GainBSPoly order1="1">
         <Coef exponent1="0">1.0</Coef>
+        <Coef exponent1="1">0.0</Coef>
       </GainBSPoly>
       <AntPolRef>
         <AmpX>1.0</AmpX>

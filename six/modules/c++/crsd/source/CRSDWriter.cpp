@@ -234,7 +234,14 @@ void CRSDWriter::write(const PVPBlock& pvpBlock,
 {
     // Write File header and metadata to file
     // Padding is added in writeMetadata
-    writeMetadata(pvpBlock, pppBlock);
+    if (mMetadata.getType() == CRSDType::SAR)
+        writeMetadata(pvpBlock, pppBlock);
+    else if (mMetadata.getType() == CRSDType::TX)
+        writeMetadata(pppBlock);
+    else if (mMetadata.getType() == CRSDType::RCV)
+        writeMetadata(pvpBlock);
+    else
+        throw except::Exception(Ctxt("CRSDType is not supported"));
 
     // Write optional support array block
     // Padding is added in writeSupportData
@@ -249,22 +256,26 @@ void CRSDWriter::write(const PVPBlock& pvpBlock,
 
     // Write pvp data block
     // Padding is added in writePVPData
-    writePPPData(pppBlock);
+    if (mMetadata.getType() != CRSDType::RCV)
+        writePPPData(pppBlock);
 
     // Write pvp data block
     // Padding is added in writePVPData
-    writePVPData(pvpBlock);
-
-    // Doesn't require padding because pvp block is always 8 bytes words
-    // Write wideband (or signal) block
-    size_t elementsWritten = 0;  // Used to increment widebandData pointer
-    for (size_t ii = 0; ii < mMetadata.data.getNumChannels(); ++ii)
+    if (mMetadata.getType() != CRSDType::TX)
     {
-        size_t numElements = mMetadata.data.getNumVectors(ii) *
-                mMetadata.data.getNumSamples(ii);
-        // writeCRSDData handles compressed data as well
-        writeCRSDData<T>(widebandData + elementsWritten, numElements, ii);
-        elementsWritten += numElements;
+        writePVPData(pvpBlock);
+
+        // Doesn't require padding because pvp block is always 8 bytes words
+        // Write wideband (or signal) block
+        size_t elementsWritten = 0;  // Used to increment widebandData pointer
+        for (size_t ii = 0; ii < mMetadata.data.getNumChannels(); ++ii)
+        {
+            size_t numElements = mMetadata.data.getNumVectors(ii) *
+                    mMetadata.data.getNumSamples(ii);
+            // writeCRSDData handles compressed data as well
+            writeCRSDData<T>(widebandData + elementsWritten, numElements, ii);
+            elementsWritten += numElements;
+        }
     }
 }
 
@@ -364,6 +375,7 @@ void CRSDWriter::writePPPData(const PPPBlock& pppBlock)
     }
 }
 
+// Write metadata for CRSD SAR File. (has PPP and PVP)
 void CRSDWriter::writeMetadata(const PVPBlock& pvpBlock,
                                const PPPBlock& pppBlock)    
 {
@@ -401,8 +413,78 @@ void CRSDWriter::writeMetadata(const PVPBlock& pvpBlock,
     for (size_t ii = 0; ii < numTxSequences; ++ii)
     {
         totalPPPSize += pppBlock.getPPPsize(ii);
-        totalCRSDSize += mMetadata.data.getNumPulses(ii) *
+    }
+
+    writeMetadata(totalSupportSize, totalPVPSize, totalPPPSize, totalCRSDSize);
+}
+
+// Write metadata for CRSD RCV File. (hasPVP only )
+void CRSDWriter::writeMetadata(const PVPBlock& pvpBlock)    
+{
+    // Update the number of bytes per PVP
+    if (mMetadata.data.receiveParameters->getNumBytesPVP() != pvpBlock.getNumBytesPVPSet())
+    {
+        std::ostringstream ostr;
+        ostr << "Number of pvp block bytes in metadata: "
+             << mMetadata.data.receiveParameters->getNumBytesPVP() 
+             << " does not match calculated size of pvp block: "
+             << pvpBlock.getNumBytesPVPSet();
+        throw except::Exception(ostr.str());
+    }
+
+    const size_t numChannels = mMetadata.data.getNumChannels();
+    const size_t numTxSequences = mMetadata.data.getNumTxSequences();
+    size_t totalSupportSize = 0;
+    size_t totalPVPSize = 0;
+    size_t totalPPPSize = 0;
+    size_t totalCRSDSize = 0;
+
+    for (auto it = mMetadata.data.supportArrayMap.begin();
+         it != mMetadata.data.supportArrayMap.end();
+         ++it)
+    {
+        totalSupportSize += it->second.getSize();
+    }
+    for (size_t ii = 0; ii < numChannels; ++ii)
+    {
+        totalPVPSize += pvpBlock.getPVPsize(ii);
+        totalCRSDSize += mMetadata.data.getNumVectors(ii) *
                 mMetadata.data.getNumSamples(ii) * mElementSize;
+    }
+
+    writeMetadata(totalSupportSize, totalPVPSize, totalPPPSize, totalCRSDSize);
+}
+
+// Write metadata for CRSD TX File. (has PPP only)
+void CRSDWriter::writeMetadata(const PPPBlock& pppBlock)    
+{
+    // Update the number of bytes per PVP
+    if (mMetadata.data.transmitParameters->getNumBytesPPP() != pppBlock.getNumBytesPPPSet())
+    {
+        std::ostringstream ostr;
+        ostr << "Number of ppp block bytes in metadata: "
+             << mMetadata.data.transmitParameters->getNumBytesPPP() 
+             << " does not match calculated size of ppp block: "
+             << pppBlock.getNumBytesPPPSet();
+        throw except::Exception(ostr.str());
+    }
+    
+    const size_t numTxSequences = mMetadata.data.getNumTxSequences();
+    size_t totalSupportSize = 0;
+    size_t totalPVPSize = 0;
+    size_t totalPPPSize = 0;
+    size_t totalCRSDSize = 0;
+
+    for (auto it = mMetadata.data.supportArrayMap.begin();
+         it != mMetadata.data.supportArrayMap.end();
+         ++it)
+    {
+        totalSupportSize += it->second.getSize();
+    }
+
+    for (size_t ii = 0; ii < numTxSequences; ++ii)
+    {
+        totalPPPSize += pppBlock.getPPPsize(ii);
     }
 
     writeMetadata(totalSupportSize, totalPVPSize, totalPPPSize, totalCRSDSize);

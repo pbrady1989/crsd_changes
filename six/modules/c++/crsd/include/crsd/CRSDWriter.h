@@ -267,7 +267,7 @@ struct CRSDWriter
 
     /*
      *  \func writeMetadata
-     *  \brief Writes the header, and metadata into the file.
+     *  \brief Writes the header, and metadata into the file for CRSDSar
      *
      *  This should be used in situations where you need to write out the CPHD
      *  data in chunks.
@@ -275,6 +275,28 @@ struct CRSDWriter
      *  \param pvpBlock The vector based metadata to write.
      */
     void writeMetadata(const PVPBlock& pvpBlock, const PPPBlock& pppBlock);
+
+    /*
+     *  \func writeMetadata
+     *  \brief Writes the header, and metadata into the file for CRSDrcv
+     *
+     *  This should be used in situations where you need to write out the CPHD
+     *  data in chunks.
+     *
+     *  \param pvpBlock The vector based metadata to write.
+     */
+    void writeMetadata(const PVPBlock& pvpBlock);
+
+    /*
+     *  \func writeMetadata
+     *  \brief Writes the header, and metadata into the file for CRSDtx
+     *
+     *  This should be used in situations where you need to write out the CPHD
+     *  data in chunks.
+     *
+     *  \param pvpBlock The vector based metadata to write.
+     */
+    void writeMetadata(const PPPBlock& pppBlock);
 
     /*
      *  \func writeSupportData

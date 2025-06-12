@@ -91,25 +91,34 @@ void CRSDReader::initialize(std::shared_ptr<io::SeekableInputStream> inStream,
 
     mSupportBlock = std::make_unique<SupportBlock>(inStream, mMetadata.data, mFileHeader);
 
-    // Load the PPPBlock into memory
-    if (DEBUG)
-        std::cout << "reading in PPP block..." << std::endl;
+    if (mMetadata.getType() != CRSDType::RCV)
+    {
+        // Load the PPPBlock into memory
+        if (DEBUG)
+            std::cout << "reading in PPP block..." << std::endl;
 
-    mPPPBlock = PPPBlock(mMetadata);
-    mPPPBlock.load(*inStream, mFileHeader, numThreads);
+        mPPPBlock = PPPBlock(mMetadata);
+        
+        mPPPBlock.load(*inStream, mFileHeader, numThreads);
 
-    // Load the PVPBlock into memory
-    if (DEBUG)
-        std::cout << "reading in PVP block..." << std::endl;
 
-    mPVPBlock = PVPBlock(mMetadata);
-    mPVPBlock.load(*inStream, mFileHeader, numThreads);
+    }
 
-    // Setup for wideband reading
-    if (DEBUG)
-        std::cout << "reading in wideband block..." << std::endl;
+    if (mMetadata.getType() != CRSDType::TX)
+    {
+        // Load the PVPBlock into memory
+        if (DEBUG)
+            std::cout << "reading in PVP block..." << std::endl;
 
-    mWideband = std::make_unique<Wideband>(inStream, mMetadata,
-        mFileHeader.getSignalBlockByteOffset(), mFileHeader.getSignalBlockSize());
+        mPVPBlock = PVPBlock(mMetadata);
+        mPVPBlock.load(*inStream, mFileHeader, numThreads);
+
+        // Setup for wideband reading
+        if (DEBUG)
+            std::cout << "reading in wideband block..." << std::endl;
+
+        mWideband = std::make_unique<Wideband>(inStream, mMetadata,
+            mFileHeader.getSignalBlockByteOffset(), mFileHeader.getSignalBlockSize());
+    }
 }
 }

@@ -129,6 +129,15 @@ void setPulseParameters(size_t txSequence,
 void setUpMetadata(Metadata& metadata);
 
 /*
+ *  \func setUpMetadataRCV
+ *  \brief Set up bare minimum metadata for valid roundtrip for CRSDrcv
+ *
+ *  \param[out] Filled metadata object
+ *
+ */
+void setUpMetadataRCV(Metadata& metadata);
+
+/*
  *  \func setUpData
  *  \brief Sets up data metadata, as well as rest of metadata
  *
@@ -164,51 +173,57 @@ void setUpData(Metadata& metadata,
                const std::vector<T>& writeData)
 {
     const size_t numChannels = 1;
-    if (!metadata.data.receiveParameters.get())
+    if (metadata.getType() != CRSDType::TX)
     {
-        metadata.data.receiveParameters.reset(new crsd::Data::Receive());
-    }
-    for (size_t ii = 0; ii < numChannels; ++ii)
-    {
-        metadata.data.receiveParameters->channels.push_back(crsd::Data::Channel(dims.row, dims.col));
-    }
-
-    const size_t numTxSequences = 1;
-    metadata.data.transmitParameters.reset(new crsd::Data::Transmit());
-    for (size_t ii = 0; ii < numTxSequences; ++ii)
-    {
-        metadata.data.transmitParameters->txSequence.push_back(crsd::Data::TxSequence(dims.row, dims.col));
-    }
-
-    if (!writeData.empty())
-    {
-        // If compressed data
-        if (metadata.data.isCompressed())
+        if (!metadata.data.receiveParameters.get())
         {
+            metadata.data.receiveParameters.reset(new crsd::Data::Receive());
+        }
+        for (size_t ii = 0; ii < numChannels; ++ii)
+        {
+            metadata.data.receiveParameters->channels.push_back(crsd::Data::Channel(dims.row, dims.col));
+        }
+    }
 
-            std::cout << "Using compressed CRSD data..." << std::endl;            
-            // SignalArrayFormat doesn't matter for storing
-            metadata.data.receiveParameters->signalArrayFormat = crsd::SignalArrayFormat::CF8;
-            for (size_t ii = 0; ii < numChannels; ++ii)
+    if (metadata.getType() != CRSDType::RCV)
+    {
+        const size_t numTxSequences = 1;
+        metadata.data.transmitParameters.reset(new crsd::Data::Transmit());
+        for (size_t ii = 0; ii < numTxSequences; ++ii)
+        {
+            metadata.data.transmitParameters->txSequence.push_back(crsd::Data::TxSequence(dims.row, dims.col));
+        }
+    }
+
+    if (metadata.getType() != CRSDType::TX)
+    {
+        if (!writeData.empty())
+        {
+            // If compressed data
+            if (metadata.data.isCompressed())
             {
-                if (!metadata.data.receiveParameters->signalCompression.get())
+                // SignalArrayFormat doesn't matter for storing
+                metadata.data.receiveParameters->signalArrayFormat = crsd::SignalArrayFormat::CF8;
+                for (size_t ii = 0; ii < numChannels; ++ii)
                 {
-                    metadata.data.receiveParameters->signalCompression.reset(new crsd::Data::SignalCompression());
+                    if (!metadata.data.receiveParameters->signalCompression.get())
+                    {
+                        metadata.data.receiveParameters->signalCompression.reset(new crsd::Data::SignalCompression());
+                    }
+                    metadata.data.receiveParameters->signalCompression->compressedSignalSize = dims.area();
                 }
-                metadata.data.receiveParameters->signalCompression->compressedSignalSize = dims.area();
+            }
+            // Must set the sample type
+            else
+            {
+                metadata.data.receiveParameters->signalArrayFormat = getSignalArrayFormat(sizeof(writeData[0]));
             }
         }
-        // Must set the sample type
         else
         {
-            std::cout << "Using uncompressed CRSD data..." << std::endl;  
-            metadata.data.receiveParameters->signalArrayFormat = getSignalArrayFormat(sizeof(writeData[0]));
+            // Select an arbitrary size so we can test other stuff
+            metadata.data.receiveParameters->signalArrayFormat = crsd::SignalArrayFormat::CF8;
         }
-    }
-    else
-    {
-        // Select an arbitrary size so we can test other stuff
-        metadata.data.receiveParameters->signalArrayFormat = crsd::SignalArrayFormat::CF8;
     }
 
     setUpMetadata(metadata);

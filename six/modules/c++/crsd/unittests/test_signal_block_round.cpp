@@ -44,6 +44,7 @@
 static constexpr size_t NUM_SUPPORT = 3;
 static constexpr size_t NUM_ROWS = 3;
 static constexpr size_t NUM_COLS = 4;
+static constexpr bool   DEBUG = false;
 
 template<typename T>
 std::vector<T> generateSupportData(size_t length)
@@ -131,17 +132,31 @@ void writeCRSD(const std::string& outPathname, size_t /*numThreads*/,
     }
 
     crsd::CRSDWriter writer(metadata, outPathname);
-    std::cout << "Writing metadata portion..." << std::endl;
+    if (DEBUG)
+        std::cout << "Writing metadata portion..." << std::endl;
+
     writer.writeMetadata(pvpBlock, pppBlock);
-    std::cout << "Writing support block..." << std::endl;
+
+    if (DEBUG)
+        std::cout << "Writing support block..." << std::endl;
+
     writer.writeSupportData(writeSupportData.data());
-    std::cout << "Writing PPP data..." << std::endl;
+
+    if (DEBUG)
+        std::cout << "Writing PPP data..." << std::endl;
+
     writer.writePPPData(pppBlock);
-    std::cout << "Writing PVP data..." << std::endl;
+
+    if (DEBUG)
+        std::cout << "Writing PVP data..." << std::endl;
+
     writer.writePVPData(pvpBlock);
+    
     for (size_t ii = 0; ii < numChannels; ++ii)
     {
-        std::cout << "Writing CRSD data for channel " << ii << "..." << std::endl;
+        if (DEBUG)
+            std::cout << "Writing CRSD data for channel " << ii << "..." << std::endl;
+
         writer.writeCRSDData(writeData.data(),dims.area());
     }
 }

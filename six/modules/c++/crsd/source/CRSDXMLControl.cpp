@@ -100,9 +100,9 @@ mem::auto_ptr<xml::lite::Document> CRSDXMLControl::toXML(
 std::unordered_map<std::string, xml::lite::Uri> CRSDXMLControl::getVersionUriMap()
 {
     return {
-        {"1.0.0", xml::lite::Uri("urn:CRSDsar:1.0.0")},
-        {"1.0.0", xml::lite::Uri("urn:CRSDtx:1.0.0")},
-        {"1.0.0", xml::lite::Uri("urn:CRSDrcv:1.0.0")}
+        {"CRSDsar/1.0.0", xml::lite::Uri("urn:CRSDsar:1.0.0")},
+        {"CRSDtx/1.0.0", xml::lite::Uri("urn:CRSDtx:1.0.0")},
+        {"CRSDrcv/1.0.0", xml::lite::Uri("urn:CRSDrcv:1.0.0")}
     };
 }
 
@@ -118,9 +118,10 @@ std::unordered_map<std::string, xml::lite::Uri> CRSDXMLControl::getTypeUriMap()
 std::unique_ptr<xml::lite::Document> CRSDXMLControl::toXMLImpl(const Metadata& metadata)
 {
     const auto versionUriMap = getVersionUriMap();
-    if (versionUriMap.find(metadata.getVersion()) != versionUriMap.end())
+    std::string metaVersion = six::toString<CRSDType>(metadata.getType()) + "/" + metadata.getVersion();
+    if (versionUriMap.find(metaVersion) != versionUriMap.end())
     {
-      return getParser(versionUriMap.find(metadata.getVersion())->second)->toXML(metadata);
+      return getParser(versionUriMap.find(metaVersion)->second)->toXML(metadata);
     }
     std::ostringstream ostr;
     ostr << "The version " << metadata.getVersion() << " is invalid. "
@@ -153,7 +154,6 @@ std::unique_ptr<Metadata> CRSDXMLControl::fromXML(const std::u8string& xmlString
 std::unique_ptr<Metadata> CRSDXMLControl::fromXML(const xml::lite::Document* doc,
                                      const std::vector<std::string>& schemaPaths)
 {
-    
     if(!schemaPaths.empty())
     {
         six::XMLControl::validate(doc, schemaPaths, mLog);
@@ -161,8 +161,10 @@ std::unique_ptr<Metadata> CRSDXMLControl::fromXML(const xml::lite::Document* doc
     
     std::unique_ptr<Metadata> metadata = fromXMLImpl(doc);
     const xml::lite::Uri uri(doc->getRootElement()->getUri());
+
     metadata->setVersion(uriToVersion(uri));
     metadata->setType(six::toType<CRSDType>(uriToType(uri)));
+
     return metadata;
 }
 Metadata CRSDXMLControl::fromXML(const xml::lite::Document& doc, const std::vector<std::filesystem::path>& schemaPaths)
@@ -171,12 +173,14 @@ Metadata CRSDXMLControl::fromXML(const xml::lite::Document& doc, const std::vect
     std::transform(schemaPaths.begin(), schemaPaths.end(), std::back_inserter(schemaPaths_),
         [](const std::filesystem::path& p) { return p.string(); });
     auto result = fromXML(&doc, schemaPaths_);
+
     return *(result.release());
 }
 
 std::unique_ptr<Metadata> CRSDXMLControl::fromXMLImpl(const xml::lite::Document* doc)
 {
     const xml::lite::Uri uri(doc->getRootElement()->getUri());
+
     return getParser(uri)->fromXML(doc);
 }
 
@@ -193,7 +197,7 @@ std::string CRSDXMLControl::uriToVersion(const xml::lite::Uri& uri) const
     {
         if (p.second == uri)
         {
-            return p.first;
+            return "1.0.0";
         }
     }
     std::ostringstream ostr;

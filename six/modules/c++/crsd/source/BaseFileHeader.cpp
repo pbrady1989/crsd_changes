@@ -34,7 +34,7 @@ namespace crsd
 {
 const char BaseFileHeader::FILE_TYPE_SAR[] = "CRSDsar";
 const char BaseFileHeader::FILE_TYPE_TX[] = "CRSDtx";
-const char BaseFileHeader::FILE_TYPE_RX[] = "CRSDrx";
+const char BaseFileHeader::FILE_TYPE_RX[] = "CRSDrcv";
 const char BaseFileHeader::KVP_DELIMITER[] = " := ";
 const char BaseFileHeader::LINE_TERMINATOR = '\n';
 const char BaseFileHeader::SECTION_TERMINATOR = '\f';
@@ -57,9 +57,9 @@ std::string BaseFileHeader::readVersion(io::SeekableInputStream& inStream)
     inStream.seek(0, io::Seekable::START);
     inStream.readln(buf, sizeof(buf));
     const KeyValuePair kvPair(tokenize(buf, "/"));
-    //std::cout << "buf: " << buf << std::endl;
-    //std::cout << "kvPair.first: " << kvPair.first << std::endl;
-    //std::cout << "kvPair.second: " << kvPair.second << std::endl;
+    // std::cout << "buf: " << buf << std::endl;
+    // std::cout << "kvPair.first: " << kvPair.first << std::endl;
+    // std::cout << "kvPair.second: " << kvPair.second << std::endl;
     if ( (kvPair.first  != FILE_TYPE_SAR) 
        && (kvPair.first != FILE_TYPE_TX) 
        && (kvPair.first != FILE_TYPE_RX) )

@@ -66,90 +66,107 @@ std::unique_ptr<xml::lite::Document> CRSDXMLParser::toXML(
 
     if (DEBUG)
         std::cout << "Converting global to XML..." << std::endl;
+
     toXML(metadata.global, root);    
 
     if (DEBUG)
         std::cout << "Converting scene to XML..." << std::endl;
+
     toXML(metadata.sceneCoordinates, root);    
 
     if (DEBUG)
         std::cout << "Converting data to XML..." << std::endl;
+
     toXML(metadata.data, root);    
 
     if (DEBUG)
         std::cout << "Converting productInfo to XML..." << std::endl;
+
     toXML(metadata.productInfo, root);    
 
     if (DEBUG)
         std::cout << "Converting support to XML..." << std::endl;
+
     toXML(metadata.supportArray, root);    
 
     if (DEBUG)
         std::cout << "Converting refGeo to XML..." << std::endl;
+
     toXML(metadata.referenceGeometry, root);    
 
     if (DEBUG)
         std::cout << "Converting antenna to XML..." << std::endl;
+
     toXML(metadata.antenna,root);    
 
     if (metadata.dwell.get())
     {
         if (DEBUG)
             std::cout << "Converting dwell to XML..." << std::endl;
+
         toXML(*(metadata.dwell), root);
     }
      if (metadata.channel.get())
     {
         if (DEBUG)
             std::cout << "Converting channel to XML..." << std::endl;
+
         toXML(*(metadata.channel), root);
     }
     if (metadata.pvp.get())
     {
         if (DEBUG)
             std::cout << "Converting pvp to XML..." << std::endl;
+
         toXML(*(metadata.pvp), root);
     }
     if (metadata.ppp.get())
     {
         if (DEBUG)
             std::cout << "Converting ppp to XML..." << std::endl;
+
         toXML(*(metadata.ppp), root);
     }
     if (metadata.sarInfo.get())
     {
         if (DEBUG)
             std::cout << "Converting sarInfo to XML..." << std::endl;
+
         toXML(*(metadata.sarInfo), root);
     }
     if (metadata.transmitInfo.get())
     {
         if (DEBUG)
             std::cout << "Converting transmitInfo to XML..." << std::endl;
+
         toXML(*(metadata.transmitInfo), root, "TransmitInfo");
     }
     if (metadata.receiveInfo.get())
     {
         if (DEBUG)
             std::cout << "Converting receiveInfo to XML..." << std::endl;
+
         toXML(*(metadata.receiveInfo), root, "ReceiveInfo");
     }
     if (metadata.txSequence.get())
     {
         if (DEBUG)
             std::cout << "Converting txSequence to XML..." << std::endl;
+
         toXML(*(metadata.txSequence), root);
     }
     if (metadata.errorParameters.get())
     {
         if (DEBUG)
             std::cout << "Converting errorParams to XML..." << std::endl;
+
         toXML(*(metadata.errorParameters), root);
     }
     for (const auto& geoInfo : metadata.geoInfo)
     {
         if (DEBUG)
             std::cout << "Converting geoInfo to XML..." << std::endl;
+
         toXML(geoInfo, root);
     }
     //set the XMLNS
@@ -996,30 +1013,44 @@ std::unique_ptr<Metadata> CRSDXMLParser::fromXML(
     // Parse XML for each section (required sections here)
     if (DEBUG)
         std::cout << "Reading in ProductInfo" << std::endl;
+
     fromXML(productInfoXML, crsd->productInfo);
+
     if (DEBUG)
         std::cout << "Reading in Global" << std::endl;
+
     fromXML(globalXML, crsd->global);
+
     if (DEBUG)
         std::cout << "Reading in SceneCoordinates" << std::endl;
+
     fromXML(sceneCoordsXML, crsd->sceneCoordinates);
+
     if (DEBUG)
         std::cout << "Reading in Data" << std::endl;
+
     fromXML(dataXML, crsd->data);
+
     if (DEBUG)
         std::cout << "Reading in ReferenceGeometry" << std::endl;
+
     fromXML(refGeoXML, crsd->referenceGeometry);
+
     if (DEBUG)
         std::cout << "Reading in SupportArray" << std::endl;
+
     fromXML(supportArrayXML, crsd->supportArray);
+
     if (DEBUG)
         std::cout << "Reading in Antenna" << std::endl;
+
     fromXML(antennaXML, crsd->antenna);
     
     if(pvpXML)
     {
         if (DEBUG)
             std::cout << "Reading in PVP" << std::endl;
+
         crsd->pvp.reset(new Pvp());
         fromXML(pvpXML, *(crsd->pvp));
         
@@ -1028,6 +1059,7 @@ std::unique_ptr<Metadata> CRSDXMLParser::fromXML(
     {
         if (DEBUG)
             std::cout << "Reading in PPP" << std::endl;
+
         crsd->ppp.reset(new Ppp());
         fromXML(pppXML, *(crsd->ppp));
         
@@ -1036,6 +1068,7 @@ std::unique_ptr<Metadata> CRSDXMLParser::fromXML(
     {
         if (DEBUG)
             std::cout << "Reading in Dwell" << std::endl;
+
         crsd->dwell.reset(new Dwell());
         fromXML(dwellXML, *(crsd->dwell));
         
@@ -1044,6 +1077,7 @@ std::unique_ptr<Metadata> CRSDXMLParser::fromXML(
     {
         if (DEBUG)
             std::cout << "Reading in Channel" << std::endl;
+
         crsd->channel.reset(new Channel());
         fromXML(channelXML, *(crsd->channel));
         
@@ -1052,6 +1086,7 @@ std::unique_ptr<Metadata> CRSDXMLParser::fromXML(
     {
         if (DEBUG)
             std::cout << "Reading in TxSequence" << std::endl;
+
         crsd->txSequence.reset(new TxSequence());
         fromXML(txSequenceXML, *(crsd->txSequence));
         
@@ -1060,6 +1095,7 @@ std::unique_ptr<Metadata> CRSDXMLParser::fromXML(
     {
         if (DEBUG)
             std::cout << "Reading in ReceiveInfo" << std::endl;
+
         crsd->receiveInfo.reset(new TransmitInfo());
         fromXML(receiveInfoXML, *(crsd->receiveInfo));
         
@@ -1068,6 +1104,7 @@ std::unique_ptr<Metadata> CRSDXMLParser::fromXML(
     {
         if (DEBUG)
             std::cout << "Reading in TransmitInfo" << std::endl;
+
         crsd->transmitInfo.reset(new TransmitInfo());
         fromXML(transmitInfoXML, *(crsd->transmitInfo));
         
@@ -1076,6 +1113,7 @@ std::unique_ptr<Metadata> CRSDXMLParser::fromXML(
     {
         if (DEBUG)
             std::cout << "Reading in SARInfo" << std::endl;
+
         crsd->sarInfo.reset(new SARInfo());
         fromXML(sarInfoXML, *(crsd->sarInfo));
         

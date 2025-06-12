@@ -79,7 +79,7 @@ Metadata::Metadata(CRSDType type) :
         data.setSupportArray("",0,0,0,0);
         data.receiveParameters.reset(new crsd::Data::Receive()); 
         referenceGeometry.rcvParameters.reset(new crsd::OneWayParams());   
-        supportArray.antGainPhase.resize(1);     
+        supportArray.antGainPhase.resize(1);
     }
 }
 

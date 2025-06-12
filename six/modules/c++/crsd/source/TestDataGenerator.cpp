@@ -154,8 +154,12 @@ void setUpMetadata(Metadata& metadata)
         metadata.sarInfo->collectType = CollectType::MONOSTATIC;
 
     // // Set default pvp size based on setPVP function
-    metadata.data.receiveParameters->numBytesPVP = (1*9 + 2*3 + 3*4) * 8;
-    metadata.data.transmitParameters->numBytesPPP = (1*8 + 2*3 + 3*4) * 8;
+    if ( (metadata.getType() == CRSDType::SAR) || (metadata.getType() == CRSDType::RCV) )
+        metadata.data.receiveParameters->numBytesPVP = (1*9 + 2*3 + 3*4) * 8;
+
+    if ( (metadata.getType() == CRSDType::SAR) || (metadata.getType() == CRSDType::TX) )
+        metadata.data.transmitParameters->numBytesPPP = (1*8 + 2*3 + 3*4) * 8;
+
     metadata.sceneCoordinates.iarp.ecf = getRandomVector3();
     metadata.sceneCoordinates.iarp.llh = LatLonAlt(0,0,0);
     metadata.sceneCoordinates.referenceSurface.planar.reset(new Planar());
@@ -176,10 +180,14 @@ void setUpMetadata(Metadata& metadata)
     }
     if (metadata.referenceGeometry.txParameters.get())
     {
+        metadata.referenceGeometry.txParameters->apcPos = getRandomVector3();
+        metadata.referenceGeometry.txParameters->apcVel = getRandomVector3();
         metadata.referenceGeometry.txParameters->sideOfTrack = six::SideOfTrackType::LEFT;
     }
     if (metadata.referenceGeometry.rcvParameters.get())
     {
+        metadata.referenceGeometry.rcvParameters->apcPos = getRandomVector3();
+        metadata.referenceGeometry.rcvParameters->apcVel = getRandomVector3();
         metadata.referenceGeometry.rcvParameters->sideOfTrack = six::SideOfTrackType::LEFT;
     }
     if (metadata.txSequence.get())
@@ -253,21 +261,24 @@ void setUpMetadata(Metadata& metadata)
         metadata.channel->parameters[0].rcvRefLAtm = 0.0;
         metadata.channel->parameters[0].pncrsd = 0.0;
         metadata.channel->parameters[0].bncrsd = 0.0;
-        metadata.channel->parameters[0].sarImage.reset(new ChannelSARImage());
-        metadata.channel->parameters[0].sarImage->txID = "txID";
-        metadata.channel->parameters[0].sarImage->refVectorPulseIndex = 0;
-        metadata.channel->parameters[0].sarImage->txPolarization.ampH = 0.0;
-        metadata.channel->parameters[0].sarImage->txPolarization.ampV = 0.0;
-        metadata.channel->parameters[0].sarImage->txPolarization.phaseH = 0.0;
-        metadata.channel->parameters[0].sarImage->txPolarization.phaseV = 0.0;
-        metadata.channel->parameters[0].sarImage->txPolarization.polarizationID = PolarizationType::UNSPECIFIED;
-        metadata.channel->parameters[0].sarImage->dwellTime.polynomials.reset(new Polynomials());
-        metadata.channel->parameters[0].sarImage->dwellTime.polynomials->codId = "codId";
-        metadata.channel->parameters[0].sarImage->dwellTime.polynomials->dwellId = "dwellId";
-        metadata.channel->parameters[0].sarImage->imageArea.x1y1 = getRandomVector2();
-        metadata.channel->parameters[0].sarImage->imageArea.x2y2 = getRandomVector2();
-        metadata.channel->parameters[0].sarImage->imageArea.polygon.resize(4);
-
+        if (metadata.getType() == CRSDType::SAR)
+        {
+            metadata.channel->parameters[0].sarImage.reset(new ChannelSARImage());
+            metadata.channel->parameters[0].sarImage->txID = "txID";
+            metadata.channel->parameters[0].sarImage->refVectorPulseIndex = 0;
+            metadata.channel->parameters[0].sarImage->txPolarization.ampH = 0.0;
+            metadata.channel->parameters[0].sarImage->txPolarization.ampV = 0.0;
+            metadata.channel->parameters[0].sarImage->txPolarization.phaseH = 0.0;
+            metadata.channel->parameters[0].sarImage->txPolarization.phaseV = 0.0;
+            metadata.channel->parameters[0].sarImage->txPolarization.polarizationID = PolarizationType::UNSPECIFIED;
+            metadata.channel->parameters[0].sarImage->dwellTime.polynomials.reset(new Polynomials());
+            metadata.channel->parameters[0].sarImage->dwellTime.polynomials->codId = "codId";
+            metadata.channel->parameters[0].sarImage->dwellTime.polynomials->dwellId = "dwellId";
+            metadata.channel->parameters[0].sarImage->imageArea.x1y1 = getRandomVector2();
+            metadata.channel->parameters[0].sarImage->imageArea.x2y2 = getRandomVector2();
+            metadata.channel->parameters[0].sarImage->imageArea.polygon.resize(4);
+        }
     }
 }
+
 }

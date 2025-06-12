@@ -35,6 +35,8 @@
 #include <crsd/PVPBlock.h>
 #include <crsd/CRSDReader.h>
 #include <str/Convert.h>
+#include <six/Utilities.h>
+#include <six/Types.h>
 
 /*!
  * Compares two CRSD files
@@ -256,39 +258,42 @@ bool checkCRSD(const std::string& pathname1, const std::string& pathname2, size_
     }
 
     // // Check wideband
-    const size_t channelsToProcess = std::min(
-            reader1.getMetadata().data.getNumChannels(),
-            reader2.getMetadata().data.getNumChannels());
-    if (reader1.getMetadata().data.getNumChannels() !=
-        reader2.getMetadata().data.getNumChannels())
+    if (reader1.getMetadata().getType() != six::CRSDType::TX)
     {
-        std::cerr << "Files contain a differing number of channels "
-                  << "comparison will continue but will only look at "
-                  << "the first " << channelsToProcess << " channels\n";
-        return false;
-    }
-    //! Only process wideband data if the data types are the same
-    if (reader1.getMetadata().data.receiveParameters->signalArrayFormat ==
-        reader2.getMetadata().data.receiveParameters->signalArrayFormat)
-    {
-        const bool crsdDataMatches = compareWideband(reader1,
-                                                     reader2,
-                                                     channelsToProcess,
-                                                     numThreads);
-        if (!crsdDataMatches)
+        const size_t channelsToProcess = std::min(
+                reader1.getMetadata().data.getNumChannels(),
+                reader2.getMetadata().data.getNumChannels());
+        if (reader1.getMetadata().data.getNumChannels() !=
+            reader2.getMetadata().data.getNumChannels())
         {
-            std::cerr << "Wideband data does not match \n";
+            std::cerr << "Files contain a differing number of channels "
+                    << "comparison will continue but will only look at "
+                    << "the first " << channelsToProcess << " channels\n";
             return false;
+        }
+        //! Only process wideband data if the data types are the same
+        if (reader1.getMetadata().data.receiveParameters->signalArrayFormat ==
+            reader2.getMetadata().data.receiveParameters->signalArrayFormat)
+        {
+            const bool crsdDataMatches = compareWideband(reader1,
+                                                        reader2,
+                                                        channelsToProcess,
+                                                        numThreads);
+            if (!crsdDataMatches)
+            {
+                std::cerr << "Wideband data does not match \n";
+                return false;
+            }
+            else
+            {
+                std::cout << "Wideband data matches \n";
+            }
         }
         else
         {
-            std::cout << "Wideband data matches \n";
+            std::cerr << "Data has differing sample type\n";
+            return false;
         }
-    }
-    else
-    {
-        std::cerr << "Data has differing sample type\n";
-        return false;
     }
     return true;
 }

@@ -2285,7 +2285,7 @@ void runTestRCV(const std::string& testName, const std::string& version)
 TEST_CASE(testVersions)
 {
     auto versionUriMap = crsd::CRSDXMLControl::getVersionUriMap();
-    for (auto version : {"1.0.0"})
+    for (auto version : {"CRSDsar/1.0.0", "CRSDtx/1.0.0", "CRSDrcv/1.0.0"})
     {
         TEST_ASSERT_TRUE(
             versionUriMap.find(version) != versionUriMap.end());

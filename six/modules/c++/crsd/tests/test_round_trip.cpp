@@ -49,7 +49,6 @@ void testRoundTrip(const std::string& inPathname, const std::string& outPathname
 {
     //! Open the CRSD file
     crsd::CRSDReader reader(inPathname, numThreads, schemaPathnames);
-    std::cout << "Succesfully finished reading from CRSD: " << inPathname << "\n";
 
     // Read fileheader
     const crsd::FileHeader& header = reader.getFileHeader();
@@ -71,8 +70,11 @@ void testRoundTrip(const std::string& inPathname, const std::string& outPathname
     // Read Wideband
     const crsd::Wideband& wideband = reader.getWideband();
 
-    const crsd::SignalArrayFormat signalFormat =
-            metadata.data.receiveParameters->getSignalArrayFormat();
+    crsd::SignalArrayFormat signalFormat;
+    if (metadata.data.receiveParameters.get())
+    {
+        signalFormat = metadata.data.receiveParameters->getSignalArrayFormat();
+    }
 
     // Create the writer
     crsd::CRSDWriter writer(reader.getMetadata(), outPathname, schemaPathnames, numThreads);
@@ -112,32 +114,44 @@ void testRoundTrip(const std::string& inPathname, const std::string& outPathname
         }
 
         // Write full CRSD not compressed data
-        switch (signalFormat)
+        if (metadata.data.receiveParameters.get())
         {
-        case crsd::SignalArrayFormat::CI2:
-            std::cout << "Writing CI2 data......" << std::endl;
+            switch (signalFormat)
+            {
+            case crsd::SignalArrayFormat::CI2:
+                std::cout << "Writing CI2 data......" << std::endl;
+                writer.write(
+                        pvpBlock,
+                        pppBlock,
+                        reinterpret_cast<const std::complex<int8_t>* >(data.get()),
+                        readPtr.get());
+                break;
+            case crsd::SignalArrayFormat::CI4:
+                std::cout << "Writing CI4 data......" << std::endl;
+                writer.write(
+                        pvpBlock,
+                        pppBlock,
+                        reinterpret_cast<const std::complex<int16_t>* >(data.get()),
+                        readPtr.get());
+                break;
+            case crsd::SignalArrayFormat::CF8:
+                std::cout << "Writing CF8 data......" << std::endl;
+                writer.write(
+                        pvpBlock,
+                        pppBlock,
+                        reinterpret_cast<const std::complex<float>* >(data.get()),
+                        readPtr.get());
+                break;
+            }
+        }
+        else
+        {
+            std::cout << "Writing raw data......" << std::endl;
             writer.write(
                     pvpBlock,
                     pppBlock,
-                    reinterpret_cast<const std::complex<int8_t>* >(data.get()),
+                    reinterpret_cast<const sys::ubyte*>(data.get()),
                     readPtr.get());
-            break;
-        case crsd::SignalArrayFormat::CI4:
-            std::cout << "Writing CI4 data......" << std::endl;
-            writer.write(
-                    pvpBlock,
-                    pppBlock,
-                    reinterpret_cast<const std::complex<int16_t>* >(data.get()),
-                    readPtr.get());
-            break;
-        case crsd::SignalArrayFormat::CF8:
-            std::cout << "Writing CF8 data......" << std::endl;
-            writer.write(
-                    pvpBlock,
-                    pppBlock,
-                    reinterpret_cast<const std::complex<float>* >(data.get()),
-                    readPtr.get());
-            break;
         }
     }
 

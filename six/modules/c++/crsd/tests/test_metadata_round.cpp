@@ -57,25 +57,36 @@ bool testEqual(const std::string& inPathname, const std::string& outPathname,
 {
     // Read in first XML file
     xml::lite::MinidomParser xmlParser;
+    std::cout << "Parsing XML file: " << inPathname << std::endl;
     parseXMLFile(xmlParser, inPathname);
+    std::cout << "XML file parsed successfully." << std::endl;
     crsd::CRSDXMLControl xmlControl(new logging::NullLogger(), true);
+    std::cout << "Populating metadata object from XML Document." << std::endl;
     const std::unique_ptr<crsd::Metadata> metadata =
             xmlControl.fromXML(xmlParser.getDocument(), schemas);
+    std::cout << "Metadata object populated successfully." << std::endl;
     const auto xmlMetadata(xmlControl.toXMLString(*metadata));
+    std::cout << "Metadata converted to XML string successfully." << std::endl;
 
     //Output XML file to temp file
     io::FileOutputStream ofs(outPathname);
     ofs.write(xmlMetadata.c_str(), xmlMetadata.size());
+    std::cout << "XML string written to file: " << outPathname << std::endl;
 
     // Read in second XML file from temp file
     xml::lite::MinidomParser xmlParser2;
     parseXMLFile(xmlParser2, outPathname);
+    std::cout << "Second XML file parsed successfully." << std::endl;
 
     crsd::CRSDXMLControl xmlControl2(new logging::NullLogger(), true);
+
+    std::cout << "Populating second metadata object from XML Document." << std::endl;
 
     // Populate metadata object from XML Document
     const std::unique_ptr<crsd::Metadata> metadata2 =
             xmlControl2.fromXML(xmlParser2.getDocument(), schemas);
+
+    std::cout << "Second metadata object populated successfully." << std::endl;
 
     // Check if both metadata are equal
     return (*metadata == *metadata2);

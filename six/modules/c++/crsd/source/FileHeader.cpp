@@ -365,7 +365,7 @@ int64_t FileHeader::getPvpPadBytes() const
     {
         return (getPvpBlockByteOffset() - (getPppBlockByteOffset() + getPppBlockSize()));
     }
-    return (getPvpBlockByteOffset() - (getSupportBlockByteOffset() + getSupportBlockSize() + 2));
+    return (getPvpBlockByteOffset() - (getSupportBlockByteOffset() + getSupportBlockSize()));
 }
 
 

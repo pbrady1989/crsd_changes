@@ -153,7 +153,12 @@ struct DwellTimes
         }
         else if (array.get() && other.array.get())
         {
-                   array->dtaId == other.array->dtaId;
+            return array->dtaId == other.array->dtaId;
+        }
+        else
+        {
+            throw except::Exception(Ctxt("DwellTimes: Polynomials or PolyArray not set"));
+            return false;
         }
     }
     bool operator!=(const DwellTimes& other) const

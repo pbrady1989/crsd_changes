@@ -2278,6 +2278,11 @@ void runTestRCV(const std::string& testName, const std::string& version)
     TEST_ASSERT_EQ(metadata->antenna.antPattern[0].antPolRef.ampY, 1.0);
     TEST_ASSERT_EQ(metadata->antenna.antPattern[0].antPolRef.phaseX, 0.0);
     TEST_ASSERT_EQ(metadata->antenna.antPattern[0].antPolRef.phaseY, 0.0);
+
+    // GeoInfo
+    TEST_ASSERT_EQ(metadata->geoInfo[0].name, "ExampleGeoInfo");
+    TEST_ASSERT_EQ(metadata->geoInfo[0].geometryLatLon[0].getLat(), 38.0);
+    TEST_ASSERT_EQ(metadata->geoInfo[0].geometryLatLon[0].getLon(), -77.0);
 }
 
 }

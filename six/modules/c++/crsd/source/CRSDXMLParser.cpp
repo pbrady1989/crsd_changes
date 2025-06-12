@@ -1125,12 +1125,12 @@ std::unique_ptr<Metadata> CRSDXMLParser::fromXML(
     //     fromXML(errParamXML, *(crsd->errorParameters));
     //     
     // }
-    // for (size_t ii = 0; ii < geoInfoXMLVec.size(); ++ii)
-    // {
-    //     
-    //     fromXML(geoInfoXMLVec[ii], crsd->geoInfo[ii]);
-    //     
-    // }
+    for (size_t ii = 0; ii < geoInfoXMLVec.size(); ++ii)
+    {
+        
+        fromXML(geoInfoXMLVec[ii], crsd->geoInfo[ii]);
+        
+    }
 
     return crsd;
 }
